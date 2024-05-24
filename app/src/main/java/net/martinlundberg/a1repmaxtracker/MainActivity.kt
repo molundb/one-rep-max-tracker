@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,12 +28,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
+import net.martinlundberg.a1repmaxtracker.ui.HomeUiState.Loading
+import net.martinlundberg.a1repmaxtracker.ui.HomeUiState.Success
+import net.martinlundberg.a1repmaxtracker.ui.HomeViewModel
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val viewModel: HomeViewModel by viewModels()
+
         setContent {
             _1RepMaxTrackerTheme {
                 MainScreen()
@@ -43,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -56,32 +64,36 @@ fun MainScreen() {
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(vertical = 8.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            LazyColumn {
-                // Add 5 items
-                items(5) {
-                    MovementCard()
-                }
-            }
-            FloatingActionButton(
-                modifier = Modifier.size(80.dp),
-                onClick = { onClick() },
+        when (homeUiState) {
+            Loading -> TODO()
+            is Success -> Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(vertical = 8.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Icon(Filled.Add, "Floating action button.")
+                LazyColumn {
+                    homeUiState.movements.map {
+                        item {
+                            MovementCard(it.name, it.weight)
+                        }
+                    }
+                }
+                FloatingActionButton(
+                    modifier = Modifier.size(80.dp),
+                    onClick = { onClick() },
+                ) {
+                    Icon(Filled.Add, "Floating action button.")
+                }
             }
         }
     }
 }
 
 @Composable
-fun MovementCard() {
+fun MovementCard(name: String, weight: Int) {
     Card {
         Row(
             modifier = Modifier
@@ -89,8 +101,8 @@ fun MovementCard() {
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Back Squat")
-            Text("82 kg")
+            Text(name)
+            Text("$weight kg")
         }
     }
 }

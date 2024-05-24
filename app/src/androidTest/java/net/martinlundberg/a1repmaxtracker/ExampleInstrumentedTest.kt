@@ -36,6 +36,6 @@ class ExampleInstrumentedTest {
         }
 
         composeTestRule.onNodeWithText("Test movement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("2 kg").assertIsDisplayed()
     }
 }
