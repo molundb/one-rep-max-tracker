@@ -4,6 +4,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
+import net.martinlundberg.a1repmaxtracker.ui.Movement
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import org.junit.Rule
 import org.junit.Test
@@ -23,10 +25,17 @@ class ExampleInstrumentedTest {
     fun givenA_whenB_ThenC() {
         composeTestRule.setContent {
             _1RepMaxTrackerTheme {
-                MainScreen()
+                MainScreen(
+                    homeUiState = HomeUiState.Success(
+                        listOf(
+                            Movement("Test movement", 2)
+                        )
+                    )
+                )
             }
         }
 
-        composeTestRule.onNodeWithText("Welcome").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Test movement").assertIsDisplayed()
+        composeTestRule.onNodeWithText("2").assertIsDisplayed()
     }
 }
