@@ -22,7 +22,7 @@ class ExampleInstrumentedTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun givenA_whenB_ThenC() {
+    fun givenListWithMovement_whenMainScreen_ThenMovementInfoIsDisplayed() {
         composeTestRule.setContent {
             _1RepMaxTrackerTheme {
                 MainScreen(
