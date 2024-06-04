@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
 import net.martinlundberg.a1repmaxtracker.ui.HomeViewModel
+import net.martinlundberg.a1repmaxtracker.ui.Movement
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val viewModel: HomeViewModel by viewModels()
+        viewModel.getMovements()
 
         setContent {
             _1RepMaxTrackerTheme {
@@ -72,7 +75,25 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         when (homeUiState) {
-            HomeUiState.Loading -> CircularProgressIndicator()
+            HomeUiState.Loading -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(top = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(text = "Loading...",)
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .width(64.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                }
+            }
+
             is HomeUiState.Success -> Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -120,8 +141,23 @@ fun onClick() {
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun MainScreenLoadingPreview() {
     _1RepMaxTrackerTheme {
-        MainScreen()
+        MainScreen(HomeUiState.Loading)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenContentPreview() {
+    _1RepMaxTrackerTheme {
+        MainScreen(
+            HomeUiState.Success(
+                listOf(
+                    Movement("Movement 1", 100),
+                    Movement("Movement 4", 4),
+                )
+            )
+        )
     }
 }
