@@ -84,7 +84,7 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(text = "Loading...",)
+                    Text(text = "Loading...")
                     CircularProgressIndicator(
                         modifier = Modifier
                             .width(64.dp),
@@ -102,7 +102,10 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     homeUiState.movements.map {
                         item {
                             MovementCard(it.name, it.weight)
@@ -129,8 +132,8 @@ fun MovementCard(name: String, weight: Int) {
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(name)
-            Text("$weight kg")
+            Text(name, style = MaterialTheme.typography.titleLarge)
+            Text("$weight kg", style = MaterialTheme.typography.titleLarge)
         }
     }
 }
