@@ -56,6 +56,6 @@ class MainScreenTest {
         }
 
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithText("Add Movement").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertIsDisplayed()
     }
 }

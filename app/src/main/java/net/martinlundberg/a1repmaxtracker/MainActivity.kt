@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -24,16 +26,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
 import net.martinlundberg.a1repmaxtracker.ui.HomeViewModel
 import net.martinlundberg.a1repmaxtracker.ui.Movement
@@ -64,6 +72,9 @@ fun MainRoute(homeViewModel: HomeViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
+    var showAddMovementDialog by remember { mutableStateOf(false) }
+
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -118,9 +129,16 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
                     modifier = Modifier
                         .size(80.dp)
                         .semantics { contentDescription = "Add Movement" },
-                    onClick = { addMovement() },
+                    onClick = { showAddMovementDialog = true },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
+                }
+
+                if (showAddMovementDialog) {
+                    AddMovementDialog(
+                        onDismissRequest = { showAddMovementDialog = false },
+                        onConfirmation = { /*Call viewmodel*/ }
+                    )
                 }
             }
         }
@@ -130,7 +148,7 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementCard(name: String, weight: Int) {
-    Card(onClick = { addMovement() }) {
+    Card(onClick = { navigateToMovement() }) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -143,12 +161,47 @@ fun MovementCard(name: String, weight: Int) {
     }
 }
 
-fun addMovement() {
+fun navigateToMovement() {
     TODO("Not yet implemented")
 }
 
-fun navigateToMovement() {
-    TODO("Not yet implemented")
+@Composable
+fun AddMovementDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+) {
+    var text by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "Add Movement Dialog" },
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+            ) {
+                TextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Name of exercise") }
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    TextButton(onClick = { onDismissRequest() }) {
+                        Text("Dismiss")
+                    }
+                    TextButton(onClick = { onConfirmation() }) {
+                        Text("Add")
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -170,6 +223,17 @@ fun MainScreenContentPreview() {
                     Movement("Movement 4", 4),
                 )
             )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddMovementDialogPreview() {
+    _1RepMaxTrackerTheme {
+        AddMovementDialog(
+            {},
+            {},
         )
     }
 }
