@@ -30,6 +30,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
@@ -104,7 +106,7 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
             ) {
                 LazyColumn(
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     homeUiState.movements.map {
                         item {
@@ -113,8 +115,10 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
                     }
                 }
                 FloatingActionButton(
-                    modifier = Modifier.size(80.dp),
-                    onClick = { onClick() },
+                    modifier = Modifier
+                        .size(80.dp)
+                        .semantics { contentDescription = "Add Movement" },
+                    onClick = { addMovement() },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
                 }
@@ -123,9 +127,10 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementCard(name: String, weight: Int) {
-    Card {
+    Card(onClick = { addMovement() }) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -138,7 +143,11 @@ fun MovementCard(name: String, weight: Int) {
     }
 }
 
-fun onClick() {
+fun addMovement() {
+    TODO("Not yet implemented")
+}
+
+fun navigateToMovement() {
     TODO("Not yet implemented")
 }
 
