@@ -148,7 +148,7 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementCard(name: String, weight: Int) {
-    Card(onClick = { navigateToMovement() }) {
+    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }, onClick = { navigateToMovement() }) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
