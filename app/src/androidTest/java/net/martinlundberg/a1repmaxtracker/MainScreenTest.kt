@@ -1,16 +1,15 @@
 package net.martinlundberg.a1repmaxtracker
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.TestCase.assertTrue
 import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
 import net.martinlundberg.a1repmaxtracker.ui.Movement
-import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,15 +28,13 @@ class MainScreenTest {
     fun givenListWithMovement_whenMainScreen_ThenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            _1RepMaxTrackerTheme {
-                MainScreen(
-                    homeUiState = HomeUiState.Success(
-                        listOf(
-                            Movement("Test movement", 2)
-                        )
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf(
+                        Movement("Test movement", 2)
                     )
                 )
-            }
+            )
         }
 
         // When
@@ -51,15 +48,13 @@ class MainScreenTest {
     fun whenAddButtonIsPressed_ThenAddMovementDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            _1RepMaxTrackerTheme {
-                MainScreen(
-                    homeUiState = HomeUiState.Success(
-                        listOf(
-                            Movement("Test movement", 2)
-                        )
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf(
+                        Movement("Test movement", 2)
                     )
                 )
-            }
+            )
         }
 
         // When
@@ -69,17 +64,19 @@ class MainScreenTest {
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertIsDisplayed()
     }
 
+    /*
+    Should integration tests be done and if so how? NIA app does not seem to have any.
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNewMovementIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            _1RepMaxTrackerTheme {
-                MainScreen(
-                    homeUiState = HomeUiState.Success(
-                        listOf()
-                    )
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf()
                 )
-            }
+            )
+
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
         composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
@@ -88,21 +85,48 @@ class MainScreenTest {
         composeTestRule.onNodeWithText("Add").performClick()
 
         // Then
-        composeTestRule.onNodeWithText("Add Movement Dialog").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText("movement test name").assertIsDisplayed()
+        composeTestRule.waitUntilExactlyOneExists(hasText("movement test name"))
+        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+
+    }
+     */
+
+    @Test
+    fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNewMovementIsAdded() {
+        // Given
+        var addMovementCalled = false
+
+        composeTestRule.setContent {
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf()
+                ),
+                addMovement = {
+                    addMovementCalled = true
+                }
+            )
+
+        }
+        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
+        composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
+
+        // When
+        composeTestRule.onNodeWithText("Add").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+        assertTrue(addMovementCalled)
     }
 
     @Test
     fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
-            _1RepMaxTrackerTheme {
-                MainScreen(
-                    homeUiState = HomeUiState.Success(
-                        listOf()
-                    )
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf()
                 )
-            }
+            )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
 
@@ -110,21 +134,19 @@ class MainScreenTest {
         composeTestRule.onNodeWithText("Add").performClick()
 
         // Then
-        composeTestRule.onNodeWithText("Add Movement Dialog").assertIsNotDisplayed()
-        composeTestRule.onNodeWithContentDescription("Movement Card").assertIsNotDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Movement Card").assertDoesNotExist()
     }
 
     @Test
     fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
-            _1RepMaxTrackerTheme {
-                MainScreen(
-                    homeUiState = HomeUiState.Success(
-                        listOf()
-                    )
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf()
                 )
-            }
+            )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
         composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
@@ -133,7 +155,7 @@ class MainScreenTest {
         composeTestRule.onNodeWithText("Dismiss").performClick()
 
         // Then
-        composeTestRule.onNodeWithText("Add Movement Dialog").assertIsNotDisplayed()
-        composeTestRule.onNodeWithContentDescription("Movement Card").assertIsNotDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Movement Card").assertDoesNotExist()
     }
 }

@@ -15,13 +15,13 @@ class HomeViewModel : ViewModel() {
 
     fun getMovements() {
         viewModelScope.launch {
-            val backendResult = performBackendCall()
+            val backendResult = fetchMovements()
             _uiState.update { backendResult }
         }
     }
 
     // Suspend function to perform the backend call
-    private suspend fun performBackendCall(): HomeUiState.Success {
+    private suspend fun fetchMovements(): HomeUiState.Success {
         // Simulate network delay
         delay(2000)
         return HomeUiState.Success(
@@ -34,6 +34,16 @@ class HomeViewModel : ViewModel() {
         )
     }
 
+    fun addMovement(newMovement: String) {
+        viewModelScope.launch {
+            // Update backend with new movement
+            val currentState = _uiState.value
+            if (currentState is HomeUiState.Success) {
+                val updatedMovements = currentState.movements + Movement(newMovement, null)
+                _uiState.value = HomeUiState.Success(updatedMovements)
+            }
+        }
+    }
 }
 
 sealed interface HomeUiState {
@@ -46,5 +56,5 @@ sealed interface HomeUiState {
 
 data class Movement(
     val name: String,
-    val weight: Int,
+    val weight: Int?,
 )

@@ -66,14 +66,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainRoute(homeViewModel: HomeViewModel) {
     val homeUiState by homeViewModel.uiState.collectAsState()
-    MainScreen(homeUiState)
+    MainScreen(homeUiState, homeViewModel::addMovement)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
+fun MainScreen(
+    homeUiState: HomeUiState = HomeUiState.Loading,
+    addMovement: (String) -> Unit = {},
+) {
     var showAddMovementDialog by remember { mutableStateOf(false) }
-
 
     Scaffold(
         topBar = {
@@ -137,7 +139,10 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
                 if (showAddMovementDialog) {
                     AddMovementDialog(
                         onDismissRequest = { showAddMovementDialog = false },
-                        onConfirmation = { /*Call viewmodel*/ }
+                        onConfirmation = {
+                            addMovement(it)
+                            showAddMovementDialog = false
+                        }
                     )
                 }
             }
@@ -147,7 +152,7 @@ fun MainScreen(homeUiState: HomeUiState = HomeUiState.Loading) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovementCard(name: String, weight: Int) {
+fun MovementCard(name: String, weight: Int?) {
     Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }, onClick = { navigateToMovement() }) {
         Row(
             modifier = Modifier
@@ -156,7 +161,14 @@ fun MovementCard(name: String, weight: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(name, style = MaterialTheme.typography.titleLarge)
-            Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+            if (weight == null) {
+                Text(
+                    modifier = Modifier.padding(end = 12.dp),
+                    text = "-", style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+                Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+            }
         }
     }
 }
@@ -168,7 +180,7 @@ fun navigateToMovement() {
 @Composable
 fun AddMovementDialog(
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    onConfirmation: (String) -> Unit,
 ) {
     var text by remember { mutableStateOf("") }
 
@@ -195,7 +207,7 @@ fun AddMovementDialog(
                     TextButton(onClick = { onDismissRequest() }) {
                         Text("Dismiss")
                     }
-                    TextButton(onClick = { onConfirmation() }) {
+                    TextButton(onClick = { onConfirmation(text) }) {
                         Text("Add")
                     }
                 }
@@ -208,7 +220,9 @@ fun AddMovementDialog(
 @Composable
 fun MainScreenLoadingPreview() {
     _1RepMaxTrackerTheme {
-        MainScreen(HomeUiState.Loading)
+        MainScreen(
+            homeUiState = HomeUiState.Loading,
+        )
     }
 }
 
@@ -217,12 +231,13 @@ fun MainScreenLoadingPreview() {
 fun MainScreenContentPreview() {
     _1RepMaxTrackerTheme {
         MainScreen(
-            HomeUiState.Success(
+            homeUiState = HomeUiState.Success(
                 listOf(
                     Movement("Movement 1", 100),
                     Movement("Movement 4", 4),
+                    Movement("No weight", null),
                 )
-            )
+            ),
         )
     }
 }
@@ -232,8 +247,8 @@ fun MainScreenContentPreview() {
 fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
         AddMovementDialog(
-            {},
-            {},
+            onDismissRequest = {},
+            onConfirmation = {},
         )
     }
 }
