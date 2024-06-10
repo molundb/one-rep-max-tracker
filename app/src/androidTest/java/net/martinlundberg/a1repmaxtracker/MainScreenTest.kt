@@ -64,33 +64,6 @@ class MainScreenTest {
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertIsDisplayed()
     }
 
-    /*
-    Should integration tests be done and if so how? NIA app does not seem to have any.
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNewMovementIsDisplayed() {
-        // Given
-        composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
-                    listOf()
-                )
-            )
-
-        }
-        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
-
-        // When
-        composeTestRule.onNodeWithText("Add").performClick()
-
-        // Then
-        composeTestRule.waitUntilExactlyOneExists(hasText("movement test name"))
-        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
-
-    }
-     */
-
     @Test
     fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNewMovementIsAdded() {
         // Given
