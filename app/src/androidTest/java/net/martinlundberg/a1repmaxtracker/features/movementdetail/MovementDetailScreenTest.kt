@@ -19,11 +19,12 @@ class MovementDetailScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun givenStateIsSuccess_thenNameOfMovementIsDisplayed() {
+    fun givenMovementName_thenNameOfMovementIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementName = "Name of movement",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail("Name of movement")
+                    MovementDetail()
                 )
             )
         }
@@ -49,7 +50,7 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
-                        "Name of movement", listOf(
+                        listOf(
                             OneRMInfo(70, "10 Jun, 2024"),
                             OneRMInfo(72, "17 Jun, 2024"),
                             OneRMInfo(75, "28 Jun, 2024"),
@@ -72,7 +73,7 @@ class MovementDetailScreenTest {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail("name")
+                    MovementDetail()
                 )
             )
         }
@@ -87,7 +88,7 @@ class MovementDetailScreenTest {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail("name")
+                    MovementDetail()
                 )
             )
         }
@@ -103,7 +104,7 @@ class MovementDetailScreenTest {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail("name")
+                    MovementDetail()
                 )
             )
         }
@@ -123,7 +124,7 @@ class MovementDetailScreenTest {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail("name")
+                    MovementDetail()
                 )
             )
         }

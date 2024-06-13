@@ -108,7 +108,6 @@ fun MovementDetailScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(text = movementDetailUiState.movement.name)
                     FloatingActionButton(
                         modifier = Modifier
                             .size(80.dp)
@@ -196,7 +195,7 @@ fun MovementDetailScreenContentPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
             movementDetailUiState = Success(
-                MovementDetail("Movement Name")
+                MovementDetail()
             )
         )
     }

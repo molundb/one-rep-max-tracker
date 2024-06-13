@@ -28,7 +28,7 @@ class MovementDetailViewModel(
     private suspend fun fetchMovementInfo(): Success {
         // Simulate network delay
         delay(2000)
-        return Success(MovementDetail(name = "Test Movement"))
+        return Success(MovementDetail())
     }
 }
 
@@ -41,7 +41,6 @@ sealed interface MovementDetailUiState {
 }
 
 data class MovementDetail(
-    val name: String,
     val oneRMs: List<OneRMInfo> = emptyList(),
 )
 
