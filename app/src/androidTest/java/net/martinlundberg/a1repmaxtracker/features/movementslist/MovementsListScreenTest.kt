@@ -151,7 +151,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsLongPressed_thenOptionDialogIsOpened() {
+    fun whenMovementIsLongPressed_thenOptionDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -167,6 +167,6 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement options").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsDisplayed()
     }
 }

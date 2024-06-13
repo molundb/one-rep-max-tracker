@@ -1,6 +1,9 @@
 package net.martinlundberg.a1repmaxtracker.features.movementslist
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Filled
@@ -15,6 +19,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -30,11 +36,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -148,28 +157,70 @@ fun MovementsListScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementCard(
     name: String,
     weight: Int?,
     onMovementClick: (String) -> Unit,
 ) {
-    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }, onClick = { onMovementClick(name) }) {
-        Row(
+    var movementName by rememberSaveable { mutableStateOf<String?>(null) }
+    val haptics = LocalHapticFeedback.current
+    Box {
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(name, style = MaterialTheme.typography.titleLarge)
-            if (weight == null) {
-                Text(
-                    modifier = Modifier.padding(end = 12.dp),
-                    text = "-", style = MaterialTheme.typography.titleLarge
+                .combinedClickable(
+                    onClick = { onMovementClick(name) },
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        movementName = name
+                    },
                 )
-            } else {
-                Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+                .semantics { contentDescription = "Movement Card" },
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(name, style = MaterialTheme.typography.titleLarge)
+                if (weight == null) {
+                    Text(
+                        modifier = Modifier.padding(end = 12.dp),
+                        text = "-", style = MaterialTheme.typography.titleLarge
+                    )
+                } else {
+                    Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+                }
             }
+            movementName?.let { MovementDropDownMenu(it) }
+        }
+    }
+}
+
+@Composable
+fun MovementDropDownMenu(name: String) {
+    var expanded by remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.TopEnd)
+            .semantics { contentDescription = "Movement Drop Down Menu" }
+    ) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Edit") },
+                onClick = { }
+            )
+            DropdownMenuItem(
+                text = { Text("Delete") },
+                onClick = { }
+            )
         }
     }
 }
