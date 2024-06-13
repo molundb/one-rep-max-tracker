@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.features.movementslist
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -84,27 +85,19 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
+    fun givenAddMovementDialogWithoutMovementName_thenAddButtonIsDisabled() {
         // Given
-        var addMovementCalled = false
         composeTestRule.setContent {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf()
-                ),
-                addMovement = {
-                    addMovementCalled = true
-                }
+                )
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
 
-        // When
-        composeTestRule.onNodeWithText("Add").performClick()
-
         // Then
-        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
-        assertFalse(addMovementCalled)
+        composeTestRule.onNodeWithText("Add").assertIsNotEnabled()
     }
 
     @Test

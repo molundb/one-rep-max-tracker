@@ -206,7 +206,10 @@ fun AddMovementDialog(
                     TextButton(onClick = { onDismissRequest() }) {
                         Text("Dismiss")
                     }
-                    TextButton(onClick = { onConfirmation(text) }) {
+                    TextButton(
+                        onClick = { onConfirmation(text) },
+                        enabled = text.isNotBlank()
+                    ) {
                         Text("Add")
                     }
                 }
