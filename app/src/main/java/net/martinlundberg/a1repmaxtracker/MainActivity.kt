@@ -42,9 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import net.martinlundberg.a1repmaxtracker.ui.Movement
 import net.martinlundberg.a1repmaxtracker.ui.MovementsListUiState
 import net.martinlundberg.a1repmaxtracker.ui.MovementsListViewModel
@@ -59,18 +56,6 @@ class MainActivity : ComponentActivity() {
             _1RepMaxTrackerTheme {
                 Navigation()
             }
-        }
-    }
-}
-
-@Composable
-fun Navigation() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "movements_list") {
-        composable(route = "movements_list") {
-            MovementsListRoute()
-        }
-        composable(route = "movement_detail") {
         }
     }
 }
