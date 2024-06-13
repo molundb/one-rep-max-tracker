@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.ui
+package net.martinlundberg.a1repmaxtracker.features.movementslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Loading
+import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Success
 
 class MovementsListViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(MovementsListUiState.Loading)
+    private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
 
     fun getMovements() {
@@ -21,10 +23,10 @@ class MovementsListViewModel : ViewModel() {
     }
 
     // Suspend function to perform the backend call
-    private suspend fun fetchMovements(): MovementsListUiState.Success {
+    private suspend fun fetchMovements(): Success {
         // Simulate network delay
         delay(2000)
-        return MovementsListUiState.Success(
+        return Success(
             listOf(
                 Movement("Movement 1", 100),
                 Movement("Movement 2", 6),
@@ -38,9 +40,9 @@ class MovementsListViewModel : ViewModel() {
         viewModelScope.launch {
             // Update backend with new movement
             val currentState = _uiState.value
-            if (currentState is MovementsListUiState.Success) {
+            if (currentState is Success) {
                 val updatedMovements = currentState.movements + Movement(newMovement, null)
-                _uiState.value = MovementsListUiState.Success(updatedMovements)
+                _uiState.value = Success(updatedMovements)
             }
         }
     }
