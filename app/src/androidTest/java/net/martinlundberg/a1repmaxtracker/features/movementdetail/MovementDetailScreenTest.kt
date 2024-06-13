@@ -1,10 +1,14 @@
 package net.martinlundberg.a1repmaxtracker.features.movementdetail
 
+import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -67,19 +71,69 @@ class MovementDetailScreenTest {
     fun givenAdd1RMButtonIsPressed_thenAdd1RMDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
-                movementDetailUiState = MovementDetailUiState.Loading
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail("name")
+                )
             )
         }
 
+        composeTestRule.onNodeWithText("Add 1RM").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertIsDisplayed()
     }
 
     @Test
-    fun givenAdd1RMButtonIsPressed_whenAddButtonIsPressed_thenDialogIsClosedAndNew1RMIsAdded() {
+    fun givenAdd1RMDialogWithNoWeight_thenAddButtonIsDisabled() {
         composeTestRule.setContent {
             MovementDetailScreen(
-                movementDetailUiState = MovementDetailUiState.Loading
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail("name")
+                )
             )
         }
 
+        composeTestRule.onNodeWithText("Add 1RM").performClick()
+
+        composeTestRule.onNodeWithText("Add").assertHasNoClickAction()
+    }
+
+    @Test
+    fun givenAdd1RMDialogWithWeight_whenAddButtonIsPressed_thenDialogIsClosedAndNew1RMIsAdded() {
+        var add1RMCalled = false
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail("name")
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithText("Weight").performTextInput("780")
+
+        composeTestRule.onNodeWithText("Add").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertDoesNotExist()
+        assertTrue(add1RMCalled)
+    }
+
+    @Test
+    fun givenAdd1RMDialogWithWeight_whenDismissButtonIsPressed_thenDialogIsClosedAndNoNew1RMIsAdded() {
+        var add1RMCalled = false
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail("name")
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithText("Weight").performTextInput("780")
+
+        composeTestRule.onNodeWithText("Add").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertDoesNotExist()
+        assertTrue(add1RMCalled)
     }
 }
