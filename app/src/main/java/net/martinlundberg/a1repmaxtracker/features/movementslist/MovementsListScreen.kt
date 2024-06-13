@@ -176,10 +176,10 @@ fun AddMovementDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: (String) -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
+        val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,10 +209,9 @@ fun AddMovementDialog(
                 }
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
     }
 }
 

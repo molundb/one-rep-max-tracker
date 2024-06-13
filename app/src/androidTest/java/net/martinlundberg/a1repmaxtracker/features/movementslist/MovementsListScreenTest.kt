@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -85,11 +86,15 @@ class MovementsListScreenTest {
     @Test
     fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
+        var addMovementCalled = false
         composeTestRule.setContent {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf()
-                )
+                ),
+                addMovement = {
+                    addMovementCalled = true
+                }
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
@@ -99,17 +104,21 @@ class MovementsListScreenTest {
 
         // Then
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
-        composeTestRule.onNodeWithContentDescription("Movement Card").assertDoesNotExist()
+        assertFalse(addMovementCalled)
     }
 
     @Test
     fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
+        var addMovementCalled = false
         composeTestRule.setContent {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf()
-                )
+                ),
+                addMovement = {
+                    addMovementCalled = true
+                }
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
@@ -120,7 +129,7 @@ class MovementsListScreenTest {
 
         // Then
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
-        composeTestRule.onNodeWithContentDescription("Movement Card").assertDoesNotExist()
+        assertFalse(addMovementCalled)
     }
 
     @Test
