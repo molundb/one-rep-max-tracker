@@ -60,11 +60,11 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("70").assertIsDisplayed()
+        composeTestRule.onNodeWithText("70 kg").assertIsDisplayed()
         composeTestRule.onNodeWithText("10 Jun, 2024").assertIsDisplayed()
-        composeTestRule.onNodeWithText("72").assertIsDisplayed()
+        composeTestRule.onNodeWithText("72 kg").assertIsDisplayed()
         composeTestRule.onNodeWithText("17 Jun, 2024").assertIsDisplayed()
-        composeTestRule.onNodeWithText("75").assertIsDisplayed()
+        composeTestRule.onNodeWithText("75 kg").assertIsDisplayed()
         composeTestRule.onNodeWithText("28 Jun, 2024").assertIsDisplayed()
     }
 
