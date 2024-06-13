@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -42,6 +39,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
 import net.martinlundberg.a1repmaxtracker.ui.HomeViewModel
 import net.martinlundberg.a1repmaxtracker.ui.Movement
@@ -52,19 +53,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val viewModel: HomeViewModel by viewModels()
-        viewModel.getMovements()
-
         setContent {
             _1RepMaxTrackerTheme {
-                MainRoute(viewModel)
+                Navigation()
             }
         }
     }
 }
 
 @Composable
+fun Navigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "movements_list") {
+        composable(route = "movements_list") {
+            val homeViewModel: HomeViewModel = viewModel()
+            MainRoute(homeViewModel)
+        }
+        composable(route = "movement_detail") {
+//            MainRoute(HomeViewModel())
+        }
+    }
+}
+
+@Composable
 fun MainRoute(homeViewModel: HomeViewModel) {
+    homeViewModel.getMovements()
     val homeUiState by homeViewModel.uiState.collectAsState()
     MainScreen(homeUiState, homeViewModel::addMovement)
 }
@@ -100,12 +113,12 @@ fun MainScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(text = "Loading...")
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(64.dp),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
+//                    CircularProgressIndicator(
+//                        modifier = Modifier
+//                            .width(64.dp),
+//                        color = MaterialTheme.colorScheme.secondary,
+//                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+//                    )
                 }
             }
 

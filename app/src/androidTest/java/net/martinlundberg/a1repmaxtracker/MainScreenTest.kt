@@ -131,4 +131,24 @@ class MainScreenTest {
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
         composeTestRule.onNodeWithContentDescription("Movement Card").assertDoesNotExist()
     }
+
+    @Test
+    fun whenMovementIsPressed_ThenNavigateToMovementScreen() {
+        // Given
+        composeTestRule.setContent {
+            MainScreen(
+                homeUiState = HomeUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                )
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithText("Test movement").performClick()
+
+        // Then
+
+    }
 }
