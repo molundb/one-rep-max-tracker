@@ -11,8 +11,8 @@ import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListRo
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 
+const val MOVEMENT_DETAIL_ROUTE = "movement_detail_route"
 const val MOVEMENT_NAME = "movementName"
-const val MOVEMENT_DETAIL_ROUTE = "movement_detail_route/{$MOVEMENT_NAME}"
 
 @Composable
 fun Navigation() {
@@ -26,7 +26,7 @@ fun Navigation() {
             )
         }
         composable(
-            route = MOVEMENT_DETAIL_ROUTE,
+            route = "$MOVEMENT_DETAIL_ROUTE/{$MOVEMENT_NAME}",
             arguments = listOf(
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             )
