@@ -131,15 +131,18 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsPressed_ThenNavigateToMovementScreen() {
+    fun whenMovementIsPressed_ThenNavigateToMovementDetailScreen() {
         // Given
+        var onMovementClickCalled = false
+
         composeTestRule.setContent {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement("Test movement", 3)
                     )
-                )
+                ),
+                onMovementClick = { onMovementClickCalled = true }
             )
         }
 
@@ -147,6 +150,6 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performClick()
 
         // Then
-
+        assertTrue(onMovementClickCalled)
     }
 }

@@ -43,17 +43,25 @@ import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUi
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @Composable
-fun MovementsListRoute(movementsListViewModel: MovementsListViewModel = viewModel()) {
+fun MovementsListRoute(
+    onMovementClick: (String) -> Unit = {},
+    movementsListViewModel: MovementsListViewModel = viewModel(),
+) {
     movementsListViewModel.getMovements()
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
-    MovementsListScreen(movementsListUiState, movementsListViewModel::addMovement)
+    MovementsListScreen(
+        movementsListUiState = movementsListUiState,
+        addMovement = movementsListViewModel::addMovement,
+        onMovementClick = onMovementClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementsListScreen(
-    movementsListUiState: MovementsListUiState = MovementsListUiState.Loading,
+    movementsListUiState: MovementsListUiState = Loading,
     addMovement: (String) -> Unit = {},
+    onMovementClick: (String) -> Unit = {},
 ) {
     var showAddMovementDialog by remember { mutableStateOf(false) }
 
@@ -103,7 +111,11 @@ fun MovementsListScreen(
                 ) {
                     movementsListUiState.movements.map {
                         item {
-                            MovementCard(it.name, it.weight)
+                            MovementCard(
+                                name = it.name,
+                                weight = it.weight,
+                                onMovementClick = onMovementClick
+                            )
                         }
                     }
                 }
@@ -130,10 +142,13 @@ fun MovementsListScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovementCard(name: String, weight: Int?) {
-    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }, onClick = { navigateToMovement() }) {
+fun MovementCard(
+    name: String,
+    weight: Int?,
+    onMovementClick: (String) -> Unit,
+) {
+    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }, onClick = { onMovementClick(name) }) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -151,10 +166,6 @@ fun MovementCard(name: String, weight: Int?) {
             }
         }
     }
-}
-
-fun navigateToMovement() {
-    TODO("Not yet implemented")
 }
 
 @Composable

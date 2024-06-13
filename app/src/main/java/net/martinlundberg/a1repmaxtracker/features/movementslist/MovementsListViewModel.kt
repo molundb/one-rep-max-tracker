@@ -22,7 +22,6 @@ class MovementsListViewModel : ViewModel() {
         }
     }
 
-    // Suspend function to perform the backend call
     private suspend fun fetchMovements(): Success {
         // Simulate network delay
         delay(2000)
