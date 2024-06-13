@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+class MovementsListViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(MovementsListUiState.Loading)
+    val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
 
     fun getMovements() {
         viewModelScope.launch {
@@ -21,10 +21,10 @@ class HomeViewModel : ViewModel() {
     }
 
     // Suspend function to perform the backend call
-    private suspend fun fetchMovements(): HomeUiState.Success {
+    private suspend fun fetchMovements(): MovementsListUiState.Success {
         // Simulate network delay
         delay(2000)
-        return HomeUiState.Success(
+        return MovementsListUiState.Success(
             listOf(
                 Movement("Movement 1", 100),
                 Movement("Movement 2", 6),
@@ -38,20 +38,20 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             // Update backend with new movement
             val currentState = _uiState.value
-            if (currentState is HomeUiState.Success) {
+            if (currentState is MovementsListUiState.Success) {
                 val updatedMovements = currentState.movements + Movement(newMovement, null)
-                _uiState.value = HomeUiState.Success(updatedMovements)
+                _uiState.value = MovementsListUiState.Success(updatedMovements)
             }
         }
     }
 }
 
-sealed interface HomeUiState {
-    data object Loading : HomeUiState
+sealed interface MovementsListUiState {
+    data object Loading : MovementsListUiState
 
     data class Success(
         val movements: List<Movement> = emptyList(),
-    ) : HomeUiState
+    ) : MovementsListUiState
 }
 
 data class Movement(

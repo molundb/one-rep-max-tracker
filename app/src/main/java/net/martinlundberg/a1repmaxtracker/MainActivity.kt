@@ -45,9 +45,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
-import net.martinlundberg.a1repmaxtracker.ui.HomeViewModel
 import net.martinlundberg.a1repmaxtracker.ui.Movement
+import net.martinlundberg.a1repmaxtracker.ui.MovementsListUiState
+import net.martinlundberg.a1repmaxtracker.ui.MovementsListViewModel
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -68,25 +68,24 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "movements_list") {
         composable(route = "movements_list") {
-            MainRoute()
+            MovementsListRoute()
         }
         composable(route = "movement_detail") {
-//            MainRoute(HomeViewModel())
         }
     }
 }
 
 @Composable
-fun MainRoute(homeViewModel: HomeViewModel = viewModel()) {
-    homeViewModel.getMovements()
-    val homeUiState by homeViewModel.uiState.collectAsState()
-    MainScreen(homeUiState, homeViewModel::addMovement)
+fun MovementsListRoute(movementsListViewModel: MovementsListViewModel = viewModel()) {
+    movementsListViewModel.getMovements()
+    val movementsListUiState by movementsListViewModel.uiState.collectAsState()
+    MovementsListScreen(movementsListUiState, movementsListViewModel::addMovement)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
-    homeUiState: HomeUiState = HomeUiState.Loading,
+fun MovementsListScreen(
+    movementsListUiState: MovementsListUiState = MovementsListUiState.Loading,
     addMovement: (String) -> Unit = {},
 ) {
     var showAddMovementDialog by remember { mutableStateOf(false) }
@@ -103,8 +102,8 @@ fun MainScreen(
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
-        when (homeUiState) {
-            HomeUiState.Loading -> {
+        when (movementsListUiState) {
+            MovementsListUiState.Loading -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -123,7 +122,7 @@ fun MainScreen(
                 }
             }
 
-            is HomeUiState.Success -> Column(
+            is MovementsListUiState.Success -> Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -135,7 +134,7 @@ fun MainScreen(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    homeUiState.movements.map {
+                    movementsListUiState.movements.map {
                         item {
                             MovementCard(it.name, it.weight)
                         }
@@ -234,8 +233,8 @@ fun AddMovementDialog(
 @Composable
 fun MainScreenLoadingPreview() {
     _1RepMaxTrackerTheme {
-        MainScreen(
-            homeUiState = HomeUiState.Loading,
+        MovementsListScreen(
+            movementsListUiState = MovementsListUiState.Loading,
         )
     }
 }
@@ -244,8 +243,8 @@ fun MainScreenLoadingPreview() {
 @Composable
 fun MainScreenContentPreview() {
     _1RepMaxTrackerTheme {
-        MainScreen(
-            homeUiState = HomeUiState.Success(
+        MovementsListScreen(
+            movementsListUiState = MovementsListUiState.Success(
                 listOf(
                     Movement("Movement 1", 100),
                     Movement("Movement 4", 4),

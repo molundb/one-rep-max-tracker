@@ -8,8 +8,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertTrue
-import net.martinlundberg.a1repmaxtracker.ui.HomeUiState
 import net.martinlundberg.a1repmaxtracker.ui.Movement
+import net.martinlundberg.a1repmaxtracker.ui.MovementsListUiState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,8 +28,8 @@ class MainScreenTest {
     fun givenListWithMovement_whenMainScreen_ThenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement("Test movement", 2)
                     )
@@ -48,8 +48,8 @@ class MainScreenTest {
     fun whenAddButtonIsPressed_ThenAddMovementDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement("Test movement", 2)
                     )
@@ -70,8 +70,8 @@ class MainScreenTest {
         var addMovementCalled = false
 
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf()
                 ),
                 addMovement = {
@@ -95,8 +95,8 @@ class MainScreenTest {
     fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf()
                 )
             )
@@ -115,8 +115,8 @@ class MainScreenTest {
     fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf()
                 )
             )
@@ -136,8 +136,8 @@ class MainScreenTest {
     fun whenMovementIsPressed_ThenNavigateToMovementScreen() {
         // Given
         composeTestRule.setContent {
-            MainScreen(
-                homeUiState = HomeUiState.Success(
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement("Test movement", 3)
                     )
