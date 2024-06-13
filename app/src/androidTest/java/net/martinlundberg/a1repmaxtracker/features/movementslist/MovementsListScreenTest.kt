@@ -3,10 +3,12 @@ package net.martinlundberg.a1repmaxtracker.features.movementslist
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -146,5 +148,25 @@ class MovementsListScreenTest {
 
         // Then
         assertTrue(onMovementClickCalled)
+    }
+
+    @Test
+    fun whenMovementIsLongPressed_thenOptionDialogIsOpened() {
+        // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Movement options").assertIsDisplayed()
     }
 }
