@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.features.movementdetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -11,7 +12,9 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Success
 
-class MovementDetailViewModel : ViewModel() {
+class MovementDetailViewModel(
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 

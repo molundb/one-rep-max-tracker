@@ -47,15 +47,21 @@ import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetail
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @Composable
-fun MovementDetailRoute(movementDetailViewModel: MovementDetailViewModel = viewModel()) {
-    movementDetailViewModel.getMovementInfo()
+fun MovementDetailRoute(
+    movementName: String,
+    movementDetailViewModel: MovementDetailViewModel = viewModel(),
+) {
+    LaunchedEffect(Unit) {
+        movementDetailViewModel.getMovementInfo()
+    }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
-    MovementDetailScreen(movementDetailUiState)
+    MovementDetailScreen(movementName, movementDetailUiState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementDetailScreen(
+    movementName: String = "",
     movementDetailUiState: MovementDetailUiState = Loading,
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
@@ -67,7 +73,7 @@ fun MovementDetailScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
-                title = { Text(text = "1RM Tracker") },
+                title = { Text(text = movementName) },
             )
         },
         modifier = Modifier.fillMaxSize(),
@@ -106,7 +112,7 @@ fun MovementDetailScreen(
                     FloatingActionButton(
                         modifier = Modifier
                             .size(80.dp)
-                            .semantics { contentDescription = "Add Movement" },
+                            .semantics { contentDescription = "Add 1RM" },
                         onClick = { showAdd1rmDialog = true },
                     ) {
                         Icon(Filled.Add, "Floating action button.")
