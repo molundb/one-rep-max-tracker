@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.features.movementslist
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
@@ -168,7 +169,8 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
     }
 
     @Test
@@ -189,7 +191,8 @@ class MovementsListScreenTest {
         composeTestRule.onRoot().performClick() // Does this click outside?
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
     }
 
     @Test
@@ -203,6 +206,7 @@ class MovementsListScreenTest {
                         Movement("Test movement", 3)
                     )
                 ),
+                onDeleteMovementClick = { deleteMovementCalled = true }
             )
         }
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
@@ -211,7 +215,8 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Delete").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
         assertTrue(deleteMovementCalled)
     }
 
@@ -233,7 +238,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Edit").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsNotDisplayed()
         composeTestRule.onNodeWithContentDescription("Edit Movement Dialog").assertIsDisplayed()
     }
 
@@ -256,6 +261,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
     }
 }

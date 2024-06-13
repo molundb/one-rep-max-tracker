@@ -67,7 +67,8 @@ fun MovementsListRoute(
     MovementsListScreen(
         movementsListUiState = movementsListUiState,
         addMovement = movementsListViewModel::addMovement,
-        onMovementClick = onMovementClick
+        onMovementClick = onMovementClick,
+        onDeleteMovementClick = movementsListViewModel::deleteMovement
     )
 }
 
@@ -77,6 +78,7 @@ fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
     addMovement: (String) -> Unit = {},
     onMovementClick: (String) -> Unit = {},
+    onDeleteMovementClick: (String) -> Unit = {},
 ) {
     var showAddMovementDialog by remember { mutableStateOf(false) }
 
@@ -129,7 +131,8 @@ fun MovementsListScreen(
                             MovementCard(
                                 name = it.name,
                                 weight = it.weight,
-                                onMovementClick = onMovementClick
+                                onMovementClick = onMovementClick,
+                                onDeleteMovementClick = onDeleteMovementClick
                             )
                         }
                     }
@@ -163,6 +166,7 @@ fun MovementCard(
     name: String,
     weight: Int?,
     onMovementClick: (String) -> Unit,
+    onDeleteMovementClick: (String) -> Unit,
 ) {
     var movementName by rememberSaveable { mutableStateOf<String?>(null) }
     val haptics = LocalHapticFeedback.current
@@ -194,13 +198,21 @@ fun MovementCard(
                     Text("$weight kg", style = MaterialTheme.typography.titleLarge)
                 }
             }
-            movementName?.let { MovementDropDownMenu(it) }
+            movementName?.let {
+                MovementDropDownMenu(
+                    name = it,
+                    onDeleteMovementClick = onDeleteMovementClick
+                )
+            }
         }
     }
 }
 
 @Composable
-fun MovementDropDownMenu(name: String) {
+fun MovementDropDownMenu(
+    name: String,
+    onDeleteMovementClick: (String) -> Unit = {},
+) {
     var expanded by remember { mutableStateOf(true) }
 
     Box(
@@ -219,7 +231,10 @@ fun MovementDropDownMenu(name: String) {
             )
             DropdownMenuItem(
                 text = { Text("Delete") },
-                onClick = { }
+                onClick = {
+                    expanded = false
+                    onDeleteMovementClick(name)
+                }
             )
         }
     }

@@ -45,6 +45,17 @@ class MovementsListViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteMovement(name: String) {
+        viewModelScope.launch {
+            // Delete movement in backend
+            val currentState = _uiState.value
+            if (currentState is Success) {
+                val updatedMovements = currentState.movements.filter { it.name != name }
+                _uiState.value = Success(updatedMovements)
+            }
+        }
+    }
 }
 
 sealed interface MovementsListUiState {
