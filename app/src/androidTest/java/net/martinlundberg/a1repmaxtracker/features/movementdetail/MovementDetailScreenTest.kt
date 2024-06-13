@@ -1,7 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.features.movementdetail
 
-import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -40,7 +40,7 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Loading").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Loading...").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Circular Progress Indicator").assertIsDisplayed()
     }
 
@@ -78,7 +78,7 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertIsDisplayed()
     }
@@ -93,9 +93,9 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
 
-        composeTestRule.onNodeWithText("Add").assertHasNoClickAction()
+        composeTestRule.onNodeWithText("Add").assertIsNotEnabled()
     }
 
     @Test
@@ -105,11 +105,14 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
-                )
+                ),
+                add1RM = {
+                    add1RMCalled = true
+                }
             )
         }
 
-        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
         composeTestRule.onNodeWithText("Weight").performTextInput("780")
 
         composeTestRule.onNodeWithText("Add").performClick()
@@ -125,11 +128,14 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
-                )
+                ),
+                add1RM = {
+                    add1RMCalled = true
+                }
             )
         }
 
-        composeTestRule.onNodeWithText("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
         composeTestRule.onNodeWithText("Weight").performTextInput("780")
 
         composeTestRule.onNodeWithText("Add").performClick()

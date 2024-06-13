@@ -49,21 +49,26 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @Composable
 fun MovementDetailRoute(
-    movementName: String,
     movementDetailViewModel: MovementDetailViewModel = viewModel(),
+    movementName: String,
 ) {
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo()
     }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
-    MovementDetailScreen(movementName, movementDetailUiState)
+    MovementDetailScreen(
+        movementDetailUiState = movementDetailUiState,
+        movementName = movementName,
+        add1RM = movementDetailViewModel::add1RM
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementDetailScreen(
-    movementName: String = "",
     movementDetailUiState: MovementDetailUiState = Loading,
+    movementName: String = "",
+    add1RM: (Int) -> Unit = {},
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
 
@@ -134,7 +139,7 @@ fun MovementDetailScreen(
                         Add1rmDialog(
                             onDismissRequest = { showAdd1rmDialog = false },
                             onConfirmation = {
-//                                addMovement(it)
+                                add1RM(it)
                                 showAdd1rmDialog = false
                             }
                         )
@@ -180,12 +185,12 @@ fun OneRMCard(
 @Composable
 fun Add1rmDialog(
     onDismissRequest: () -> Unit,
-    onConfirmation: (String) -> Unit,
+    onConfirmation: (Int) -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
+        val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,16 +217,18 @@ fun Add1rmDialog(
                     TextButton(onClick = { onDismissRequest() }) {
                         Text("Dismiss")
                     }
-                    TextButton(onClick = { onConfirmation(text) }) {
+                    TextButton(
+                        onClick = { onConfirmation(text.toInt()) },
+                        enabled = text.isNotBlank(),
+                    ) {
                         Text("Add")
                     }
                 }
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
     }
 }
 

@@ -1,6 +1,5 @@
 package net.martinlundberg.a1repmaxtracker.features.movementdetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -11,10 +10,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Success
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-class MovementDetailViewModel(
-    private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+class MovementDetailViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
@@ -31,12 +30,25 @@ class MovementDetailViewModel(
         return Success(
             MovementDetail(
                 oneRMs = listOf(
-                    OneRMInfo(70, "01/01/2023"),
+                    OneRMInfo(70, "09/01/2023"),
                     OneRMInfo(75, "05/01/2023"),
-                    OneRMInfo(78, "09/01/2023"),
+                    OneRMInfo(78, "01/01/2023"),
                 )
             )
         )
+    }
+
+    fun add1RM(value: Int) {
+        viewModelScope.launch {
+            // Update backend with new 1RM
+            val currentState = _uiState.value
+            if (currentState is Success) {
+                val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
+                val updated1RMs =
+                    listOf(OneRMInfo(value, LocalDateTime.now().format(formatter))) + currentState.movement.oneRMs
+                _uiState.value = Success(currentState.movement.copy(oneRMs = updated1RMs))
+            }
+        }
     }
 }
 
