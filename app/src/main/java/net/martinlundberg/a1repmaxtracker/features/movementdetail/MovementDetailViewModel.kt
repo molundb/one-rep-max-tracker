@@ -39,4 +39,10 @@ sealed interface MovementDetailUiState {
 
 data class MovementDetail(
     val name: String,
+    val oneRMs: List<OneRMInfo> = emptyList(),
+)
+
+data class OneRMInfo(
+    val weight: Int,
+    val date: String,
 )

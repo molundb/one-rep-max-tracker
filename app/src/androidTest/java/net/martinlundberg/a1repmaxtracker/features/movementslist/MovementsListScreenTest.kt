@@ -12,18 +12,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 @RunWith(AndroidJUnit4::class)
 class MovementsListScreenTest {
 
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun givenListWithMovement_whenMovementsListScreen_ThenMovementInfoIsDisplayed() {
+    fun givenListWithMovement_thenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -35,15 +30,13 @@ class MovementsListScreenTest {
             )
         }
 
-        // When
-        composeTestRule.onNodeWithText("Test movement").assertIsDisplayed()
-
         // Then
+        composeTestRule.onNodeWithText("Test movement").assertIsDisplayed()
         composeTestRule.onNodeWithText("2 kg").assertIsDisplayed()
     }
 
     @Test
-    fun whenAddButtonIsPressed_ThenAddMovementDialogIsDisplayed() {
+    fun whenAddButtonIsPressed_thenAddMovementDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -63,7 +56,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNewMovementIsAdded() {
+    fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_thenDialogIsClosedAndNewMovementIsAdded() {
         // Given
         var addMovementCalled = false
 
@@ -90,7 +83,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
+    fun givenAddMovementDialogWithoutMovementName_whenAddButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -110,7 +103,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_ThenDialogIsClosedAndNoNewMovementIsAdded() {
+    fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -131,7 +124,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsPressed_ThenNavigateToMovementDetailScreen() {
+    fun whenMovementIsPressed_thenNavigateToMovementDetailScreen() {
         // Given
         var onMovementClickCalled = false
 

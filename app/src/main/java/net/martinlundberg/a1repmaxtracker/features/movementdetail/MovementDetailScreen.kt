@@ -85,7 +85,8 @@ fun MovementDetailScreen(
                     Text(text = "Loading...")
                     CircularProgressIndicator(
                         modifier = Modifier
-                            .width(64.dp),
+                            .width(64.dp)
+                            .semantics { contentDescription = "Circular Progress Indicator" },
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     )
