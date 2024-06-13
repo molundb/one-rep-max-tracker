@@ -28,7 +28,15 @@ class MovementDetailViewModel(
     private suspend fun fetchMovementInfo(): Success {
         // Simulate network delay
         delay(2000)
-        return Success(MovementDetail())
+        return Success(
+            MovementDetail(
+                oneRMs = listOf(
+                    OneRMInfo(70, "01/01/2023"),
+                    OneRMInfo(75, "05/01/2023"),
+                    OneRMInfo(78, "09/01/2023"),
+                )
+            )
+        )
     }
 }
 

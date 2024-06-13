@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons.Filled
@@ -108,6 +109,19 @@ fun MovementDetailScreen(
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    LazyColumn(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        movementDetailUiState.movement.oneRMs.map {
+                            item {
+                                OneRMCard(
+                                    weight = it.weight,
+                                    date = it.date,
+                                )
+                            }
+                        }
+                    }
                     FloatingActionButton(
                         modifier = Modifier
                             .size(80.dp)
@@ -126,6 +140,38 @@ fun MovementDetailScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun OneRMCard(
+    weight: Int?,
+    date: String?,
+) {
+    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (weight == null) {
+                Text(
+                    modifier = Modifier.padding(end = 12.dp),
+                    text = "-", style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+                Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+            }
+            if (date == null) {
+                Text(
+                    modifier = Modifier.padding(end = 12.dp),
+                    text = "-", style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+                Text(date, style = MaterialTheme.typography.titleLarge)
             }
         }
     }
