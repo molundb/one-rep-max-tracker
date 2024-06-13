@@ -25,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -173,6 +176,7 @@ fun AddMovementDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: (String) -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -189,7 +193,8 @@ fun AddMovementDialog(
                 TextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text("Name of exercise") }
+                    label = { Text("Name of exercise") },
+                    modifier = Modifier.focusRequester(focusRequester),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -204,6 +209,10 @@ fun AddMovementDialog(
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 
