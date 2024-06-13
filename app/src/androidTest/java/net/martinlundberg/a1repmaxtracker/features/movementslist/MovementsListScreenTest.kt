@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
@@ -151,7 +152,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsLongPressed_thenOptionDropDownMenuIsDisplayed() {
+    fun whenMovementIsLongPressed_thenDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -162,6 +163,94 @@ class MovementsListScreenTest {
                 ),
             )
         }
+
+        // When
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenMovementDropDownMenu_whenClickOutsideOfMenu_thenMenuIsDismissed() {
+        // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // When
+        composeTestRule.onRoot().performClick() // Does this click outside?
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+    }
+
+    @Test
+    fun givenMovementDropDownMenu_whenDeleteIsPressed_thenMenuIsDismissedAndMovementIsDeleted() {
+        // Given
+        var deleteMovementCalled = false
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // When
+        composeTestRule.onNodeWithText("Delete").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+        assertTrue(deleteMovementCalled)
+    }
+
+    @Test
+    fun givenMovementDropDownMenu_whenEditIsPressed_thenMenuIsDismissedAndEditDialogIsDisplayed() {
+        // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // When
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Edit Movement Dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenMovementDropDownMenuDismissed_whenMovementLongPressed_thenDropDownMenuIsDisplayed() {
+        // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+        composeTestRule.onRoot().performClick() // Does this click outside?
 
         // When
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
