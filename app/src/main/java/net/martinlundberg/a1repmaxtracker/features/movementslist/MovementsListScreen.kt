@@ -50,7 +50,10 @@ fun MovementsListRoute(
     onMovementClick: (String) -> Unit = {},
     movementsListViewModel: MovementsListViewModel = viewModel(),
 ) {
-    movementsListViewModel.getMovements()
+    LaunchedEffect(Unit) {
+        movementsListViewModel.getMovements()
+
+    }
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
     MovementsListScreen(
         movementsListUiState = movementsListUiState,
