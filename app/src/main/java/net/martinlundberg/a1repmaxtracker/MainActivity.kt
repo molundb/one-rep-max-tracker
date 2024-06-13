@@ -68,8 +68,7 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "movements_list") {
         composable(route = "movements_list") {
-            val homeViewModel: HomeViewModel = viewModel()
-            MainRoute(homeViewModel)
+            MainRoute()
         }
         composable(route = "movement_detail") {
 //            MainRoute(HomeViewModel())
@@ -78,7 +77,7 @@ fun Navigation() {
 }
 
 @Composable
-fun MainRoute(homeViewModel: HomeViewModel) {
+fun MainRoute(homeViewModel: HomeViewModel = viewModel()) {
     homeViewModel.getMovements()
     val homeUiState by homeViewModel.uiState.collectAsState()
     MainScreen(homeUiState, homeViewModel::addMovement)
