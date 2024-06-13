@@ -209,7 +209,7 @@ fun AddMovementDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenLoadingPreview() {
+fun MovementsListLoadingPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Loading,
@@ -219,7 +219,7 @@ fun MainScreenLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenContentPreview() {
+fun MovementsListScreenContentPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Success(
