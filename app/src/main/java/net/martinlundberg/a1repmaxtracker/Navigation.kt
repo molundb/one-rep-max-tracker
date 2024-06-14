@@ -3,6 +3,7 @@ package net.martinlundberg.a1repmaxtracker
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,8 +18,7 @@ const val MOVEMENT_DETAIL_ROUTE = "movement_detail_route"
 const val MOVEMENT_NAME = "movementName"
 
 @Composable
-fun Navigation() {
-    val navController = rememberNavController()
+fun Navigation(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = MOVEMENTS_LIST_ROUTE) {
         composable(
             route = MOVEMENTS_LIST_ROUTE,
