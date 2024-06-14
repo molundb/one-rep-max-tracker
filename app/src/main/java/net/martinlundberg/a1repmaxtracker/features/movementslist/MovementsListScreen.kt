@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -69,7 +70,7 @@ fun MovementsListRoute(
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
     MovementsListScreen(
         movementsListUiState = movementsListUiState,
-        addMovement = movementsListViewModel::addMovement,
+        onAddMovementClick = movementsListViewModel::addMovement,
         onMovementClick = onMovementClick,
         onDeleteMovementClick = movementsListViewModel::deleteMovement
     )
@@ -79,11 +80,12 @@ fun MovementsListRoute(
 @Composable
 fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
-    addMovement: (Movement) -> Unit = {},
+    onAddMovementClick: (Movement) -> Unit = {},
     onMovementClick: (String) -> Unit = {},
     onDeleteMovementClick: (String) -> Unit = {},
 ) {
     var showAddMovementDialog by remember { mutableStateOf(false) }
+    var movementNameToDelete by rememberSaveable { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -135,7 +137,9 @@ fun MovementsListScreen(
                                 name = it.name,
                                 weight = it.weight,
                                 onMovementClick = onMovementClick,
-                                onDeleteMovementClick = onDeleteMovementClick
+                                onDeleteMovementClick = { name ->
+                                    movementNameToDelete = name
+                                }
                             )
                         }
                     }
@@ -153,8 +157,19 @@ fun MovementsListScreen(
                     AddMovementDialog(
                         onDismissRequest = { showAddMovementDialog = false },
                         onConfirmation = {
-                            addMovement(it)
+                            onAddMovementClick(it)
                             showAddMovementDialog = false
+                        }
+                    )
+                }
+
+                movementNameToDelete?.let { name ->
+                    DeleteMovementConfirmDialog(
+                        name = name,
+                        onDismissRequest = { movementNameToDelete = null },
+                        onConfirmation = {
+                            onDeleteMovementClick(it)
+                            movementNameToDelete = null
                         }
                     )
                 }
@@ -246,9 +261,41 @@ fun MovementDropDownMenu(
 }
 
 @Composable
+fun DeleteMovementConfirmDialog(
+    name: String,
+    onDismissRequest: () -> Unit = {},
+    onConfirmation: (String) -> Unit = {},
+) {
+    AlertDialog(
+        modifier = Modifier.semantics { contentDescription = "Delete Movement Confirmation Dialog" },
+        title = { Text("Delete Movement") },
+        text = { Text("Are you sure you want to delete $name?") },
+        onDismissRequest = { onDismissRequest() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(name)
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Dismiss")
+            }
+        }
+    )
+}
+
+@Composable
 fun AddMovementDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: (Movement) -> Unit,
+    onDismissRequest: () -> Unit = {},
+    onConfirmation: (Movement) -> Unit = {},
 ) {
     var movementNameText by remember { mutableStateOf("") }
     var movementWeightText by remember { mutableStateOf("") }
@@ -332,9 +379,14 @@ fun MovementsListScreenContentPreview() {
 @Composable
 fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
-        AddMovementDialog(
-            onDismissRequest = {},
-            onConfirmation = {},
-        )
+        AddMovementDialog()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DeleteMovementConfirmDialogPreview() {
+    _1RepMaxTrackerTheme {
+        DeleteMovementConfirmDialog(name = "Movement 1")
     }
 }

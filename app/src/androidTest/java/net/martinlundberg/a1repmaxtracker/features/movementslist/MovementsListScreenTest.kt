@@ -71,7 +71,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf()
                 ),
-                addMovement = {
+                onAddMovementClick = {
                     addMovementCalled = true
                 }
             )
@@ -112,7 +112,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf()
                 ),
-                addMovement = {
+                onAddMovementClick = {
                     addMovementCalled = true
                 }
             )
@@ -197,6 +197,29 @@ class MovementsListScreenTest {
     @Test
     fun givenMovementDropDownMenu_whenDeleteIsPressed_thenMenuIsDismissedAndConfirmationDialogIsDisplayed() {
         // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement("Test movement", 3)
+                    )
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+
+        // When
+        composeTestRule.onNodeWithText("Delete").performClick()
+
+        // Then
+        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenDeleteMovementConfirmDialog_whenConfirmIsPressed_thenMenuIsDismissedAndMovementIsDeleted() {
+        // Given
         var deleteMovementCalled = false
         composeTestRule.setContent {
             MovementsListScreen(
@@ -209,14 +232,13 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
-
-        // When
         composeTestRule.onNodeWithText("Delete").performClick()
 
+        // When
+        composeTestRule.onNodeWithText("Confirm").performClick()
+
         // Then
-        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertDoesNotExist()
         assertTrue(deleteMovementCalled)
     }
 
