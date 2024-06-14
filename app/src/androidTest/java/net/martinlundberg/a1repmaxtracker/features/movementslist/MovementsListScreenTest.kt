@@ -195,7 +195,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenMovementDropDownMenu_whenDeleteIsPressed_thenMenuIsDismissedAndMovementIsDeleted() {
+    fun givenMovementDropDownMenu_whenDeleteIsPressed_thenMenuIsDismissedAndConfirmationDialogIsDisplayed() {
         // Given
         var deleteMovementCalled = false
         composeTestRule.setContent {
@@ -216,6 +216,7 @@ class MovementsListScreenTest {
         // Then
         composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
         composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
         assertTrue(deleteMovementCalled)
     }
 
