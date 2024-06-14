@@ -7,10 +7,10 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
+import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -188,7 +188,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
 
         // When
-        composeTestRule.onRoot().performClick() // Does this click outside?
+        Espresso.pressBack()
 
         // Then
         composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
@@ -255,7 +255,7 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
-        composeTestRule.onRoot().performClick() // Does this click outside?
+        Espresso.pressBack()
 
         // When
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
