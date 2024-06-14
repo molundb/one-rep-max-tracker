@@ -169,8 +169,8 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
 
         // Then
-        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Edit").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsDisplayed()
     }
 
     @Test
