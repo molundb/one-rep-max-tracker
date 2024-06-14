@@ -184,8 +184,8 @@ fun OneRMCard(
 
 @Composable
 fun Add1rmDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: (Int) -> Unit,
+    onDismissRequest: () -> Unit = {},
+    onConfirmation: (Int) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
 
@@ -248,8 +248,22 @@ fun MovementDetailScreenContentPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
             movementDetailUiState = Success(
-                MovementDetail()
+                MovementDetail(
+                    listOf(
+                        OneRMInfo(80, "2023-01-05"),
+                        OneRMInfo(75, "2023-01-03"),
+                        OneRMInfo(70, "2023-01-01"),
+                    )
+                )
             )
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Add1rmDialogPreview() {
+    _1RepMaxTrackerTheme {
+        Add1rmDialog()
     }
 }
