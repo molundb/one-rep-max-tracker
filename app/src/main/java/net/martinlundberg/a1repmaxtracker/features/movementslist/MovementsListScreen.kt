@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.features.movementslist
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,8 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
@@ -202,14 +202,17 @@ fun MovementCard(
     onDeleteMovementClick: (String) -> Unit,
 ) {
     var movementDropDownMenuInfo by rememberSaveable { mutableStateOf<Movement?>(null) }
-    val haptics = LocalHapticFeedback.current
+    val view = LocalView.current
     Box {
         Card(
             modifier = Modifier
                 .combinedClickable(
                     onClick = { onMovementClick(movement.name) },
                     onLongClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        view.performHapticFeedback(
+                            HapticFeedbackConstants.LONG_PRESS,
+                            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                        )
                         movementDropDownMenuInfo = movement
                     },
                 )
