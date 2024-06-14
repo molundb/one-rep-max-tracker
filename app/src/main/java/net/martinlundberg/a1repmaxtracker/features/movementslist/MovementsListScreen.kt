@@ -82,10 +82,11 @@ fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
     onAddMovementClick: (Movement) -> Unit = {},
     onMovementClick: (String) -> Unit = {},
+    onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (String) -> Unit = {},
 ) {
-    var showAddMovementDialog by remember { mutableStateOf(false) }
-    var movementNameToDelete by rememberSaveable { mutableStateOf<String?>(null) }
+    var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementToDelete by rememberSaveable { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -134,11 +135,13 @@ fun MovementsListScreen(
                     movementsListUiState.movements.map {
                         item {
                             MovementCard(
-                                name = it.name,
-                                weight = it.weight,
+                                movement = Movement(it.name, it.weight),
                                 onMovementClick = onMovementClick,
+                                onEditMovementClick = { name ->
+                                    movementToEdit = name
+                                },
                                 onDeleteMovementClick = { name ->
-                                    movementNameToDelete = name
+                                    movementToDelete = name
                                 }
                             )
                         }
@@ -148,28 +151,40 @@ fun MovementsListScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .semantics { contentDescription = "Add Movement" },
-                    onClick = { showAddMovementDialog = true },
+                    onClick = { movementToEdit = Movement("") },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
                 }
 
-                if (showAddMovementDialog) {
-                    AddMovementDialog(
-                        onDismissRequest = { showAddMovementDialog = false },
-                        onConfirmation = {
-                            onAddMovementClick(it)
-                            showAddMovementDialog = false
-                        }
-                    )
+                movementToEdit?.let { movement ->
+                    if (movement.name.isEmpty()) {
+                        AddMovementDialog(
+                            movement = movement,
+                            onDismissRequest = { movementToEdit = null },
+                            onConfirmation = {
+                                onAddMovementClick(it)
+                                movementToEdit = null
+                            }
+                        )
+                    } else {
+                        EditMovementDialog(
+                            movement = movement,
+                            onDismissRequest = { movementToEdit = null },
+                            onConfirmation = {
+                                onEditMovementClick(it)
+                                movementToEdit = null
+                            }
+                        )
+                    }
                 }
 
-                movementNameToDelete?.let { name ->
+                movementToDelete?.let { name ->
                     DeleteMovementConfirmDialog(
                         name = name,
-                        onDismissRequest = { movementNameToDelete = null },
+                        onDismissRequest = { movementToDelete = null },
                         onConfirmation = {
                             onDeleteMovementClick(it)
-                            movementNameToDelete = null
+                            movementToDelete = null
                         }
                     )
                 }
@@ -181,21 +196,21 @@ fun MovementsListScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementCard(
-    name: String,
-    weight: Int?,
+    movement: Movement,
     onMovementClick: (String) -> Unit,
+    onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (String) -> Unit,
 ) {
-    var movementName by rememberSaveable { mutableStateOf<String?>(null) }
+    var movementDropDownMenuInfo by rememberSaveable { mutableStateOf<Movement?>(null) }
     val haptics = LocalHapticFeedback.current
     Box {
         Card(
             modifier = Modifier
                 .combinedClickable(
-                    onClick = { onMovementClick(name) },
+                    onClick = { onMovementClick(movement.name) },
                     onLongClick = {
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        movementName = name
+                        movementDropDownMenuInfo = movement
                     },
                 )
                 .semantics { contentDescription = "Movement Card" },
@@ -206,21 +221,22 @@ fun MovementCard(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(name, style = MaterialTheme.typography.titleLarge)
-                if (weight == null) {
+                Text(movement.name, style = MaterialTheme.typography.titleLarge)
+                if (movement.weight == null) {
                     Text(
                         modifier = Modifier.padding(end = 12.dp),
                         text = "-", style = MaterialTheme.typography.titleLarge
                     )
                 } else {
-                    Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+                    Text("${movement.weight} kg", style = MaterialTheme.typography.titleLarge)
                 }
             }
-            movementName?.let {
+            movementDropDownMenuInfo?.let {
                 MovementDropDownMenu(
-                    name = it,
+                    movement = it,
+                    onEditMovementClick = onEditMovementClick,
                     onDeleteMovementClick = onDeleteMovementClick,
-                    onDismiss = { movementName = null }
+                    onDismiss = { movementDropDownMenuInfo = null }
                 )
             }
         }
@@ -229,7 +245,8 @@ fun MovementCard(
 
 @Composable
 fun MovementDropDownMenu(
-    name: String,
+    movement: Movement,
+    onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (String) -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
@@ -247,13 +264,16 @@ fun MovementDropDownMenu(
         ) {
             DropdownMenuItem(
                 text = { Text("Edit") },
-                onClick = { }
+                onClick = {
+                    onDismiss()
+                    onEditMovementClick(movement)
+                }
             )
             DropdownMenuItem(
                 text = { Text("Delete") },
                 onClick = {
                     onDismiss()
-                    onDeleteMovementClick(name)
+                    onDeleteMovementClick(movement.name)
                 }
             )
         }
@@ -294,18 +314,49 @@ fun DeleteMovementConfirmDialog(
 
 @Composable
 fun AddMovementDialog(
+    movement: Movement,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
-    var movementNameText by remember { mutableStateOf("") }
-    var movementWeightText by remember { mutableStateOf("") }
+    AddOrEditMovementDialog(
+        isAdd = true,
+        movement = movement,
+        onDismissRequest = onDismissRequest,
+        onConfirmation = onConfirmation
+    )
+}
+
+@Composable
+fun EditMovementDialog(
+    movement: Movement,
+    onDismissRequest: () -> Unit = {},
+    onConfirmation: (Movement) -> Unit = {},
+) {
+    AddOrEditMovementDialog(
+        isAdd = false,
+        movement = movement,
+        onDismissRequest = onDismissRequest,
+        onConfirmation = onConfirmation
+    )
+}
+
+@Composable
+private fun AddOrEditMovementDialog(
+    isAdd: Boolean = true,
+    movement: Movement,
+    onDismissRequest: () -> Unit = {},
+    onConfirmation: (Movement) -> Unit = {},
+) {
+    var movementNameText by remember { mutableStateOf(movement.name) }
+    val weightInitialValue = if (movement.weight == null) "" else movement.weight.toString()
+    var movementWeightText by remember { mutableStateOf(weightInitialValue) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "Add Movement Dialog" },
+                .semantics { contentDescription = if (isAdd) "Add Movement Dialog" else "Edit Movement Dialog" },
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -335,10 +386,12 @@ fun AddMovementDialog(
                         Text("Dismiss")
                     }
                     TextButton(
-                        onClick = { onConfirmation(Movement(movementNameText, movementWeightText.toIntOrNull())) },
+                        onClick = {
+                            onConfirmation(Movement(movementNameText, movementWeightText.toIntOrNull()))
+                        },
                         enabled = movementNameText.isNotBlank()
                     ) {
-                        Text("Add")
+                        Text(if (isAdd) "Add" else "Edit")
                     }
                 }
             }
@@ -379,7 +432,7 @@ fun MovementsListScreenContentPreview() {
 @Composable
 fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
-        AddMovementDialog()
+        AddOrEditMovementDialog(movement = Movement(name = "Movement 1", weight = 100))
     }
 }
 

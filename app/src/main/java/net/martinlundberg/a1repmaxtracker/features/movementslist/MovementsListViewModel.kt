@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.features.movementslist
 
+import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Success
 
@@ -35,16 +37,22 @@ class MovementsListViewModel : ViewModel() {
         )
     }
 
-    fun addMovement(newMovement: Movement) {
+    fun addMovement(movement: Movement) {
         viewModelScope.launch {
             // Update backend with new movement
             val currentState = _uiState.value
             if (currentState is Success) {
-                val updatedMovements = currentState.movements + newMovement
+                val updatedMovements = currentState.movements + movement
                 _uiState.value = Success(updatedMovements)
             }
         }
     }
+
+//    fun editMovement(movement: Movement) {
+//        // TODO: Do this properly with local storage
+//        deleteMovement(prevName)
+//        addMovement(movement)
+//    }
 
     fun deleteMovement(name: String) {
         viewModelScope.launch {
@@ -66,7 +74,9 @@ sealed interface MovementsListUiState {
     ) : MovementsListUiState
 }
 
+@Parcelize
 data class Movement(
+//    val id: Int,
     val name: String,
-    val weight: Int?,
-)
+    val weight: Int? = null,
+) : Parcelable
