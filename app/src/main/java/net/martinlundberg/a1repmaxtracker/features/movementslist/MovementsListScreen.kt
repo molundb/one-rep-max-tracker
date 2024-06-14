@@ -201,7 +201,8 @@ fun MovementCard(
             movementName?.let {
                 MovementDropDownMenu(
                     name = it,
-                    onDeleteMovementClick = onDeleteMovementClick
+                    onDeleteMovementClick = onDeleteMovementClick,
+                    onDismiss = { movementName = null }
                 )
             }
         }
@@ -212,9 +213,8 @@ fun MovementCard(
 fun MovementDropDownMenu(
     name: String,
     onDeleteMovementClick: (String) -> Unit = {},
+    onDismiss: () -> Unit = {},
 ) {
-    var expanded by remember { mutableStateOf(true) }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -222,8 +222,10 @@ fun MovementDropDownMenu(
             .semantics { contentDescription = "Movement Drop Down Menu" }
     ) {
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = true,
+            onDismissRequest = {
+                onDismiss()
+            }
         ) {
             DropdownMenuItem(
                 text = { Text("Edit") },
@@ -232,7 +234,7 @@ fun MovementDropDownMenu(
             DropdownMenuItem(
                 text = { Text("Delete") },
                 onClick = {
-                    expanded = false
+                    onDismiss()
                     onDeleteMovementClick(name)
                 }
             )
