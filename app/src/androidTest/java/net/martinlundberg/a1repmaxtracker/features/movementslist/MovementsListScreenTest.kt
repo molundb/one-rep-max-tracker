@@ -75,7 +75,6 @@ class MovementsListScreenTest {
                     addMovementCalled = true
                 }
             )
-
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
         composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")

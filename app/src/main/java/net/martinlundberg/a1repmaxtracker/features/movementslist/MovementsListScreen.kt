@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -46,6 +48,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -76,7 +79,7 @@ fun MovementsListRoute(
 @Composable
 fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
-    addMovement: (String) -> Unit = {},
+    addMovement: (Movement) -> Unit = {},
     onMovementClick: (String) -> Unit = {},
     onDeleteMovementClick: (String) -> Unit = {},
 ) {
@@ -245,9 +248,10 @@ fun MovementDropDownMenu(
 @Composable
 fun AddMovementDialog(
     onDismissRequest: () -> Unit,
-    onConfirmation: (String) -> Unit,
+    onConfirmation: (Movement) -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
+    var movementNameText by remember { mutableStateOf("") }
+    var movementWeightText by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
@@ -262,10 +266,19 @@ fun AddMovementDialog(
                     .padding(start = 8.dp, top = 8.dp, end = 8.dp),
             ) {
                 TextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = movementNameText,
+                    onValueChange = { movementNameText = it },
                     label = { Text("Name of exercise") },
                     modifier = Modifier.focusRequester(focusRequester),
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                TextField(
+                    value = movementWeightText,
+                    onValueChange = { movementWeightText = it },
+                    label = { Text("Weight (kg)") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -275,8 +288,8 @@ fun AddMovementDialog(
                         Text("Dismiss")
                     }
                     TextButton(
-                        onClick = { onConfirmation(text) },
-                        enabled = text.isNotBlank()
+                        onClick = { onConfirmation(Movement(movementNameText, movementWeightText.toIntOrNull())) },
+                        enabled = movementNameText.isNotBlank()
                     ) {
                         Text("Add")
                     }

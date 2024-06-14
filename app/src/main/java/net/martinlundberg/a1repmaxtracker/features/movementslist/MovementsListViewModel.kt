@@ -35,12 +35,12 @@ class MovementsListViewModel : ViewModel() {
         )
     }
 
-    fun addMovement(newMovement: String) {
+    fun addMovement(newMovement: Movement) {
         viewModelScope.launch {
             // Update backend with new movement
             val currentState = _uiState.value
             if (currentState is Success) {
-                val updatedMovements = currentState.movements + Movement(newMovement, null)
+                val updatedMovements = currentState.movements + newMovement
                 _uiState.value = Success(updatedMovements)
             }
         }
