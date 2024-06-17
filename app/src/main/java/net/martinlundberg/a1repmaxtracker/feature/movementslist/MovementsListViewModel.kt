@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.features.movementslist
+package net.martinlundberg.a1repmaxtracker.feature.movementslist
 
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Loading
-import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListUiState.Success
+import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
+import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 
 class MovementsListViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)

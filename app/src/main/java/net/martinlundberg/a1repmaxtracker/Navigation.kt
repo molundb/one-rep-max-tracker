@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailRoute
-import net.martinlundberg.a1repmaxtracker.features.movementslist.MovementsListRoute
+import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailRoute
+import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 

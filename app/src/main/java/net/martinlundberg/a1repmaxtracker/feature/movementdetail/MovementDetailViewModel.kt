@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.features.movementdetail
+package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Loading
-import net.martinlundberg.a1repmaxtracker.features.movementdetail.MovementDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
+import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

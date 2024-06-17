@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.features.movementslist
+package net.martinlundberg.a1repmaxtracker.feature.movementslist
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
