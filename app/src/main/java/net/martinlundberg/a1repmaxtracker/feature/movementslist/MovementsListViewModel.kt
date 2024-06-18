@@ -19,7 +19,11 @@ class MovementsListViewModel(
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
 
-    fun getMovements() {
+    init {
+        getMovements()
+    }
+
+    private fun getMovements() {
         viewModelScope.launch {
             val movements = Success(movementsRepository.getMovements())
             _uiState.update { movements }
@@ -29,7 +33,7 @@ class MovementsListViewModel(
     fun addMovement(movement: Movement) {
         viewModelScope.launch {
             movementsRepository.addMovement(movement)
-            movementsRepository.getMovements() // TODO: Improve
+            getMovements()
         }
     }
 
@@ -42,7 +46,7 @@ class MovementsListViewModel(
     fun deleteMovement(id: Int) {
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
-            movementsRepository.getMovements() // TODO: Improve
+            getMovements()
         }
     }
 }
