@@ -8,14 +8,14 @@ import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.asEntity
 
 class DefaultMovementsRepository(private val movementDao: MovementDao) : MovementsRepository {
-    override fun getMovements(): List<Movement> =
+    override suspend fun getMovements(): List<Movement> =
         movementDao.getMovements()
             .map { it.asExternalMovement() }
 
-    override fun getMovementDetail(id: Int): MovementDetail =
+    override suspend fun getMovementDetail(id: Int): MovementDetail =
         movementDao.getMovement(id).asExternalMovementDetail()
 
-    override fun addMovement(movement: Movement) = movementDao.insert(movement.asEntity())
+    override suspend fun addMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 
     override fun updateMovement(movement: Movement): Boolean {
         TODO("Not yet implemented")

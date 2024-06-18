@@ -5,11 +5,11 @@ import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 
 interface MovementsRepository {
 
-    fun getMovements(): List<Movement>
+    suspend fun getMovements(): List<Movement>
 
-    fun getMovementDetail(id: Int): MovementDetail
+    suspend fun getMovementDetail(id: Int): MovementDetail
 
-    fun addMovement(movement: Movement)
+    suspend fun addMovement(movement: Movement)
 
     fun updateMovement(movement: Movement): Boolean
 

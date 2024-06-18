@@ -11,7 +11,7 @@ import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
 @Dao
 interface MovementDao {
     @Query("SELECT * FROM movementEntity")
-    fun getMovements(): List<MovementEntity>
+    suspend fun getMovements(): List<MovementEntity>
 
 //    @Query("SELECT * FROM movementEntity WHERE id = :id")
 //    fun getMovement(id: Int): MovementEntity
@@ -19,10 +19,10 @@ interface MovementDao {
     @Query(
         "SELECT * FROM movementEntity JOIN oneRMEntity ON movementEntity.id = oneRMEntity.movementId WHERE id = :id "
     )
-    fun getMovement(id: Int): Map<MovementEntity, List<OneRMEntity>>
+    suspend fun getMovement(id: Int): Map<MovementEntity, List<OneRMEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movement: MovementEntity)
+    suspend fun insert(movement: MovementEntity)
 
     @Delete
     fun delete(movement: MovementEntity)

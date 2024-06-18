@@ -53,7 +53,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
@@ -62,7 +61,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 @Composable
 fun MovementsListRoute(
     onMovementClick: (String) -> Unit = {},
-    movementsListViewModel: MovementsListViewModel = viewModel(),
+    movementsListViewModel: MovementsListViewModel,
 ) {
     LaunchedEffect(Unit) {
         movementsListViewModel.getMovements()
