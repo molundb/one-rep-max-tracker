@@ -26,32 +26,11 @@ class MovementsListViewModel(
         }
     }
 
-//    private suspend fun fetchMovements(): Success {
-//        // Simulate network delay
-//        delay(2000)
-//        return Success(
-//            listOf(
-//                Movement("Movement 1", 100),
-//                Movement("Movement 2", 6),
-//                Movement("Movement 3", 82),
-//                Movement("Movement 4", 33),
-//            )
-//        )
-//    }
-
     fun addMovement(movement: Movement) {
         viewModelScope.launch {
             movementsRepository.addMovement(movement)
             movementsRepository.getMovements() // TODO: Improve
         }
-
-//        viewModelScope.launch {
-//            val currentState = _uiState.value
-//            if (currentState is Success) {
-//                val updatedMovements = currentState.movements + movement
-//                _uiState.value = Success(updatedMovements)
-//            }
-//        }
     }
 
 //    fun editMovement(movement: Movement) {
