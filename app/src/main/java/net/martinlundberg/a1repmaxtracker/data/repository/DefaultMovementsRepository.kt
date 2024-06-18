@@ -1,8 +1,8 @@
-package net.martinlundberg.a1repmaxtracker.repository
+package net.martinlundberg.a1repmaxtracker.data.repository
 
-import net.martinlundberg.a1repmaxtracker.database.dao.MovementDao
-import net.martinlundberg.a1repmaxtracker.database.model.asExternalMovement
-import net.martinlundberg.a1repmaxtracker.database.model.asExternalMovementDetail
+import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
+import net.martinlundberg.a1repmaxtracker.data.database.model.asExternalMovement
+import net.martinlundberg.a1repmaxtracker.data.database.model.asExternalMovementDetail
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetail
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.Movement
 

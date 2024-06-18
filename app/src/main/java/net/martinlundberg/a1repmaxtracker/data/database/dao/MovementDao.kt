@@ -1,12 +1,12 @@
-package net.martinlundberg.a1repmaxtracker.database.dao
+package net.martinlundberg.a1repmaxtracker.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import net.martinlundberg.a1repmaxtracker.database.model.MovementEntity
-import net.martinlundberg.a1repmaxtracker.database.model.OneRMEntity
+import net.martinlundberg.a1repmaxtracker.data.database.model.MovementEntity
+import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
 
 @Dao
 interface MovementDao {

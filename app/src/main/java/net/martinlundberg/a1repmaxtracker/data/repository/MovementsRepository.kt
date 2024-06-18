@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.repository
+package net.martinlundberg.a1repmaxtracker.data.repository
 
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetail
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.Movement

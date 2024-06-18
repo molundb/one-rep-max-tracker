@@ -1,4 +1,4 @@
-package net.martinlundberg.a1repmaxtracker.database.model
+package net.martinlundberg.a1repmaxtracker.data.database.model
 
 import androidx.room.Entity
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.OneRMInfo

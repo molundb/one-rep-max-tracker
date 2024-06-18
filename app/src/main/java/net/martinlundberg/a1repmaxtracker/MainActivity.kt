@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.room.Room
-import net.martinlundberg.a1repmaxtracker.database.OneRepMaxTrackerDatabase
+import net.martinlundberg.a1repmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 class MainActivity : ComponentActivity() {

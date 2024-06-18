@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
-import net.martinlundberg.a1repmaxtracker.repository.MovementsRepository
 
 class MovementsListViewModel(
     private val movementsRepository: MovementsRepository,
