@@ -14,6 +14,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
+import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +31,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 2)
+                        Movement(name = "Test movement", weight = 2)
                     )
                 )
             )
@@ -48,7 +49,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 2)
+                        Movement(name = "Test movement", weight = 2)
                     )
                 )
             )
@@ -137,7 +138,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
                 onMovementClick = { onMovementClickCalled = true }
@@ -158,7 +159,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
             )
@@ -179,7 +180,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
             )
@@ -201,7 +202,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
             )
@@ -225,7 +226,10 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(
+                            name = "Test movement",
+                            weight = 3
+                        )
                     )
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
@@ -249,7 +253,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
             )
@@ -271,7 +275,7 @@ class MovementsListScreenTest {
             MovementsListScreen(
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
-                        Movement("Test movement", 3)
+                        Movement(name = "Test movement", weight = 3)
                     )
                 ),
             )
@@ -297,7 +301,7 @@ class MovementsListScreenTest {
 //            MovementsListScreen(
 //                movementsListUiState = MovementsListUiState.Success(
 //                    listOf(
-//                        Movement("Test movement", 3)
+//                        Movement(name = "Test movement",  weight = 3)
 //                    )
 //                ),
 //                onMovementClick =

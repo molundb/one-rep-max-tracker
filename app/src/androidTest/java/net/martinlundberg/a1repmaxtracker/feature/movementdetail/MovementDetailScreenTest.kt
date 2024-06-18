@@ -9,6 +9,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertTrue
+import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
+import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
