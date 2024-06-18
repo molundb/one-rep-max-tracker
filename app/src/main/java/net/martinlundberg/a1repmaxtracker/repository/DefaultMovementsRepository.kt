@@ -14,9 +14,7 @@ class DefaultMovementsRepository(private val movementDao: MovementDao) : Movemen
     override fun getMovementDetail(id: Int): MovementDetail =
         movementDao.getMovement(id).asExternalMovementDetail()
 
-    override fun addMovement(movement: Movement): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun addMovement(movement: Movement) = movementDao.insert(movement)
 
     override fun updateMovement(movement: Movement): Boolean {
         TODO("Not yet implemented")

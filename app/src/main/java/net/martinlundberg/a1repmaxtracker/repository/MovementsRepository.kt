@@ -9,7 +9,7 @@ interface MovementsRepository {
 
     fun getMovementDetail(id: Int): MovementDetail
 
-    fun addMovement(movement: Movement): Boolean
+    fun addMovement(movement: Movement)
 
     fun updateMovement(movement: Movement): Boolean
 

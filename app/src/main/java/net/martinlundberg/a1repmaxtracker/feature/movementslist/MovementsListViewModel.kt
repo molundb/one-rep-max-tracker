@@ -3,7 +3,6 @@ package net.martinlundberg.a1repmaxtracker.feature.movementslist
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,30 +11,33 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.a1repmaxtracker.repository.MovementsRepository
 
-class MovementsListViewModel : ViewModel() {
+class MovementsListViewModel(
+    private val movementsRepository: MovementsRepository,
+) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
 
     fun getMovements() {
-        viewModelScope.launch {
-            val backendResult = fetchMovements()
-            _uiState.update { backendResult }
-        }
+//        viewModelScope.launch {
+        val movements = Success(movementsRepository.getMovements())
+        _uiState.update { movements }
+//        }
     }
 
-    private suspend fun fetchMovements(): Success {
-        // Simulate network delay
-        delay(2000)
-        return Success(
-            listOf(
-                Movement("Movement 1", 100),
-                Movement("Movement 2", 6),
-                Movement("Movement 3", 82),
-                Movement("Movement 4", 33),
-            )
-        )
-    }
+//    private suspend fun fetchMovements(): Success {
+//        // Simulate network delay
+//        delay(2000)
+//        return Success(
+//            listOf(
+//                Movement("Movement 1", 100),
+//                Movement("Movement 2", 6),
+//                Movement("Movement 3", 82),
+//                Movement("Movement 4", 33),
+//            )
+//        )
+//    }
 
     fun addMovement(movement: Movement) {
         viewModelScope.launch {
