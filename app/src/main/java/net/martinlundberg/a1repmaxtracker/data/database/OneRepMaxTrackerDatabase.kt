@@ -4,8 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
 import net.martinlundberg.a1repmaxtracker.data.database.model.MovementEntity
+import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
 
-@Database(entities = [MovementEntity::class], version = 1)
+@Database(entities = [MovementEntity::class, OneRMEntity::class], version = 1)
 abstract class OneRepMaxTrackerDatabase : RoomDatabase() {
     abstract fun movementDao(): MovementDao
 }

@@ -1,7 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.data.repository
 
-import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetail
-import net.martinlundberg.a1repmaxtracker.feature.movementslist.Movement
+import net.martinlundberg.a1repmaxtracker.data.model.Movement
+import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 
 interface MovementsRepository {
 

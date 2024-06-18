@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
+import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import java.time.LocalDateTime
@@ -59,12 +61,3 @@ sealed interface MovementDetailUiState {
         val movement: MovementDetail,
     ) : MovementDetailUiState
 }
-
-data class MovementDetail(
-    val oneRMs: List<OneRMInfo> = emptyList(),
-)
-
-data class OneRMInfo(
-    val weight: Int,
-    val date: String,
-)

@@ -1,6 +1,5 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementslist
 
-import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
+import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
@@ -40,25 +39,26 @@ class MovementsListViewModel(
 //    }
 
     fun addMovement(movement: Movement) {
-        viewModelScope.launch {
-            // Update backend with new movement
-            val currentState = _uiState.value
-            if (currentState is Success) {
-                val updatedMovements = currentState.movements + movement
-                _uiState.value = Success(updatedMovements)
-            }
-        }
+        movementsRepository.addMovement(movement)
+        movementsRepository.getMovements() // TODO: Improve
+
+//        viewModelScope.launch {
+//            val currentState = _uiState.value
+//            if (currentState is Success) {
+//                val updatedMovements = currentState.movements + movement
+//                _uiState.value = Success(updatedMovements)
+//            }
+//        }
     }
 
 //    fun editMovement(movement: Movement) {
-//        // TODO: Do this properly with local storage
+//        // TODO: Do this properly with Room
 //        deleteMovement(prevName)
 //        addMovement(movement)
 //    }
 
     fun deleteMovement(name: String) {
         viewModelScope.launch {
-            // Delete movement in backend
             val currentState = _uiState.value
             if (currentState is Success) {
                 val updatedMovements = currentState.movements.filter { it.name != name }
@@ -75,10 +75,3 @@ sealed interface MovementsListUiState {
         val movements: List<Movement> = emptyList(),
     ) : MovementsListUiState
 }
-
-@Parcelize
-data class Movement(
-//    val id: Int,
-    val name: String,
-    val weight: Int? = null,
-) : Parcelable

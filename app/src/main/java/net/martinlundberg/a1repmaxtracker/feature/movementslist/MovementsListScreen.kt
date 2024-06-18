@@ -54,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
@@ -135,7 +136,7 @@ fun MovementsListScreen(
                     movementsListUiState.movements.map {
                         item {
                             MovementCard(
-                                movement = Movement(it.name, it.weight),
+                                movement = Movement(it.id, it.name, it.weight),
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { name ->
                                     movementToEdit = name
@@ -151,7 +152,7 @@ fun MovementsListScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .semantics { contentDescription = "Add Movement" },
-                    onClick = { movementToEdit = Movement("") },
+                    onClick = { movementToEdit = Movement(-1, "") },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
                 }
@@ -390,7 +391,7 @@ private fun AddOrEditMovementDialog(
                     }
                     TextButton(
                         onClick = {
-                            onConfirmation(Movement(movementNameText, movementWeightText.toIntOrNull()))
+                            onConfirmation(Movement(1, movementNameText, movementWeightText.toIntOrNull()))
                         },
                         enabled = movementNameText.isNotBlank()
                     ) {
@@ -422,9 +423,9 @@ fun MovementsListScreenContentPreview() {
         MovementsListScreen(
             movementsListUiState = Success(
                 listOf(
-                    Movement("Movement 1", 100),
-                    Movement("Movement 4", 4),
-                    Movement("No weight", null),
+                    Movement(1, "Movement 1", 100),
+                    Movement(2, "Movement 4", 4),
+                    Movement(3, "No weight", null),
                 )
             ),
         )
@@ -435,7 +436,7 @@ fun MovementsListScreenContentPreview() {
 @Composable
 fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
-        AddOrEditMovementDialog(movement = Movement(name = "Movement 1", weight = 100))
+        AddOrEditMovementDialog(movement = Movement(id = 1, name = "Movement 1", weight = 100))
     }
 }
 
