@@ -13,5 +13,5 @@ interface MovementsRepository {
 
     fun updateMovement(movement: Movement): Boolean
 
-    fun deleteMovement(id: Int): Boolean
+    suspend fun deleteMovement(id: Int)
 }

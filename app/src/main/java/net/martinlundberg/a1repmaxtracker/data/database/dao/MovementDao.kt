@@ -1,7 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -24,6 +23,6 @@ interface MovementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(movement: MovementEntity)
 
-    @Delete
-    fun delete(movement: MovementEntity)
+    @Query("DELETE FROM movementEntity WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

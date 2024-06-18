@@ -60,13 +60,10 @@ class MovementsListViewModel(
 //        addMovement(movement)
 //    }
 
-    fun deleteMovement(name: String) {
+    fun deleteMovement(id: Int) {
         viewModelScope.launch {
-            val currentState = _uiState.value
-            if (currentState is Success) {
-                val updatedMovements = currentState.movements.filter { it.name != name }
-                _uiState.value = Success(updatedMovements)
-            }
+            movementsRepository.deleteMovement(id)
+            movementsRepository.getMovements() // TODO: Improve
         }
     }
 }

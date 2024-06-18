@@ -7,7 +7,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 
 @Entity
 data class MovementEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val weight: Int?,
 )

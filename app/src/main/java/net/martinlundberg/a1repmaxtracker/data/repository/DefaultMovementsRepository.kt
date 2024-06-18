@@ -21,7 +21,5 @@ class DefaultMovementsRepository(private val movementDao: MovementDao) : Movemen
         TODO("Not yet implemented")
     }
 
-    override fun deleteMovement(id: Int): Boolean {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deleteMovement(id: Int) = movementDao.deleteById(id)
 }

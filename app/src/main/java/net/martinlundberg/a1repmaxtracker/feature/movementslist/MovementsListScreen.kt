@@ -83,10 +83,10 @@ fun MovementsListScreen(
     onAddMovementClick: (Movement) -> Unit = {},
     onMovementClick: (String) -> Unit = {},
     onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (String) -> Unit = {},
+    onDeleteMovementClick: (Int) -> Unit = {},
 ) {
     var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
-    var movementToDelete by rememberSaveable { mutableStateOf<String?>(null) }
+    var movementToDelete by rememberSaveable { mutableStateOf<Movement?>(null) }
 
     Scaffold(
         topBar = {
@@ -137,11 +137,11 @@ fun MovementsListScreen(
                             MovementCard(
                                 movement = Movement(it.id, it.name, it.weight),
                                 onMovementClick = onMovementClick,
-                                onEditMovementClick = { name ->
-                                    movementToEdit = name
+                                onEditMovementClick = { movement ->
+                                    movementToEdit = movement
                                 },
-                                onDeleteMovementClick = { name ->
-                                    movementToDelete = name
+                                onDeleteMovementClick = { movement ->
+                                    movementToDelete = movement
                                 }
                             )
                         }
@@ -157,7 +157,7 @@ fun MovementsListScreen(
                 }
 
                 movementToEdit?.let { movement ->
-                    if (movement.name.isEmpty()) {
+                    if (movement.id == -1) {
                         AddMovementDialog(
                             movement = movement,
                             onDismissRequest = { movementToEdit = null },
@@ -178,12 +178,12 @@ fun MovementsListScreen(
                     }
                 }
 
-                movementToDelete?.let { name ->
+                movementToDelete?.let { movement ->
                     DeleteMovementConfirmDialog(
-                        name = name,
+                        name = movement.name,
                         onDismissRequest = { movementToDelete = null },
                         onConfirmation = {
-                            onDeleteMovementClick(it)
+                            onDeleteMovementClick(movement.id)
                             movementToDelete = null
                         }
                     )
@@ -199,7 +199,7 @@ fun MovementCard(
     movement: Movement,
     onMovementClick: (String) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
-    onDeleteMovementClick: (String) -> Unit,
+    onDeleteMovementClick: (Movement) -> Unit,
 ) {
     var movementDropDownMenuInfo by rememberSaveable { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
@@ -250,7 +250,7 @@ fun MovementCard(
 fun MovementDropDownMenu(
     movement: Movement,
     onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (String) -> Unit = {},
+    onDeleteMovementClick: (Movement) -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
     Box(
@@ -276,7 +276,7 @@ fun MovementDropDownMenu(
                 text = { Text("Delete") },
                 onClick = {
                     onDismiss()
-                    onDeleteMovementClick(movement.name)
+                    onDeleteMovementClick(movement)
                 }
             )
         }
@@ -390,7 +390,12 @@ private fun AddOrEditMovementDialog(
                     }
                     TextButton(
                         onClick = {
-                            onConfirmation(Movement(1, movementNameText, movementWeightText.toIntOrNull()))
+                            onConfirmation(
+                                Movement(
+                                    name = movementNameText,
+                                    weight = movementWeightText.toIntOrNull()
+                                )
+                            )
                         },
                         enabled = movementNameText.isNotBlank()
                     ) {
