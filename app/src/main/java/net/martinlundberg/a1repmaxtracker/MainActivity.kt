@@ -24,13 +24,13 @@ class MainActivity : ComponentActivity() {
             OneRepMaxTrackerDatabase::class.java, "database-name"
         ).build()
 
-        val movementsRepository = DefaultMovementsRepository(db.movementDao())
+        val movementsRepository = DefaultMovementsRepository(db.movementDao(), db.oneRMDao())
         val movementsListViewModel: MovementsListViewModel by viewModels {
-            MovementsListViewModelFactory(movementsRepository) // Pass your repository instance here
+            MovementsListViewModelFactory(movementsRepository)
         }
 
         val movementDetailViewModel: MovementDetailViewModel by viewModels {
-            MovementDetailViewModelFactory(movementsRepository) // Pass your repository instance here
+            MovementDetailViewModelFactory(movementsRepository)
         }
 
         setContent {

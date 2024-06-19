@@ -6,7 +6,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 
 @Entity
 data class OneRMEntity(
-    @PrimaryKey val oneRMid: Int,
+    @PrimaryKey(autoGenerate = true) val oneRMid: Int = 0,
     val movementId: Int,
     val weight: Int,
     val date: String,

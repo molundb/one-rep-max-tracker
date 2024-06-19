@@ -60,6 +60,7 @@ fun MovementDetailRoute(
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
     MovementDetailScreen(
         movementDetailUiState = movementDetailUiState,
+        movementId = movementId,
         movementName = movementName,
         add1RM = movementDetailViewModel::add1RM
     )
@@ -69,8 +70,9 @@ fun MovementDetailRoute(
 @Composable
 fun MovementDetailScreen(
     movementDetailUiState: MovementDetailUiState = Loading,
+    movementId: Int = 0,
     movementName: String = "",
-    add1RM: (Int) -> Unit = {},
+    add1RM: (weight: Int, movementId: Int) -> Unit = { _, _ -> },
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
 
@@ -140,8 +142,8 @@ fun MovementDetailScreen(
                     if (showAdd1rmDialog) {
                         Add1rmDialog(
                             onDismissRequest = { showAdd1rmDialog = false },
-                            onConfirmation = {
-                                add1RM(it)
+                            onConfirmation = { weight ->
+                                add1RM(weight, movementId)
                                 showAdd1rmDialog = false
                             }
                         )
