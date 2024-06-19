@@ -19,5 +19,5 @@ fun MovementEntity.asExternalMovement() = Movement(
 )
 
 fun Map<MovementEntity, List<OneRMEntity>>.asExternalMovementDetail() = MovementDetail(
-    oneRMs = this.entries.first().value.map { it.asExternalModel() }
+    oneRMs = this.entries.firstOrNull()?.value?.map { it.asExternalModel() } ?: emptyList()
 )

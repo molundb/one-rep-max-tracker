@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
@@ -51,11 +50,12 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @Composable
 fun MovementDetailRoute(
-    movementDetailViewModel: MovementDetailViewModel = viewModel(),
+    movementId: Int,
     movementName: String,
+    movementDetailViewModel: MovementDetailViewModel,
 ) {
     LaunchedEffect(Unit) {
-        movementDetailViewModel.getMovementInfo()
+        movementDetailViewModel.getMovementInfo(movementId)
     }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
     MovementDetailScreen(

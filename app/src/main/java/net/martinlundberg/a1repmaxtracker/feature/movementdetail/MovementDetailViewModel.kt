@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,19 +11,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class MovementDetailViewModel : ViewModel() {
+class MovementDetailViewModel(
+    private val movementsRepository: MovementsRepository,
+) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
-    fun getMovementInfo() {
+    fun getMovementInfo(id: Int) {
         viewModelScope.launch {
-            val backendResult = fetchMovementInfo()
-            _uiState.update { backendResult }
+            val movementDetail = Success(movementsRepository.getMovementDetail(id))
+            _uiState.update { movementDetail }
         }
     }
 
@@ -60,4 +64,14 @@ sealed interface MovementDetailUiState {
     data class Success(
         val movement: MovementDetail,
     ) : MovementDetailUiState
+}
+
+class MovementDetailViewModelFactory(private val repository: MovementsRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MovementDetailViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MovementDetailViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

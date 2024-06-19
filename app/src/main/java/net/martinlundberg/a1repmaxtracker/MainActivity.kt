@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.room.Room
 import net.martinlundberg.a1repmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.a1repmaxtracker.data.repository.DefaultMovementsRepository
+import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailViewModel
+import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailViewModelFactory
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListViewModel
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListViewModelFactory
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
@@ -23,13 +25,17 @@ class MainActivity : ComponentActivity() {
         ).build()
 
         val movementsRepository = DefaultMovementsRepository(db.movementDao())
-        val viewModel: MovementsListViewModel by viewModels {
+        val movementsListViewModel: MovementsListViewModel by viewModels {
             MovementsListViewModelFactory(movementsRepository) // Pass your repository instance here
+        }
+
+        val movementDetailViewModel: MovementDetailViewModel by viewModels {
+            MovementDetailViewModelFactory(movementsRepository) // Pass your repository instance here
         }
 
         setContent {
             _1RepMaxTrackerTheme {
-                Navigation(viewModel)
+                Navigation(movementsListViewModel, movementDetailViewModel)
             }
         }
     }

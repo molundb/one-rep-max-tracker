@@ -60,7 +60,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @Composable
 fun MovementsListRoute(
-    onMovementClick: (String) -> Unit = {},
+    onMovementClick: (Movement) -> Unit = {},
     movementsListViewModel: MovementsListViewModel,
 ) {
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
@@ -77,7 +77,7 @@ fun MovementsListRoute(
 fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
     onAddMovementClick: (Movement) -> Unit = {},
-    onMovementClick: (String) -> Unit = {},
+    onMovementClick: (Movement) -> Unit = {},
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Int) -> Unit = {},
 ) {
@@ -193,7 +193,7 @@ fun MovementsListScreen(
 @Composable
 fun MovementCard(
     movement: Movement,
-    onMovementClick: (String) -> Unit,
+    onMovementClick: (Movement) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Movement) -> Unit,
 ) {
@@ -203,7 +203,7 @@ fun MovementCard(
         Card(
             modifier = Modifier
                 .combinedClickable(
-                    onClick = { onMovementClick(movement.name) },
+                    onClick = { onMovementClick(movement) },
                     onLongClick = {
                         view.performHapticFeedback(
                             HapticFeedbackConstants.LONG_PRESS,
