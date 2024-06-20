@@ -9,7 +9,7 @@ data class OneRMInfo(
     val date: OffsetDateTime,
 ) {
     fun formattedDate(): String {
-        val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
         return date.format(formatter)
     }
 }
