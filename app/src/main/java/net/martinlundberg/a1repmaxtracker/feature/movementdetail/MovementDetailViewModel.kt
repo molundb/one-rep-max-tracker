@@ -13,8 +13,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.OffsetDateTime
 
 class MovementDetailViewModel(
     private val movementsRepository: MovementsRepository,
@@ -31,17 +30,8 @@ class MovementDetailViewModel(
 
     fun add1RM(weight: Int, movementId: Int) {
         viewModelScope.launch {
-            val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
-            val dateTime = LocalDateTime.now().format(formatter)
-
-            movementsRepository.addOneRM(OneRMInfo(weight, dateTime), movementId)
+            movementsRepository.addOneRM(OneRMInfo(weight, OffsetDateTime.now()), movementId)
             getMovementInfo(movementId)
-
-//            val currentState = _uiState.value
-//            if (currentState is Success) {
-//                val updated1RMs = listOf(OneRMInfo(weight, dateTime)) + currentState.movement.oneRMs
-//                _uiState.value = Success(currentState.movement.copy(oneRMs = updated1RMs))
-//            }
         }
     }
 }

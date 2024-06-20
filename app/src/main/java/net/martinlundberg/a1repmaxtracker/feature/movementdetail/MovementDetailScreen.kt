@@ -47,6 +47,8 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 @Composable
 fun MovementDetailRoute(
@@ -126,7 +128,7 @@ fun MovementDetailScreen(
                             item {
                                 OneRMCard(
                                     weight = it.weight,
-                                    date = it.date,
+                                    date = it.formattedDate(),
                                 )
                             }
                         }
@@ -254,9 +256,9 @@ fun MovementDetailScreenContentPreview() {
             movementDetailUiState = Success(
                 MovementDetail(
                     listOf(
-                        OneRMInfo(80, "2023-01-05"),
-                        OneRMInfo(75, "2023-01-03"),
-                        OneRMInfo(70, "2023-01-01"),
+                        OneRMInfo(80, OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)),
+                        OneRMInfo(75, OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)),
+                        OneRMInfo(70, OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
                     )
                 )
             )
