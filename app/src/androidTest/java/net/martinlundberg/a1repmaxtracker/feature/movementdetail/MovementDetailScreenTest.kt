@@ -8,17 +8,34 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 class MovementDetailScreenTest {
 
     @get:Rule val composeTestRule = createComposeRule()
+
+    @Before
+    fun setUp() {
+        setLocalTo(Locale("en", "US"))
+    }
+
+    private fun setLocalTo(testLocale: Locale) {
+        Locale.setDefault(testLocale)
+        val config = InstrumentationRegistry.getInstrumentation().targetContext.resources.configuration
+        config.setLocale(testLocale)
+        InstrumentationRegistry.getInstrumentation().targetContext.createConfigurationContext(config)
+    }
 
     @Test
     fun givenMovementName_thenNameOfMovementIsDisplayed() {
@@ -53,9 +70,9 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(70, "10 Jun, 2024"),
-                            OneRMInfo(72, "17 Jun, 2024"),
-                            OneRMInfo(75, "28 Jun, 2024"),
+                            OneRMInfo(70, OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)),
+                            OneRMInfo(72, OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)),
+                            OneRMInfo(75, OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)),
                         )
                     )
                 )
@@ -63,11 +80,11 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithText("70 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("10 Jun, 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("10 Jun 2024").assertIsDisplayed()
         composeTestRule.onNodeWithText("72 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("17 Jun, 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("17 Jul 2024").assertIsDisplayed()
         composeTestRule.onNodeWithText("75 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("28 Jun, 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("28 Aug 2024").assertIsDisplayed()
     }
 
     @Test
@@ -108,7 +125,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = {
+                add1RM = { _, _ ->
                     add1RMCalled = true
                 }
             )
@@ -131,7 +148,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = {
+                add1RM = { _, _ ->
                     add1RMCalled = true
                 }
             )
