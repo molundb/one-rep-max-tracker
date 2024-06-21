@@ -3,7 +3,7 @@
 **One Rep Max Tracker** is an Android application built entirely with Kotlin and Jetpack Compose using MVVM architecture. It is currently in development and not yet available in the Google Play Store.
 
 ## Features 
-With **One Rep Max Tracker** users can track their heaviests lifts, also known as 1 rep maxes or 1RMs.
+With **One Rep Max Tracker** users can track their heaviest lifts, also known as 1 rep maxes or 1RMs.
 
 ## Status
 At the moment there is only a simple UI with two screens. The next step is to store the 1RMs either locally in the phone's storage or in Firebase.
