@@ -19,11 +19,7 @@ class MovementsListViewModel(
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
 
-    init {
-        getMovements()
-    }
-
-    private fun getMovements() {
+    fun getMovements() {
         viewModelScope.launch {
             val movements = Success(movementsRepository.getMovements())
             _uiState.update { movements }
