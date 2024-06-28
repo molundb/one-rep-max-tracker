@@ -14,8 +14,9 @@ class DefaultMovementsRepository(
     private val oneRMDao: OneRMDao,
 ) : MovementsRepository {
     override suspend fun getMovements(): List<Movement> =
-        movementDao.getMovements()
-            .map { it.asExternalMovement() }
+        movementDao.getMovements().entries.map {
+            it.asExternalMovement()
+        }
 
     override suspend fun getMovementDetail(id: Int): MovementDetail =
         movementDao.getMovement(id).asExternalMovementDetail()

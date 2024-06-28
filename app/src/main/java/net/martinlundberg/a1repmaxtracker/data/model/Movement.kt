@@ -13,5 +13,4 @@ data class Movement(
 
 fun Movement.asEntity() = MovementEntity(
     name = name,
-    weight = weight,
 )

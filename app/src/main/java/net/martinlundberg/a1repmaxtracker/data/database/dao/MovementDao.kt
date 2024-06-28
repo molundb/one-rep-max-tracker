@@ -9,11 +9,8 @@ import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
 
 @Dao
 interface MovementDao {
-    @Query("SELECT * FROM movementEntity")
-    suspend fun getMovements(): List<MovementEntity>
-
-//    @Query("SELECT * FROM movementEntity WHERE id = :id")
-//    fun getMovement(id: Int): MovementEntity
+    @Query("SELECT * FROM movementEntity LEFT JOIN oneRMEntity ON movementEntity.id = oneRMEntity.movementId")
+    suspend fun getMovements(): Map<MovementEntity, List<OneRMEntity>>
 
     @Query(
         "SELECT * FROM movementEntity JOIN oneRMEntity ON movementEntity.id = oneRMEntity.movementId WHERE id = :id "
