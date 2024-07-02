@@ -374,15 +374,17 @@ private fun AddOrEditMovementDialog(
                     label = { Text("Name of exercise") },
                     modifier = Modifier.focusRequester(focusRequester),
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                TextField(
-                    value = movementWeightText,
-                    onValueChange = { movementWeightText = it },
-                    label = { Text("Weight (kg)") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                )
+                if (isAdd) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    TextField(
+                        value = movementWeightText,
+                        onValueChange = { movementWeightText = it },
+                        label = { Text("Weight (kg)") },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
