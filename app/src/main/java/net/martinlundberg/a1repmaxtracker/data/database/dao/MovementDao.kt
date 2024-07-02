@@ -21,5 +21,5 @@ interface MovementDao {
     suspend fun insert(movement: MovementEntity): Long
 
     @Query("DELETE FROM movementEntity WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Long)
 }

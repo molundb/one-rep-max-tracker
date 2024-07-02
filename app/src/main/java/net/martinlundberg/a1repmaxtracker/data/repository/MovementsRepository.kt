@@ -10,11 +10,9 @@ interface MovementsRepository {
 
     suspend fun getMovementDetail(id: Long): MovementDetail
 
-    suspend fun addMovement(movement: Movement): Long
+    suspend fun setMovement(movement: Movement): Long
 
-    fun updateMovement(movement: Movement): Boolean
-
-    suspend fun deleteMovement(id: Int)
+    suspend fun deleteMovement(id: Long)
 
     suspend fun addOneRM(oneRM: OneRMInfo, movementId: Long)
 }

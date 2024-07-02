@@ -73,6 +73,7 @@ fun MovementsListRoute(
         movementsListUiState = movementsListUiState,
         onAddMovementClick = movementsListViewModel::addMovement,
         onMovementClick = onMovementClick,
+        onEditMovementClick = movementsListViewModel::editMovement,
         onDeleteMovementClick = movementsListViewModel::deleteMovement
     )
 }
@@ -84,7 +85,7 @@ fun MovementsListScreen(
     onAddMovementClick: (Movement) -> Unit = {},
     onMovementClick: (Movement) -> Unit = {},
     onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (Int) -> Unit = {},
+    onDeleteMovementClick: (Long) -> Unit = {},
 ) {
     var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
     var movementToDelete by rememberSaveable { mutableStateOf<Movement?>(null) }
@@ -158,7 +159,7 @@ fun MovementsListScreen(
                 }
 
                 movementToEdit?.let { movement ->
-                    if (movement.id == -1) {
+                    if (movement.id == -1L) {
                         AddMovementDialog(
                             movement = movement,
                             onDismissRequest = { movementToEdit = null },
@@ -393,6 +394,7 @@ private fun AddOrEditMovementDialog(
                         onClick = {
                             onConfirmation(
                                 Movement(
+                                    id = movement.id,
                                     name = movementNameText,
                                     weight = movementWeightText.toIntOrNull()
                                 )

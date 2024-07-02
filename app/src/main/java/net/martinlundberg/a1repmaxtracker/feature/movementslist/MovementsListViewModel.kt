@@ -33,7 +33,7 @@ class MovementsListViewModel @Inject constructor(
 
     fun addMovement(movement: Movement) {
         viewModelScope.launch {
-            val movementId = movementsRepository.addMovement(movement)
+            val movementId = movementsRepository.setMovement(movement)
             movement.weight?.let {
                 movementsRepository.addOneRM(OneRMInfo(it, OffsetDateTime.now()), movementId)
             }
@@ -41,13 +41,14 @@ class MovementsListViewModel @Inject constructor(
         }
     }
 
-//    fun editMovement(movement: Movement) {
-//        // TODO: Do this properly with Room
-//        deleteMovement(prevName)
-//        addMovement(movement)
-//    }
+    fun editMovement(movement: Movement) {
+        viewModelScope.launch {
+            movementsRepository.setMovement(movement)
+            getMovements()
+        }
+    }
 
-    fun deleteMovement(id: Int) {
+    fun deleteMovement(id: Long) {
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
             getMovements()
