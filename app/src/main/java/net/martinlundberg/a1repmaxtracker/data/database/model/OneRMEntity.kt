@@ -7,13 +7,14 @@ import java.time.OffsetDateTime
 
 @Entity
 data class OneRMEntity(
-    @PrimaryKey(autoGenerate = true) val oneRMid: Int = 0,
+    @PrimaryKey(autoGenerate = true) val oneRMid: Long = 0,
     val movementId: Long,
     val weight: Int,
     val date: OffsetDateTime,
 )
 
 fun OneRMEntity.asExternalModel() = OneRMInfo(
+    id = oneRMid,
     weight = weight,
     date = date
 )

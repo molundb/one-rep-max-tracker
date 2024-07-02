@@ -5,6 +5,7 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 data class OneRMInfo(
+    val id: Long = 0, // Will be overwritten by Room
     val weight: Int,
     val date: OffsetDateTime,
 ) {

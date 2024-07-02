@@ -55,6 +55,7 @@ import java.time.ZoneOffset
 fun MovementDetailRoute(
     movementId: Long,
     movementName: String,
+    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -65,6 +66,7 @@ fun MovementDetailRoute(
         movementDetailUiState = movementDetailUiState,
         movementId = movementId,
         movementName = movementName,
+        onOneRepMaxClick = onOneRepMaxClick,
         add1RM = movementDetailViewModel::add1RM
     )
 }
@@ -75,6 +77,7 @@ fun MovementDetailScreen(
     movementDetailUiState: MovementDetailUiState = Loading,
     movementId: Long = 0,
     movementName: String = "",
+    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
@@ -128,8 +131,11 @@ fun MovementDetailScreen(
                         movementDetailUiState.movement.oneRMs.map {
                             item {
                                 OneRMCard(
+                                    movementName = movementName,
+                                    id = it.id,
                                     weight = it.weight,
                                     date = it.formattedDate(),
+                                    onOneRepMaxClick = onOneRepMaxClick,
                                 )
                             }
                         }
@@ -159,10 +165,16 @@ fun MovementDetailScreen(
 
 @Composable
 fun OneRMCard(
+    movementName: String,
+    id: Long,
     weight: Int?,
     date: String?,
+    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
 ) {
-    Card(modifier = Modifier.semantics { contentDescription = "Movement Card" }) {
+    Card(
+        modifier = Modifier.semantics { contentDescription = "Movement Card" },
+        onClick = { onOneRepMaxClick(id, movementName) }
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -257,9 +269,21 @@ fun MovementDetailScreenContentPreview() {
             movementDetailUiState = Success(
                 MovementDetail(
                     listOf(
-                        OneRMInfo(80, OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)),
-                        OneRMInfo(75, OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)),
-                        OneRMInfo(70, OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
+                        OneRMInfo(
+                            id = 80,
+                            weight = 15,
+                            date = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
+                        ),
+                        OneRMInfo(
+                            id = 75,
+                            weight = 15,
+                            date = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
+                        ),
+                        OneRMInfo(
+                            id = 70,
+                            weight = 15,
+                            date = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                        ),
                     )
                 )
             )
