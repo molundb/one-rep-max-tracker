@@ -8,8 +8,9 @@ import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.data.model.asEntity
+import javax.inject.Inject
 
-class DefaultMovementsRepository(
+class DefaultMovementsRepository @Inject constructor(
     private val movementDao: MovementDao,
     private val oneRMDao: OneRMDao,
 ) : MovementsRepository {

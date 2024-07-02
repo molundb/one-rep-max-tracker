@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
@@ -54,7 +55,7 @@ import java.time.ZoneOffset
 fun MovementDetailRoute(
     movementId: Long,
     movementName: String,
-    movementDetailViewModel: MovementDetailViewModel,
+    movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)

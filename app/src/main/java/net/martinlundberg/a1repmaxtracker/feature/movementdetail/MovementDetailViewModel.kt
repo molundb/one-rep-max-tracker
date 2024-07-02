@@ -3,6 +3,7 @@ package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +15,10 @@ import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import java.time.OffsetDateTime
+import javax.inject.Inject
 
-class MovementDetailViewModel(
+@HiltViewModel
+class MovementDetailViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
