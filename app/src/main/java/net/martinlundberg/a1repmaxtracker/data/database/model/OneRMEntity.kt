@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 @Entity
 data class OneRMEntity(
     @PrimaryKey(autoGenerate = true) val oneRMid: Int = 0,
-    val movementId: Int,
+    val movementId: Long,
     val weight: Int,
     val date: OffsetDateTime,
 )

@@ -52,7 +52,7 @@ import java.time.ZoneOffset
 
 @Composable
 fun MovementDetailRoute(
-    movementId: Int,
+    movementId: Long,
     movementName: String,
     movementDetailViewModel: MovementDetailViewModel,
 ) {
@@ -72,9 +72,9 @@ fun MovementDetailRoute(
 @Composable
 fun MovementDetailScreen(
     movementDetailUiState: MovementDetailUiState = Loading,
-    movementId: Int = 0,
+    movementId: Long = 0,
     movementName: String = "",
-    add1RM: (weight: Int, movementId: Int) -> Unit = { _, _ -> },
+    add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
 

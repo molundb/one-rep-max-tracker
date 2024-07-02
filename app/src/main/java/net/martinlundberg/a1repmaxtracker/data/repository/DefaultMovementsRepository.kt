@@ -18,7 +18,7 @@ class DefaultMovementsRepository(
             it.asExternalMovement()
         }
 
-    override suspend fun getMovementDetail(id: Int): MovementDetail =
+    override suspend fun getMovementDetail(id: Long): MovementDetail =
         movementDao.getMovement(id).asExternalMovementDetail()
 
     override suspend fun addMovement(movement: Movement) = movementDao.insert(movement.asEntity())
@@ -29,5 +29,5 @@ class DefaultMovementsRepository(
 
     override suspend fun deleteMovement(id: Int) = movementDao.deleteById(id)
 
-    override suspend fun addOneRM(oneRM: OneRMInfo, movementId: Int) = oneRMDao.insert(oneRM.asEntity(movementId))
+    override suspend fun addOneRM(oneRM: OneRMInfo, movementId: Long) = oneRMDao.insert(oneRM.asEntity(movementId))
 }

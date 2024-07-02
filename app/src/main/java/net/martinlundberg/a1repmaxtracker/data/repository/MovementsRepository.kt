@@ -8,13 +8,13 @@ interface MovementsRepository {
 
     suspend fun getMovements(): List<Movement>
 
-    suspend fun getMovementDetail(id: Int): MovementDetail
+    suspend fun getMovementDetail(id: Long): MovementDetail
 
-    suspend fun addMovement(movement: Movement)
+    suspend fun addMovement(movement: Movement): Long
 
     fun updateMovement(movement: Movement): Boolean
 
     suspend fun deleteMovement(id: Int)
 
-    suspend fun addOneRM(oneRM: OneRMInfo, movementId: Int)
+    suspend fun addOneRM(oneRM: OneRMInfo, movementId: Long)
 }

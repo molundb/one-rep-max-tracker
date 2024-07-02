@@ -21,14 +21,14 @@ class MovementDetailViewModel(
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
-    fun getMovementInfo(id: Int) {
+    fun getMovementInfo(id: Long) {
         viewModelScope.launch {
             val movementDetail = Success(movementsRepository.getMovementDetail(id))
             _uiState.update { movementDetail }
         }
     }
 
-    fun add1RM(weight: Int, movementId: Int) {
+    fun add1RM(weight: Int, movementId: Long) {
         viewModelScope.launch {
             movementsRepository.addOneRM(OneRMInfo(weight, OffsetDateTime.now()), movementId)
             getMovementInfo(movementId)

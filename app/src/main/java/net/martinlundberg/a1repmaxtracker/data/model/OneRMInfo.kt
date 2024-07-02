@@ -14,7 +14,7 @@ data class OneRMInfo(
     }
 }
 
-fun OneRMInfo.asEntity(movementId: Int) = OneRMEntity(
+fun OneRMInfo.asEntity(movementId: Long) = OneRMEntity(
     movementId = movementId,
     weight = weight,
     date = date,

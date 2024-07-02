@@ -40,7 +40,7 @@ fun Navigation(
         composable(
             route = "$MOVEMENT_DETAIL_ROUTE/{$MOVEMENT_ID}/{$MOVEMENT_NAME}",
             arguments = listOf(
-                navArgument(MOVEMENT_ID) { type = NavType.IntType },
+                navArgument(MOVEMENT_ID) { type = NavType.LongType },
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
             enterTransition = {
@@ -57,7 +57,7 @@ fun Navigation(
             },
         ) { backStackEntry ->
             MovementDetailRoute(
-                movementId = backStackEntry.arguments?.getInt(MOVEMENT_ID) ?: -1,
+                movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
                 movementDetailViewModel = movementDetailViewModel
             )
