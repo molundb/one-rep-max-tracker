@@ -1,7 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementslist
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,14 +61,4 @@ sealed interface MovementsListUiState {
     data class Success(
         val movements: List<Movement> = emptyList(),
     ) : MovementsListUiState
-}
-
-class MovementsListViewModelFactory(private val repository: MovementsRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MovementsListViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MovementsListViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }
