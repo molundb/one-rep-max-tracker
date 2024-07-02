@@ -194,7 +194,7 @@ fun Add1rmDialog(
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Int) -> Unit = {},
 ) {
-    var text by remember { mutableStateOf("") }
+    var weightText by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
@@ -209,8 +209,8 @@ fun Add1rmDialog(
                     .padding(start = 8.dp, top = 8.dp, end = 8.dp),
             ) {
                 TextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = weightText,
+                    onValueChange = { weightText = it },
                     label = { Text("Weight") },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -225,8 +225,8 @@ fun Add1rmDialog(
                         Text("Dismiss")
                     }
                     TextButton(
-                        onClick = { onConfirmation(text.toInt()) },
-                        enabled = text.isNotBlank(),
+                        onClick = { onConfirmation(weightText.toInt()) },
+                        enabled = weightText.isNotBlank(),
                     ) {
                         Text("Add")
                     }
