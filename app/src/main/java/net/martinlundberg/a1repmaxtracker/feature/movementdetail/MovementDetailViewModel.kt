@@ -32,7 +32,13 @@ class MovementDetailViewModel @Inject constructor(
 
     fun add1RM(weight: Int, movementId: Long) {
         viewModelScope.launch {
-            movementsRepository.addOneRM(OneRMInfo(weight = weight, date = OffsetDateTime.now()), movementId)
+            movementsRepository.addOneRM(
+                OneRMInfo(
+                    weight = weight,
+                    date = OffsetDateTime.now(),
+                    movementId = movementId
+                )
+            )
             getMovementInfo(movementId)
         }
     }

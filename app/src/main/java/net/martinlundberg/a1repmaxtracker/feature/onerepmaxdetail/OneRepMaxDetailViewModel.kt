@@ -28,6 +28,11 @@ class OneRepMaxDetailViewModel @Inject constructor(
         }
     }
 
+    fun updateOneRepMaxDetail(oneRMInfo: OneRMInfo) {
+        viewModelScope.launch {
+            movementsRepository.addOneRM(oneRMInfo)
+        }
+    }
 }
 
 sealed interface OneRepMaxDetailUiState {

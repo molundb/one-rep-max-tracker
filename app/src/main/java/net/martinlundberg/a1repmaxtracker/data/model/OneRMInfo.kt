@@ -5,11 +5,12 @@ import java.time.OffsetDateTime
 
 data class OneRMInfo(
     val id: Long = 0, // Will be overwritten by Room
+    val movementId: Long,
     val weight: Int,
     val date: OffsetDateTime,
 )
 
-fun OneRMInfo.asEntity(movementId: Long) = OneRMEntity(
+fun OneRMInfo.asEntity() = OneRMEntity(
     movementId = movementId,
     weight = weight,
     date = date,

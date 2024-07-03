@@ -52,7 +52,8 @@ fun OneRepMaxDetailRoute(
     val oneRepMaxDetailUiState by oneRepMaxDetailViewModel.uiState.collectAsState()
     OneRepMaxDetailScreen(
         oneRepMaxDetailUiState = oneRepMaxDetailUiState,
-        movementName = movementName
+        movementName = movementName,
+        updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail
     )
 }
 
@@ -61,6 +62,7 @@ fun OneRepMaxDetailRoute(
 fun OneRepMaxDetailScreen(
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
     movementName: String = "",
+    updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -131,7 +133,12 @@ fun OneRepMaxDetailScreen(
                             OutlinedTextFieldDatePicker(
                                 currentDate = oneRepMaxDetailUiState.oneRMInfo.date,
                                 showDialog = showDatePickerDialog,
-                                setDialogVisibility = { showDatePickerDialog = it }
+                                setDialogVisibility = { showDatePickerDialog = it },
+                                updateOneRepMaxDetail = { date ->
+                                    updateOneRepMaxDetail(
+                                        oneRepMaxDetailUiState.oneRMInfo.copy(date = date),
+                                    )
+                                }
                             )
                         }
                         Spacer(Modifier.size(8.dp))
@@ -177,8 +184,9 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,
+                    movementId = 15,
                     weight = 100,
-                    date = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                    date = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             ),
         )

@@ -27,7 +27,7 @@ class DefaultMovementsRepository @Inject constructor(
 
     override suspend fun deleteMovement(id: Long) = movementDao.deleteById(id)
 
-    override suspend fun addOneRM(oneRM: OneRMInfo, movementId: Long) = oneRMDao.insert(oneRM.asEntity(movementId))
+    override suspend fun addOneRM(oneRM: OneRMInfo) = oneRMDao.insert(oneRM.asEntity())
 
     override suspend fun getOneRM(id: Long): OneRMInfo = oneRMDao.getOneRM(id).asExternalModel()
 }

@@ -26,9 +26,10 @@ import java.time.ZoneOffset
 fun OutlinedTextFieldDatePicker(
     currentDate: OffsetDateTime,
     showDialog: Boolean,
-    setDialogVisibility: (Boolean) -> Unit,
+    setDialogVisibility: (Boolean) -> Unit = {},
+    updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
 ) {
-    var date by remember { mutableStateOf(currentDate.toLocalDate()) }
+    var date by remember { mutableStateOf(currentDate.toLocalDateTime()) }
 
     OutlinedTextField(
         modifier = Modifier.clickable {
@@ -54,9 +55,9 @@ fun OutlinedTextFieldDatePicker(
                     date = Instant
                         .ofEpochMilli(it)
                         .atZone(ZoneOffset.UTC)
-                        .toLocalDate()
+                        .toLocalDateTime()
 
-                    // TODO: Save in room
+                    updateOneRepMaxDetail(OffsetDateTime.of(date, currentDate.offset))
                 }
                 setDialogVisibility(false)
             },
@@ -94,20 +95,18 @@ private fun CustomDatePickerDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun OutlinedTextFieldDatePickerPreview() {
+private fun OutlinedTextFieldDatePickerPreview() {
     OutlinedTextFieldDatePicker(
         currentDate = OffsetDateTime.now(),
         showDialog = false,
-        setDialogVisibility = {},
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun OutlinedTextFieldDatePickerDialogPreview() {
+private fun OutlinedTextFieldDatePickerDialogPreview() {
     OutlinedTextFieldDatePicker(
         currentDate = OffsetDateTime.now(),
         showDialog = true,
-        setDialogVisibility = {},
     )
 }
