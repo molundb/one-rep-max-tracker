@@ -47,6 +47,7 @@ fun Navigation(
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
             enterTransition = slideInRight,
+            popEnterTransition = null,
             popExitTransition = slideOutRight,
         ) { backStackEntry ->
             MovementDetailRoute(
@@ -64,6 +65,7 @@ fun Navigation(
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
             enterTransition = slideInRight,
+            popEnterTransition = null,
             popExitTransition = slideOutRight,
         ) { backStackEntry ->
             OneRepMaxDetailRoute(
