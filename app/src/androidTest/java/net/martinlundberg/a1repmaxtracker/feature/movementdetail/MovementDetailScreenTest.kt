@@ -70,9 +70,21 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(70, OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)),
-                            OneRMInfo(72, OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)),
-                            OneRMInfo(75, OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)),
+                            OneRMInfo(
+                                id = 70,
+                                weight = 15,
+                                date = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
+                            OneRMInfo(
+                                id = 72,
+                                weight = 16,
+                                date = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
+                            OneRMInfo(
+                                id = 75,
+                                weight = 3,
+                                date = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
                         )
                     )
                 )

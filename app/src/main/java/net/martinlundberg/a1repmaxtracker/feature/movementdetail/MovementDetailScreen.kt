@@ -48,6 +48,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.util.formatTo
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -134,7 +135,7 @@ fun MovementDetailScreen(
                                     movementName = movementName,
                                     id = it.id,
                                     weight = it.weight,
-                                    date = it.formattedDate(),
+                                    date = it.date.formatTo("dd MMM yyyy"),
                                     onOneRepMaxClick = onOneRepMaxClick,
                                 )
                             }
@@ -253,7 +254,7 @@ fun Add1rmDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun MovementDetailLoadingPreview() {
+private fun MovementDetailLoadingPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
             movementDetailUiState = Loading,
@@ -263,7 +264,7 @@ fun MovementDetailLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun MovementDetailScreenSuccessPreview() {
+private fun MovementDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
             movementDetailUiState = Success(
@@ -293,7 +294,7 @@ fun MovementDetailScreenSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun Add1rmDialogPreview() {
+private fun Add1rmDialogPreview() {
     _1RepMaxTrackerTheme {
         Add1rmDialog()
     }

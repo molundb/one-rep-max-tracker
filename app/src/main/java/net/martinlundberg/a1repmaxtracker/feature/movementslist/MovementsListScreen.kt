@@ -417,7 +417,7 @@ private fun AddOrEditMovementDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun MovementsListLoadingPreview() {
+private fun MovementsListLoadingPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Loading,
@@ -427,7 +427,7 @@ fun MovementsListLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun MovementsListScreenSuccessPreview() {
+private fun MovementsListScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Success(
@@ -443,7 +443,7 @@ fun MovementsListScreenSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun AddMovementDialogPreview() {
+private fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
         AddOrEditMovementDialog(movement = Movement(id = 1, name = "Movement 1", weight = 100))
     }
@@ -451,7 +451,7 @@ fun AddMovementDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DeleteMovementConfirmDialogPreview() {
+private fun DeleteMovementConfirmDialogPreview() {
     _1RepMaxTrackerTheme {
         DeleteMovementConfirmDialog(name = "Movement 1")
     }
