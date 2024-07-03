@@ -11,7 +11,9 @@ data class Movement(
     val weight: Int? = null,
 ) : Parcelable
 
-fun Movement.asEntity() = MovementEntity(
-    id = id,
-    name = name,
-)
+fun Movement.asEntity() = if (id == -1L) {
+    MovementEntity(name = name)
+} else {
+    MovementEntity(id = id, name = name)
+}
+
