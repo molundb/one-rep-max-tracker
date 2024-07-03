@@ -6,7 +6,7 @@ import net.martinlundberg.a1repmaxtracker.data.database.model.MovementEntity
 
 @Parcelize
 data class Movement(
-    val id: Long = 0, // Will be overwritten by Room
+    val id: Long = -1, // Will be overwritten by Room
     val name: String,
     val weight: Int? = null,
 ) : Parcelable
