@@ -427,7 +427,7 @@ fun MovementsListLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun MovementsListScreenContentPreview() {
+fun MovementsListScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Success(

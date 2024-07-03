@@ -25,10 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 @Composable
 fun OneRepMaxDetailRoute(
@@ -132,5 +137,31 @@ fun OneRepMaxDetailScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OneRepMaxDetailScreenLoadingPreview() {
+    _1RepMaxTrackerTheme {
+        OneRepMaxDetailScreen(
+            oneRepMaxDetailUiState = Loading,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OneRepMaxDetailScreenSuccessPreview() {
+    _1RepMaxTrackerTheme {
+        OneRepMaxDetailScreen(
+            oneRepMaxDetailUiState = Success(
+                oneRMInfo = OneRMInfo(
+                    id = 1,
+                    weight = 100,
+                    date = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                )
+            ),
+        )
     }
 }

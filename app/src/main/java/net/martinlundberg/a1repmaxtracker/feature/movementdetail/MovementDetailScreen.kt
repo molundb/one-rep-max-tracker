@@ -263,7 +263,7 @@ fun MovementDetailLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun MovementDetailScreenContentPreview() {
+fun MovementDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
             movementDetailUiState = Success(
