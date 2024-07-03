@@ -1,19 +1,26 @@
 package net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,8 +39,10 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun OneRepMaxDetailRoute(
@@ -120,7 +129,7 @@ fun OneRepMaxDetailScreen(
                     Row {
                         Column {
                             Text(text = "Date")
-                            // TODO: add calendar picker
+                            CustomDatePicker(oneRepMaxDetailUiState.oneRMInfo.date)
                         }
                         Column {
                             Text(text = "Time")
@@ -137,6 +146,76 @@ fun OneRepMaxDetailScreen(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDatePicker(currentDate: OffsetDateTime) {
+    var date by remember { mutableStateOf(currentDate.toLocalDate()) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(
+            modifier = Modifier.clickable {
+                showDialog = true
+            },
+            enabled = false,
+            value = date.format(DateTimeFormatter.ISO_DATE),
+            onValueChange = {},
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        )
+    }
+
+    if (showDialog) {
+        CustomDatePickerDialog(
+            onAccept = {
+                if (it != null) {
+                    date = Instant
+                        .ofEpochMilli(it)
+                        .atZone(ZoneOffset.UTC)
+                        .toLocalDate()
+
+                    // TODO: Save in room
+                }
+                showDialog = false
+            },
+            onCancel = {
+                showDialog = false
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDatePickerDialog(
+    onAccept: (Long?) -> Unit,
+    onCancel: () -> Unit,
+) {
+    val state = rememberDatePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = { },
+        confirmButton = {
+            Button(onClick = { onAccept(state.selectedDateMillis) }) {
+                Text("Accept")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onCancel) {
+                Text("Cancel")
+            }
+        }
+    ) {
+        DatePicker(state = state)
     }
 }
 
