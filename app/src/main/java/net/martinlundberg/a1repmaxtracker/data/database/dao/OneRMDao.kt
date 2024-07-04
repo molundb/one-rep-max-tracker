@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
 
 @Dao
@@ -15,7 +16,7 @@ interface OneRMDao {
     suspend fun getOneRM(id: Long): OneRMEntity
 
     @Query("SELECT * FROM oneRMEntity WHERE movementId = :id")
-    suspend fun getOneRMsForMovement(id: Long): List<OneRMEntity>
+    fun getOneRMsForMovement(id: Long): Flow<List<OneRMEntity>>
 
     @Query("DELETE FROM oneRMEntity WHERE oneRMid = :id")
     suspend fun deleteByOneRMId(id: Long)

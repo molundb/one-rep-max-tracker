@@ -25,8 +25,9 @@ class MovementDetailViewModel @Inject constructor(
 
     fun getMovementInfo(id: Long) {
         viewModelScope.launch {
-            val movementDetail = Success(oneRepMaxRepository.getMovementDetail(id))
-            _uiState.update { movementDetail }
+            oneRepMaxRepository.getMovementDetail(id).collect { movementDetail ->
+                _uiState.update { Success(movementDetail) }
+            }
         }
     }
 
@@ -39,7 +40,6 @@ class MovementDetailViewModel @Inject constructor(
                     movementId = movementId
                 )
             )
-            getMovementInfo(movementId)
         }
     }
 }

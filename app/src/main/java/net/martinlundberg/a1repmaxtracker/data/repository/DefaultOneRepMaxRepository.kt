@@ -1,5 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
 import net.martinlundberg.a1repmaxtracker.data.database.model.asExternalModel
 import net.martinlundberg.a1repmaxtracker.data.database.model.asExternalMovementDetail
@@ -12,8 +14,8 @@ class DefaultOneRepMaxRepository @Inject constructor(
     private val oneRMDao: OneRMDao,
 ) : OneRepMaxRepository {
 
-    override suspend fun getMovementDetail(id: Long): MovementDetail =
-        oneRMDao.getOneRMsForMovement(id).asExternalMovementDetail()
+    override fun getMovementDetail(id: Long): Flow<MovementDetail> =
+        oneRMDao.getOneRMsForMovement(id).map { it.asExternalMovementDetail() }
 
     override suspend fun addOneRM(oneRM: OneRMInfo) = oneRMDao.insert(oneRM.asEntity())
 
