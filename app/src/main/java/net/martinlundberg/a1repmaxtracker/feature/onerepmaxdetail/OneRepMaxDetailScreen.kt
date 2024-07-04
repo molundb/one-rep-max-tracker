@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -51,18 +55,22 @@ fun OneRepMaxDetailRoute(
 
     val oneRepMaxDetailUiState by oneRepMaxDetailViewModel.uiState.collectAsState()
     OneRepMaxDetailScreen(
+        oneRepMaxId = oneRepMaxId,
         oneRepMaxDetailUiState = oneRepMaxDetailUiState,
         movementName = movementName,
-        updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail
+        updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail,
+        onDeleteClick = oneRepMaxDetailViewModel::deleteOneRM,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OneRepMaxDetailScreen(
+    oneRepMaxId: Long,
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
     movementName: String = "",
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
+    onDeleteClick: (Long) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -72,6 +80,14 @@ fun OneRepMaxDetailScreen(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = { Text(text = movementName) },
+                actions = {
+                    IconButton(onClick = { onDeleteClick(oneRepMaxId) }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete"
+                        )
+                    }
+                }
             )
         },
         modifier = Modifier.fillMaxSize(),
@@ -171,6 +187,7 @@ fun OneRepMaxDetailScreen(
 private fun OneRepMaxDetailScreenLoadingPreview() {
     _1RepMaxTrackerTheme {
         OneRepMaxDetailScreen(
+            oneRepMaxId = 0,
             oneRepMaxDetailUiState = Loading,
         )
     }
@@ -181,6 +198,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
 private fun OneRepMaxDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         OneRepMaxDetailScreen(
+            oneRepMaxId = 0,
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,

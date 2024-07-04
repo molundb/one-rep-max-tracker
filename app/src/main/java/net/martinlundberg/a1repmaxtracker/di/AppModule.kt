@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     fun providesMovementDao(
         database: OneRepMaxTrackerDatabase,

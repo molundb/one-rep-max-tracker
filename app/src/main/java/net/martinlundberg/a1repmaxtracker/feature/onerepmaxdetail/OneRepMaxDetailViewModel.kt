@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.a1repmaxtracker.NavigationService
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OneRepMaxDetailViewModel @Inject constructor(
     private val oneRepMaxRepository: OneRepMaxRepository,
+    private val navigationService: NavigationService,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<OneRepMaxDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<OneRepMaxDetailUiState> = _uiState.asStateFlow()
@@ -31,6 +33,13 @@ class OneRepMaxDetailViewModel @Inject constructor(
     fun updateOneRepMaxDetail(oneRMInfo: OneRMInfo) {
         viewModelScope.launch {
             oneRepMaxRepository.addOneRM(oneRMInfo)
+        }
+    }
+
+    fun deleteOneRM(id: Long) {
+        viewModelScope.launch {
+            oneRepMaxRepository.deleteOneRM(id)
+            navigationService.navController.popBackStack()
         }
     }
 }

@@ -9,5 +9,4 @@ interface MovementsRepository {
     suspend fun setMovement(movement: Movement): Long
 
     suspend fun deleteMovement(id: Long)
-
 }

@@ -6,13 +6,14 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import net.martinlundberg.NavViewModel
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
@@ -28,7 +29,7 @@ const val ONE_REP_MAX_ID = "oneRepMaxId"
 
 @Composable
 fun Navigation(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = hiltViewModel<NavViewModel>().controller,
 ) {
     NavHost(navController = navController, startDestination = MOVEMENTS_LIST_ROUTE) {
         composable(
