@@ -17,5 +17,5 @@ fun OneRMEntity.asExternalModel() = OneRMInfo(
     id = oneRMid,
     movementId = movementId,
     weight = weight,
-    date = date,
+    offsetDateTime = date,
 )

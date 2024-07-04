@@ -147,14 +147,14 @@ fun OneRepMaxDetailScreen(
                         ) {
                             Text(text = "Date")
                             OutlinedTextFieldDatePicker(
-                                currentDate = oneRepMaxDetailUiState.oneRMInfo.date,
+                                currentDateTime = oneRepMaxDetailUiState.oneRMInfo.offsetDateTime,
                                 showDialog = showDatePickerDialog,
                                 setDialogVisibility = { showDatePickerDialog = it },
-                                updateOneRepMaxDetail = { date ->
+                                updateOneRepMaxDetail = { offsetDateTime ->
                                     updateOneRepMaxDetail(
-                                        oneRepMaxDetailUiState.oneRMInfo.copy(date = date),
+                                        oneRepMaxDetailUiState.oneRMInfo.copy(offsetDateTime = offsetDateTime),
                                     )
-                                }
+                                },
                             )
                         }
                         Spacer(Modifier.size(8.dp))
@@ -163,9 +163,14 @@ fun OneRepMaxDetailScreen(
                         ) {
                             Text(text = "Time")
                             OutlinedTextFieldTimePicker(
-                                currentTime = oneRepMaxDetailUiState.oneRMInfo.date.toLocalTime(),
+                                currentDateTime = oneRepMaxDetailUiState.oneRMInfo.offsetDateTime,
                                 showDialog = showTimePickerDialog,
-                                setDialogVisibility = { showTimePickerDialog = it }
+                                setDialogVisibility = { showTimePickerDialog = it },
+                                updateOneRepMaxDetail = { offsetDateTime ->
+                                    updateOneRepMaxDetail(
+                                        oneRepMaxDetailUiState.oneRMInfo.copy(offsetDateTime = offsetDateTime),
+                                    )
+                                },
                             )
                         }
                     }
@@ -204,7 +209,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
                     id = 1,
                     movementId = 15,
                     weight = 100,
-                    date = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+                    offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             ),
         )

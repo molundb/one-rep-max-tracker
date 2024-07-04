@@ -7,7 +7,7 @@ data class OneRMInfo(
     val id: Long = -1, // Will be overwritten by Room
     val movementId: Long,
     val weight: Int,
-    val date: OffsetDateTime,
+    val offsetDateTime: OffsetDateTime,
 )
 
 fun OneRMInfo.asEntity() =
@@ -15,13 +15,13 @@ fun OneRMInfo.asEntity() =
         OneRMEntity(
             movementId = movementId,
             weight = weight,
-            date = date,
+            date = offsetDateTime,
         )
     } else {
         OneRMEntity(
             oneRMid = id,
             movementId = movementId,
             weight = weight,
-            date = date,
+            date = offsetDateTime,
         )
     }

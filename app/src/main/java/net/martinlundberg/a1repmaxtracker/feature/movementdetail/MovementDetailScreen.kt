@@ -135,7 +135,7 @@ fun MovementDetailScreen(
                                     movementName = movementName,
                                     id = it.id,
                                     weight = it.weight,
-                                    date = it.date.formatTo("dd MMM yyyy"),
+                                    date = it.offsetDateTime.formatTo("dd MMM yyyy"),
                                     onOneRepMaxClick = onOneRepMaxClick,
                                 )
                             }
@@ -274,19 +274,19 @@ private fun MovementDetailScreenSuccessPreview() {
                             id = 80,
                             movementId = 18,
                             weight = 15,
-                            date = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
+                            offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                         OneRMInfo(
                             id = 75,
                             movementId = 18,
                             weight = 15,
-                            date = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
+                            offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                         OneRMInfo(
                             id = 70,
                             movementId = 18,
                             weight = 15,
-                            date = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                            offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                     )
                 )

@@ -20,10 +20,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,24 +27,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import net.martinlundberg.a1repmaxtracker.util.formatTo
-import java.time.LocalTime
+import java.time.OffsetDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedTextFieldTimePicker(
-    currentTime: LocalTime,
+    currentDateTime: OffsetDateTime,
     showDialog: Boolean,
     setDialogVisibility: (Boolean) -> Unit = {},
+    updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
 ) {
-    val timePickerState = rememberTimePickerState(currentTime.hour, currentTime.minute)
-    var time by remember { mutableStateOf(currentTime) }
+    val timePickerState = rememberTimePickerState(currentDateTime.hour, currentDateTime.minute)
 
     OutlinedTextField(
         modifier = Modifier.clickable {
             setDialogVisibility(true)
         },
         enabled = false,
-        value = time.formatTo("hh:mm a"),
+        value = currentDateTime.formatTo("hh:mm a"),
         onValueChange = {},
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
@@ -63,9 +59,7 @@ fun OutlinedTextFieldTimePicker(
     if (showDialog) {
         TimePickerDialog(
             onConfirm = {
-                time = LocalTime.of(timePickerState.hour, timePickerState.minute)
-
-                // TODO Store time in room
+                updateOneRepMaxDetail(currentDateTime.withHour(timePickerState.hour).withMinute(timePickerState.minute))
                 setDialogVisibility(false)
             },
             onCancel = {
@@ -139,7 +133,7 @@ fun TimePickerDialog(
 @Composable
 private fun OutlinedTextFieldTimePickerPreview() {
     OutlinedTextFieldTimePicker(
-        currentTime = LocalTime.now(),
+        currentDateTime = OffsetDateTime.now(),
         showDialog = false,
     )
 }
@@ -148,7 +142,7 @@ private fun OutlinedTextFieldTimePickerPreview() {
 @Composable
 private fun OutlinedTextFieldTimePickerDialogPreview() {
     OutlinedTextFieldTimePicker(
-        currentTime = LocalTime.now(),
+        currentDateTime = OffsetDateTime.now(),
         showDialog = true,
     )
 }

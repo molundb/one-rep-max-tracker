@@ -36,7 +36,7 @@ class MovementDetailViewModel @Inject constructor(
             oneRepMaxRepository.addOneRM(
                 OneRMInfo(
                     weight = weight,
-                    date = OffsetDateTime.now(),
+                    offsetDateTime = OffsetDateTime.now(),
                     movementId = movementId
                 )
             )

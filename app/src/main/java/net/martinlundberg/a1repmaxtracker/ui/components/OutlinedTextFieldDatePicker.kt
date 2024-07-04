@@ -20,7 +20,7 @@ import java.time.ZoneOffset
 
 @Composable
 fun OutlinedTextFieldDatePicker(
-    currentDate: OffsetDateTime,
+    currentDateTime: OffsetDateTime,
     showDialog: Boolean,
     setDialogVisibility: (Boolean) -> Unit = {},
     updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
@@ -30,7 +30,7 @@ fun OutlinedTextFieldDatePicker(
             setDialogVisibility(true)
         },
         enabled = false,
-        value = currentDate.formatTo("dd MMM yyyy"),
+        value = currentDateTime.formatTo("dd MMM yyyy"),
         onValueChange = {},
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
@@ -46,16 +46,16 @@ fun OutlinedTextFieldDatePicker(
         CustomDatePickerDialog(
             onAccept = {
                 if (it != null) {
-                    val date = Instant
+                    val selectedDate = Instant
                         .ofEpochMilli(it)
                         .atZone(ZoneOffset.UTC)
                         .toLocalDateTime()
-                        .withHour(currentDate.hour)
-                        .withMinute(currentDate.minute)
-                        .withSecond(currentDate.second)
-                        .withNano(currentDate.nano)
 
-                    updateOneRepMaxDetail(OffsetDateTime.of(date, currentDate.offset))
+                    updateOneRepMaxDetail(
+                        currentDateTime
+                            .withMonth(selectedDate.monthValue)
+                            .withDayOfMonth(selectedDate.dayOfMonth)
+                    )
                 }
                 setDialogVisibility(false)
             },
@@ -95,7 +95,7 @@ private fun CustomDatePickerDialog(
 @Composable
 private fun OutlinedTextFieldDatePickerPreview() {
     OutlinedTextFieldDatePicker(
-        currentDate = OffsetDateTime.now(),
+        currentDateTime = OffsetDateTime.now(),
         showDialog = false,
     )
 }
@@ -104,7 +104,7 @@ private fun OutlinedTextFieldDatePickerPreview() {
 @Composable
 private fun OutlinedTextFieldDatePickerDialogPreview() {
     OutlinedTextFieldDatePicker(
-        currentDate = OffsetDateTime.now(),
+        currentDateTime = OffsetDateTime.now(),
         showDialog = true,
     )
 }
