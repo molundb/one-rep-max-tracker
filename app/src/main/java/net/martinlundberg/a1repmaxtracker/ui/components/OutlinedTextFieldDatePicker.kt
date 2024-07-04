@@ -56,6 +56,10 @@ fun OutlinedTextFieldDatePicker(
                         .ofEpochMilli(it)
                         .atZone(ZoneOffset.UTC)
                         .toLocalDateTime()
+                        .withHour(currentDate.hour)
+                        .withMinute(currentDate.minute)
+                        .withSecond(currentDate.second)
+                        .withNano(currentDate.nano)
 
                     updateOneRepMaxDetail(OffsetDateTime.of(date, currentDate.offset))
                 }
