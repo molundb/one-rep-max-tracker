@@ -11,7 +11,9 @@ import net.martinlundberg.a1repmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
 import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
 import net.martinlundberg.a1repmaxtracker.data.repository.DefaultMovementsRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.DefaultOneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import javax.inject.Singleton
 
 @Module
@@ -40,6 +42,12 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMovementsRepository(db: OneRepMaxTrackerDatabase): MovementsRepository {
-        return DefaultMovementsRepository(db.movementDao(), db.oneRMDao())
+        return DefaultMovementsRepository(db.movementDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideOneRepMaxRepository(db: OneRepMaxTrackerDatabase): OneRepMaxRepository {
+        return DefaultOneRepMaxRepository(db.oneRMDao())
     }
 }

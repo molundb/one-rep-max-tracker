@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
-import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import java.time.OffsetDateTime
@@ -18,21 +18,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovementDetailViewModel @Inject constructor(
-    private val movementsRepository: MovementsRepository,
+    private val oneRepMaxRepository: OneRepMaxRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
     fun getMovementInfo(id: Long) {
         viewModelScope.launch {
-            val movementDetail = Success(movementsRepository.getMovementDetail(id))
+            val movementDetail = Success(oneRepMaxRepository.getMovementDetail(id))
             _uiState.update { movementDetail }
         }
     }
 
     fun add1RM(weight: Int, movementId: Long) {
         viewModelScope.launch {
-            movementsRepository.addOneRM(
+            oneRepMaxRepository.addOneRM(
                 OneRMInfo(
                     weight = weight,
                     date = OffsetDateTime.now(),
