@@ -27,8 +27,10 @@ class MovementsListViewModel @Inject constructor(
 
     fun getMovements() {
         viewModelScope.launch {
-            val movements = Success(movementsRepository.getMovements())
-            _uiState.update { movements }
+            movementsRepository.getMovements()
+                .collect { movements ->
+                    _uiState.update { Success(movements) }
+                }
         }
     }
 
@@ -44,21 +46,18 @@ class MovementsListViewModel @Inject constructor(
                     )
                 )
             }
-            getMovements()
         }
     }
 
     fun editMovement(movement: Movement) {
         viewModelScope.launch {
             movementsRepository.setMovement(movement)
-            getMovements()
         }
     }
 
     fun deleteMovement(id: Long) {
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
-            getMovements()
         }
     }
 }
