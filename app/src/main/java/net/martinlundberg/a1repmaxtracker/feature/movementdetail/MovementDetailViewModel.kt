@@ -25,7 +25,7 @@ class MovementDetailViewModel @Inject constructor(
 
     fun getMovementInfo(id: Long) {
         viewModelScope.launch {
-            val movementDetail = Success(movementsRepository.getOneRMsForMovement(id))
+            val movementDetail = Success(movementsRepository.getMovementDetail(id))
             _uiState.update { movementDetail }
         }
     }

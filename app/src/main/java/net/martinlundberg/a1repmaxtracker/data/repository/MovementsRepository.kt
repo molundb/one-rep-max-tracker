@@ -8,7 +8,7 @@ interface MovementsRepository {
 
     suspend fun getMovements(): List<Movement>
 
-    suspend fun getOneRMsForMovement(id: Long): MovementDetail
+    suspend fun getMovementDetail(id: Long): MovementDetail
 
     suspend fun setMovement(movement: Movement): Long
 
