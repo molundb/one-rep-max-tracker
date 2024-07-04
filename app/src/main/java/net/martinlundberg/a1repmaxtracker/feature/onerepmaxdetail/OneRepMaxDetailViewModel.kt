@@ -25,8 +25,9 @@ class OneRepMaxDetailViewModel @Inject constructor(
 
     fun getOneRepMaxDetail(id: Long) {
         viewModelScope.launch {
-            val oneRmInfo = Success(oneRepMaxRepository.getOneRM(id))
-            _uiState.update { oneRmInfo }
+            oneRepMaxRepository.getOneRM(id).collect { oneRmInfo ->
+                _uiState.update { Success(oneRmInfo) }
+            }
         }
     }
 

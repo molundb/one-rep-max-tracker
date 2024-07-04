@@ -11,10 +11,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import net.martinlundberg.a1repmaxtracker.util.formatTo
@@ -29,14 +25,12 @@ fun OutlinedTextFieldDatePicker(
     setDialogVisibility: (Boolean) -> Unit = {},
     updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
 ) {
-    var date by remember { mutableStateOf(currentDate.toLocalDateTime()) }
-
     OutlinedTextField(
         modifier = Modifier.clickable {
             setDialogVisibility(true)
         },
         enabled = false,
-        value = date.formatTo("dd MMM yyyy"),
+        value = currentDate.formatTo("dd MMM yyyy"),
         onValueChange = {},
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
@@ -52,7 +46,7 @@ fun OutlinedTextFieldDatePicker(
         CustomDatePickerDialog(
             onAccept = {
                 if (it != null) {
-                    date = Instant
+                    val date = Instant
                         .ofEpochMilli(it)
                         .atZone(ZoneOffset.UTC)
                         .toLocalDateTime()

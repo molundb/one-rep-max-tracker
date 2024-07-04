@@ -19,7 +19,7 @@ class DefaultOneRepMaxRepository @Inject constructor(
 
     override suspend fun addOneRM(oneRM: OneRMInfo) = oneRMDao.insert(oneRM.asEntity())
 
-    override suspend fun getOneRM(id: Long): OneRMInfo = oneRMDao.getOneRM(id).asExternalModel()
+    override fun getOneRM(id: Long): Flow<OneRMInfo> = oneRMDao.getOneRM(id).map { it.asExternalModel() }
 
     override suspend fun deleteOneRM(id: Long) = oneRMDao.deleteByOneRMId(id)
 }
