@@ -41,7 +41,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMovementsRepository(db: OneRepMaxTrackerDatabase): MovementsRepository {
-        return DefaultMovementsRepository(db.movementDao())
+        return DefaultMovementsRepository(db.movementDao(), db.oneRMDao())
     }
 
     @Provides

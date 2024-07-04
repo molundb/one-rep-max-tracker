@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.data.repository
 
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
+import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
 import net.martinlundberg.a1repmaxtracker.data.database.model.asExternalMovement
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.data.model.asEntity
@@ -8,6 +9,7 @@ import javax.inject.Inject
 
 class DefaultMovementsRepository @Inject constructor(
     private val movementDao: MovementDao,
+    private val oneRMDao: OneRMDao,
 ) : MovementsRepository {
     override suspend fun getMovements(): List<Movement> =
         movementDao.getMovements().entries.map {
@@ -16,5 +18,8 @@ class DefaultMovementsRepository @Inject constructor(
 
     override suspend fun setMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 
-    override suspend fun deleteMovement(id: Long) = movementDao.deleteById(id)
+    override suspend fun deleteMovement(movementId: Long) {
+        movementDao.deleteById(movementId)
+        oneRMDao.deleteAllWithMovementId(movementId)
+    }
 }

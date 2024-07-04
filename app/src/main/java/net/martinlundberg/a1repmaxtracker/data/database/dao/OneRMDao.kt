@@ -17,6 +17,9 @@ interface OneRMDao {
     @Query("SELECT * FROM oneRMEntity WHERE movementId = :id")
     suspend fun getOneRMsForMovement(id: Long): List<OneRMEntity>
 
-    @Query("DELETE FROM onermentity WHERE oneRMid = :id")
-    suspend fun deleteById(id: Long)
+    @Query("DELETE FROM oneRMEntity WHERE oneRMid = :id")
+    suspend fun deleteByOneRMId(id: Long)
+
+    @Query("DELETE FROM oneRMEntity WHERE movementId = :id")
+    suspend fun deleteAllWithMovementId(id: Long)
 }
