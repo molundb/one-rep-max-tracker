@@ -21,7 +21,7 @@ class DefaultMovementsRepository @Inject constructor(
         }
 
     override suspend fun getMovementDetail(id: Long): MovementDetail =
-        movementDao.getMovement(id).asExternalMovementDetail()
+        oneRMDao.getOneRMsForMovement(id).asExternalMovementDetail()
 
     override suspend fun setMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 
