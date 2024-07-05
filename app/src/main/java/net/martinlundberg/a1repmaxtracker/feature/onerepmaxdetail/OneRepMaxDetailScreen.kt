@@ -67,8 +67,8 @@ fun OneRepMaxDetailRoute(
 @Composable
 fun OneRepMaxDetailScreen(
     oneRepMaxId: Long,
+    movementName: String,
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
-    movementName: String = "",
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
 ) {
@@ -193,6 +193,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
     _1RepMaxTrackerTheme {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
+            movementName = "Back Squat",
             oneRepMaxDetailUiState = Loading,
         )
     }
@@ -204,6 +205,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
+            movementName = "The name",
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,

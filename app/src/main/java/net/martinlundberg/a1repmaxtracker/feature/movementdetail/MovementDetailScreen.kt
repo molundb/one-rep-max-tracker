@@ -64,9 +64,9 @@ fun MovementDetailRoute(
     }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
     MovementDetailScreen(
-        movementDetailUiState = movementDetailUiState,
         movementId = movementId,
         movementName = movementName,
+        movementDetailUiState = movementDetailUiState,
         onOneRepMaxClick = onOneRepMaxClick,
         add1RM = movementDetailViewModel::add1RM
     )
@@ -75,9 +75,9 @@ fun MovementDetailRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementDetailScreen(
+    movementId: Long,
+    movementName: String,
     movementDetailUiState: MovementDetailUiState = Loading,
-    movementId: Long = 0,
-    movementName: String = "",
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
 ) {
@@ -166,8 +166,8 @@ fun MovementDetailScreen(
 
 @Composable
 fun OneRMCard(
-    movementName: String,
     id: Long,
+    movementName: String,
     weight: Int?,
     date: String?,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
@@ -257,6 +257,8 @@ fun Add1rmDialog(
 private fun MovementDetailLoadingPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
+            movementId = 1,
+            movementName = "Bench Press",
             movementDetailUiState = Loading,
         )
     }
@@ -267,6 +269,8 @@ private fun MovementDetailLoadingPreview() {
 private fun MovementDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
         MovementDetailScreen(
+            movementId = 111,
+            movementName = "Back Squat",
             movementDetailUiState = Success(
                 MovementDetail(
                     listOf(
@@ -290,7 +294,7 @@ private fun MovementDetailScreenSuccessPreview() {
                         ),
                     )
                 )
-            )
+            ),
         )
     }
 }

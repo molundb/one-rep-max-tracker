@@ -41,6 +41,7 @@ class MovementDetailScreenTest {
     fun givenMovementName_thenNameOfMovementIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 11,
                 movementName = "Name of movement",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
@@ -55,6 +56,8 @@ class MovementDetailScreenTest {
     fun givenStateIsLoading_thenLoadingIndicatorAndTextAreDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 15,
+                movementName = "The name",
                 movementDetailUiState = MovementDetailUiState.Loading
             )
         }
@@ -67,6 +70,8 @@ class MovementDetailScreenTest {
     fun givenListOf1RMs_thenListInfoIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 2,
+                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -106,6 +111,8 @@ class MovementDetailScreenTest {
     fun givenAdd1RMButtonIsPressed_thenAdd1RMDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -121,6 +128,8 @@ class MovementDetailScreenTest {
     fun givenAdd1RMDialogWithNoWeight_thenAddButtonIsDisabled() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -137,6 +146,8 @@ class MovementDetailScreenTest {
         var add1RMCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
@@ -160,6 +171,8 @@ class MovementDetailScreenTest {
         var add1RMCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
