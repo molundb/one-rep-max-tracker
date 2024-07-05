@@ -227,6 +227,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(
+                            id = 17,
                             name = "Test movement",
                             weight = 3
                         )

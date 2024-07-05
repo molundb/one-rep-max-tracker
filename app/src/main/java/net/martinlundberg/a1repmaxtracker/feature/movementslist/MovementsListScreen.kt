@@ -87,7 +87,7 @@ fun MovementsListScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
 ) {
-    var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementToAddOrEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
     var movementToDelete by rememberSaveable { mutableStateOf<Movement?>(null) }
 
     Scaffold(
@@ -140,7 +140,7 @@ fun MovementsListScreen(
                                 movement = Movement(it.id, it.name, it.weight),
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
-                                    movementToEdit = movement
+                                    movementToAddOrEdit = movement
                                 },
                                 onDeleteMovementClick = { movement ->
                                     movementToDelete = movement
@@ -153,28 +153,28 @@ fun MovementsListScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .semantics { contentDescription = "Add Movement" },
-                    onClick = { movementToEdit = Movement(-1, "") },
+                    onClick = { movementToAddOrEdit = Movement(name = "") },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
                 }
 
-                movementToEdit?.let { movement ->
-                    if (movement.id == -1L) {
+                movementToAddOrEdit?.let { movement ->
+                    if (movement.id == null) {
                         AddMovementDialog(
                             movement = movement,
-                            onDismissRequest = { movementToEdit = null },
+                            onDismissRequest = { movementToAddOrEdit = null },
                             onConfirmation = {
                                 onAddMovementClick(it)
-                                movementToEdit = null
+                                movementToAddOrEdit = null
                             }
                         )
                     } else {
                         EditMovementDialog(
                             movement = movement,
-                            onDismissRequest = { movementToEdit = null },
+                            onDismissRequest = { movementToAddOrEdit = null },
                             onConfirmation = {
                                 onEditMovementClick(it)
-                                movementToEdit = null
+                                movementToAddOrEdit = null
                             }
                         )
                     }
@@ -185,7 +185,8 @@ fun MovementsListScreen(
                         name = movement.name,
                         onDismissRequest = { movementToDelete = null },
                         onConfirmation = {
-                            onDeleteMovementClick(movement.id)
+                            // TODO: Track error if id == null
+                            movement.id?.let { onDeleteMovementClick(it) }
                             movementToDelete = null
                         }
                     )
@@ -289,7 +290,7 @@ fun MovementDropDownMenu(
 fun DeleteMovementConfirmDialog(
     name: String,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (String) -> Unit = {},
+    onConfirmation: () -> Unit = {},
 ) {
     AlertDialog(
         modifier = Modifier.semantics { contentDescription = "Delete Movement Confirmation Dialog" },
@@ -299,7 +300,7 @@ fun DeleteMovementConfirmDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onConfirmation(name)
+                    onConfirmation()
                 }
             ) {
                 Text("Confirm")
