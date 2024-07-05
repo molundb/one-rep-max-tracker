@@ -87,7 +87,8 @@ fun MovementsListScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
 ) {
-    var movementToAddOrEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var showAddMovementDialog by remember { mutableStateOf(false) }
     var movementToDelete by rememberSaveable { mutableStateOf<Movement?>(null) }
 
     Scaffold(
@@ -140,7 +141,7 @@ fun MovementsListScreen(
                                 movement = Movement(it.id, it.name, it.weight),
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
-                                    movementToAddOrEdit = movement
+                                    movementToEdit = movement
                                 },
                                 onDeleteMovementClick = { movement ->
                                     movementToDelete = movement
@@ -153,32 +154,32 @@ fun MovementsListScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .semantics { contentDescription = "Add Movement" },
-                    onClick = { movementToAddOrEdit = Movement(name = "") },
+                    onClick = { showAddMovementDialog = true },
                 ) {
                     Icon(Filled.Add, "Floating action button.")
                 }
 
-                movementToAddOrEdit?.let { movement ->
-                    if (movement.id == 0L) {
-                        AddMovementDialog(
-                            movement = movement,
-                            onDismissRequest = { movementToAddOrEdit = null },
-                            onConfirmation = {
-                                onAddMovementClick(it)
-                                movementToAddOrEdit = null
-                            }
-                        )
-                    } else {
-                        EditMovementDialog(
-                            movement = movement,
-                            onDismissRequest = { movementToAddOrEdit = null },
-                            onConfirmation = {
-                                onEditMovementClick(it)
-                                movementToAddOrEdit = null
-                            }
-                        )
-                    }
+                if (showAddMovementDialog) {
+                    AddMovementDialog(
+                        onDismissRequest = { showAddMovementDialog = false },
+                        onConfirmation = {
+                            onAddMovementClick(it)
+                            showAddMovementDialog = false
+                        }
+                    )
                 }
+
+                movementToEdit?.let { movement ->
+                    EditMovementDialog(
+                        movement = movement,
+                        onDismissRequest = { movementToEdit = null },
+                        onConfirmation = {
+                            onEditMovementClick(it)
+                            movementToEdit = null
+                        }
+                    )
+                }
+
 
                 movementToDelete?.let { movement ->
                     DeleteMovementConfirmDialog(
@@ -319,13 +320,11 @@ fun DeleteMovementConfirmDialog(
 
 @Composable
 fun AddMovementDialog(
-    movement: Movement,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
     AddOrEditMovementDialog(
         isAdd = true,
-        movement = movement,
         onDismissRequest = onDismissRequest,
         onConfirmation = onConfirmation
     )
@@ -347,8 +346,8 @@ fun EditMovementDialog(
 
 @Composable
 private fun AddOrEditMovementDialog(
-    isAdd: Boolean = true,
-    movement: Movement,
+    isAdd: Boolean,
+    movement: Movement = Movement(name = ""),
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
@@ -445,7 +444,21 @@ private fun MovementsListScreenSuccessPreview() {
 @Composable
 private fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
-        AddOrEditMovementDialog(movement = Movement(id = 1, name = "Movement 1", weight = 100))
+        AddOrEditMovementDialog(
+            isAdd = true,
+            movement = Movement(id = 1, name = "Movement 1", weight = 100)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EditMovementDialogPreview() {
+    _1RepMaxTrackerTheme {
+        AddOrEditMovementDialog(
+            isAdd = false,
+            movement = Movement(id = 1, name = "Movement 1", weight = 100)
+        )
     }
 }
 
