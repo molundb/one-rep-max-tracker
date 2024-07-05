@@ -58,6 +58,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.util.weightUnit
 
 @Composable
 fun MovementsListRoute(
@@ -234,7 +235,7 @@ fun MovementCard(
                         text = "-", style = MaterialTheme.typography.titleLarge
                     )
                 } else {
-                    Text("${movement.weight} kg", style = MaterialTheme.typography.titleLarge)
+                    Text("${movement.weight} $weightUnit", style = MaterialTheme.typography.titleLarge)
                 }
             }
             movementDropDownMenuInfo?.let {

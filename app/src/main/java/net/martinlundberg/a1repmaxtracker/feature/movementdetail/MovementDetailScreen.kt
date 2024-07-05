@@ -49,6 +49,7 @@ import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailU
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.formatTo
+import net.martinlundberg.a1repmaxtracker.util.weightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -188,7 +189,7 @@ fun OneRMCard(
                     text = "-", style = MaterialTheme.typography.titleLarge
                 )
             } else {
-                Text("$weight kg", style = MaterialTheme.typography.titleLarge)
+                Text("$weight $weightUnit", style = MaterialTheme.typography.titleLarge)
             }
             if (date == null) {
                 Text(

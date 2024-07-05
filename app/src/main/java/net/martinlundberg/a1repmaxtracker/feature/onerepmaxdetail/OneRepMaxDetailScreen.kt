@@ -40,6 +40,7 @@ import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetai
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.util.weightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -114,7 +115,7 @@ fun OneRepMaxDetailScreen(
             }
 
             is Success -> {
-                var weightText by remember { mutableStateOf("${oneRepMaxDetailUiState.oneRMInfo.weight} kg") }
+                var weightText by remember { mutableStateOf("${oneRepMaxDetailUiState.oneRMInfo.weight} $weightUnit") }
                 var notesText by remember { mutableStateOf("") }
                 var showDatePickerDialog by remember { mutableStateOf(false) }
                 var showTimePickerDialog by remember { mutableStateOf(false) }
