@@ -352,7 +352,7 @@ private fun AddOrEditMovementDialog(
     onConfirmation: (Movement) -> Unit = {},
 ) {
     var movementNameText by remember { mutableStateOf(movement.name) }
-    val weightInitialValue = if (movement.weight == null) "" else movement.weight.toString()
+    val weightInitialValue = movement.weight?.toString() ?: ""
     var movementWeightText by remember { mutableStateOf(weightInitialValue) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
