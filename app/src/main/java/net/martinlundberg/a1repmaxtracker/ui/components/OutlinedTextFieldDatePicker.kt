@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import net.martinlundberg.a1repmaxtracker.util.formatTo
 import java.time.Instant
@@ -26,9 +28,9 @@ fun OutlinedTextFieldDatePicker(
     updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
 ) {
     OutlinedTextField(
-        modifier = Modifier.clickable {
-            setDialogVisibility(true)
-        },
+        modifier = Modifier
+            .clickable { setDialogVisibility(true) }
+            .semantics { contentDescription = "Outlined Text Field Date Picker" },
         enabled = false,
         value = currentDateTime.formatTo("dd MMM yyyy"),
         onValueChange = {},
@@ -75,6 +77,7 @@ private fun CustomDatePickerDialog(
     val state = rememberDatePickerState()
 
     DatePickerDialog(
+        modifier = Modifier.semantics { contentDescription = "Date Picker Dialog" },
         onDismissRequest = onCancel,
         confirmButton = {
             Button(onClick = { onAccept(state.selectedDateMillis) }) {

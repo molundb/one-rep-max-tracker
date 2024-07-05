@@ -108,7 +108,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenAdd1RMButtonIsPressed_thenAdd1RMDialogIsDisplayed() {
+    fun whenAdd1RMButtonIsClicked_thenAdd1RMDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -142,7 +142,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenAdd1RMDialogWithWeight_whenAddButtonIsPressed_thenDialogIsClosedAndNew1RMIsAdded() {
+    fun givenAdd1RMDialogWithWeight_whenAddButtonIsClicked_thenDialogIsClosedAndNew1RMIsAdded() {
         var add1RMCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
@@ -167,7 +167,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenAdd1RMDialogWithWeight_whenDismissButtonIsPressed_thenDialogIsClosedAndNoNew1RMIsAdded() {
+    fun givenAdd1RMDialogWithWeight_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNew1RMIsAdded() {
         var add1RMCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(

@@ -22,6 +22,8 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -40,9 +42,9 @@ fun OutlinedTextFieldTimePicker(
     val timePickerState = rememberTimePickerState(currentDateTime.hour, currentDateTime.minute)
 
     OutlinedTextField(
-        modifier = Modifier.clickable {
-            setDialogVisibility(true)
-        },
+        modifier = Modifier
+            .clickable { setDialogVisibility(true) }
+            .semantics { contentDescription = "Outlined Text Field Time Picker" },
         enabled = false,
         value = currentDateTime.formatTo("hh:mm a"),
         onValueChange = {},
@@ -67,6 +69,7 @@ fun OutlinedTextFieldTimePicker(
             },
         ) {
             TimePicker(
+                modifier = Modifier.semantics { contentDescription = "Time Picker Dialog" },
                 state = timePickerState,
             )
         }
@@ -122,7 +125,7 @@ fun TimePickerDialog(
                     ) { Text("Cancel") }
                     TextButton(
                         onClick = onConfirm
-                    ) { Text("OK") }
+                    ) { Text("Accept") }
                 }
             }
         }

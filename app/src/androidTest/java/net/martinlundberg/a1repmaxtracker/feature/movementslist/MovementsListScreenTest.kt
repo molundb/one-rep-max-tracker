@@ -43,7 +43,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenAddButtonIsPressed_thenAddMovementDialogIsDisplayed() {
+    fun whenAddButtonIsClicked_thenAddMovementDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -63,7 +63,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithMovementName_whenAddButtonIsPressed_thenDialogIsClosedAndNewMovementIsAdded() {
+    fun givenAddMovementDialogWithMovementName_whenAddButtonIsClicked_thenDialogIsClosedAndNewMovementIsAdded() {
         // Given
         var addMovementCalled = false
 
@@ -105,7 +105,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithMovementName_whenDismissButtonIsPressed_thenDialogIsClosedAndNoNewMovementIsAdded() {
+    fun givenAddMovementDialogWithMovementName_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         var addMovementCalled = false
         composeTestRule.setContent {
@@ -130,7 +130,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsPressed_thenNavigateToMovementDetailScreen() {
+    fun whenMovementIsClicked_thenNavigateToMovementDetailScreen() {
         // Given
         var onMovementClickCalled = false
 
@@ -153,7 +153,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun whenMovementIsLongPressed_thenDropDownMenuIsDisplayed() {
+    fun whenMovementIsLongClicked_thenDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -196,7 +196,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenMovementDropDownMenu_whenDeleteIsPressed_thenMenuIsDismissedAndConfirmationDialogIsDisplayed() {
+    fun givenMovementDropDownMenu_whenDeleteIsClicked_thenMenuIsDismissedAndConfirmationDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -219,7 +219,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenDeleteMovementConfirmDialog_whenConfirmIsPressed_thenMenuIsDismissedAndMovementIsDeleted() {
+    fun givenDeleteMovementConfirmDialog_whenConfirmIsClicked_thenMenuIsDismissedAndMovementIsDeleted() {
         // Given
         var deleteMovementCalled = false
         composeTestRule.setContent {
@@ -248,7 +248,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenMovementDropDownMenu_whenEditIsPressed_thenMenuIsDismissedAndEditDialogIsDisplayed() {
+    fun givenMovementDropDownMenu_whenEditIsClicked_thenMenuIsDismissedAndEditDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
@@ -270,7 +270,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenMovementDropDownMenuDismissed_whenMovementLongPressed_thenDropDownMenuIsDisplayed() {
+    fun givenMovementDropDownMenuDismissed_whenMovementLongClicked_thenDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
             MovementsListScreen(
