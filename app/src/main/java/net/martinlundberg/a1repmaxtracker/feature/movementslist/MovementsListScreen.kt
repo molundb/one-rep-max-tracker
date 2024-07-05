@@ -159,7 +159,7 @@ fun MovementsListScreen(
                 }
 
                 movementToAddOrEdit?.let { movement ->
-                    if (movement.id == null) {
+                    if (movement.id == 0L) {
                         AddMovementDialog(
                             movement = movement,
                             onDismissRequest = { movementToAddOrEdit = null },
@@ -185,8 +185,7 @@ fun MovementsListScreen(
                         name = movement.name,
                         onDismissRequest = { movementToDelete = null },
                         onConfirmation = {
-                            // TODO: Track error if id == null
-                            movement.id?.let { onDeleteMovementClick(it) }
+                            onDeleteMovementClick(movement.id)
                             movementToDelete = null
                         }
                     )
