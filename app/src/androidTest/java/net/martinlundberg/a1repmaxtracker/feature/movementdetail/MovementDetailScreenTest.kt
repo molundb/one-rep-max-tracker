@@ -71,18 +71,21 @@ class MovementDetailScreenTest {
                     MovementDetail(
                         listOf(
                             OneRMInfo(
-                                id = 70,
-                                weight = 15,
+                                id = 1,
+                                movementId = 2,
+                                weight = 70,
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                             OneRMInfo(
-                                id = 72,
-                                weight = 16,
+                                id = 2,
+                                movementId = 2,
+                                weight = 72,
                                 offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                             OneRMInfo(
-                                id = 75,
-                                weight = 3,
+                                id = 3,
+                                movementId = 2,
+                                weight = 75,
                                 offsetDateTime = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                         )
