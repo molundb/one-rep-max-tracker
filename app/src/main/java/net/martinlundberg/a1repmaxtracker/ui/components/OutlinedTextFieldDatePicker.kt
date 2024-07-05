@@ -61,7 +61,7 @@ fun OutlinedTextFieldDatePicker(
             },
             onCancel = {
                 setDialogVisibility(false)
-            }
+            },
         )
     }
 }
@@ -75,7 +75,7 @@ private fun CustomDatePickerDialog(
     val state = rememberDatePickerState()
 
     DatePickerDialog(
-        onDismissRequest = { },
+        onDismissRequest = onCancel,
         confirmButton = {
             Button(onClick = { onAccept(state.selectedDateMillis) }) {
                 Text("Accept")
