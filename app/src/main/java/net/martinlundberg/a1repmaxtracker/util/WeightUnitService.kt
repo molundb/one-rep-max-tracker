@@ -1,13 +1,20 @@
 package net.martinlundberg.a1repmaxtracker.util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeightUnitService {
+class WeightUnitService @Inject constructor() {
 
     private val _weightUnitFlow: MutableStateFlow<String> = MutableStateFlow("kg")
     val weightUnitFlow: StateFlow<String> = _weightUnitFlow.asStateFlow()
@@ -34,4 +41,17 @@ class WeightUnitService {
                 "$this kg"
             }
     }
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface WeightUnitServiceEntryPoint {
+    fun weightUnitService(): WeightUnitService
+}
+
+@Composable
+fun provideWeightUnitService(): WeightUnitService {
+    val hiltEntryPoint =
+        EntryPointAccessors.fromApplication(LocalContext.current, WeightUnitServiceEntryPoint::class.java)
+    return hiltEntryPoint.weightUnitService()
 }

@@ -62,12 +62,13 @@ import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiS
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
+import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 @Composable
 fun MovementsListRoute(
     onMovementClick: (Movement) -> Unit = {},
     movementsListViewModel: MovementsListViewModel = hiltViewModel(),
-    weightUnitService: WeightUnitService,
+    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         movementsListViewModel.getMovements()

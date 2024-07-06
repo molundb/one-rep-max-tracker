@@ -51,6 +51,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
+import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -60,7 +61,7 @@ fun MovementDetailRoute(
     movementName: String,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
-    weightUnitService: WeightUnitService,
+    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)

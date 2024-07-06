@@ -14,6 +14,7 @@ import net.martinlundberg.a1repmaxtracker.data.repository.DefaultMovementsReposi
 import net.martinlundberg.a1repmaxtracker.data.repository.DefaultOneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import javax.inject.Singleton
 
 @Module
@@ -36,6 +37,12 @@ object AppModule {
             appContext,
             OneRepMaxTrackerDatabase::class.java, "database-name"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeightUnitService(): WeightUnitService {
+        return WeightUnitService()
     }
 
     @Provides
