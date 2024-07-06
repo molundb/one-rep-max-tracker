@@ -27,18 +27,21 @@ class WeightUnitService @Inject constructor() {
     }
 
     companion object {
+        private const val KILOS_TO_POUNDS_RATIO = 2.205f
+
         /*
         Round pounds to nearest quarter pound.
         Round kilograms to nearest quarter kilo.
          */
         fun Float.weightWithUnit(isPounds: Boolean) =
             if (isPounds) {
-                "${(this * 2.205).roundToNearestQuarter()} lb"
+
+                "${(this * KILOS_TO_POUNDS_RATIO).roundToNearestQuarter()} lb"
             } else {
-                "$this kg"
+                "${this.roundToNearestQuarter()} kg"
             }
 
-        fun Float.poundsToKilos() = this / 2.205
+        fun Float.poundsToKilos() = this / KILOS_TO_POUNDS_RATIO
     }
 }
 
