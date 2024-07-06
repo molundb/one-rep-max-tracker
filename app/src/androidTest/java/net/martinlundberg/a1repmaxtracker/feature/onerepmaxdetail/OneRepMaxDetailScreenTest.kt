@@ -29,6 +29,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
             )
         }
 
@@ -41,7 +42,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Loading
+                weightUnit = "kg",
+                oneRepMaxDetailUiState = Loading,
             )
         }
 
@@ -55,10 +57,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 )
@@ -78,10 +81,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 )
@@ -100,10 +104,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 ),
@@ -129,10 +134,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 ),
@@ -158,10 +164,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 )
@@ -180,10 +187,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 ),
@@ -209,10 +217,11 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
-                        weight = 100,
+                        weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                     )
                 ),

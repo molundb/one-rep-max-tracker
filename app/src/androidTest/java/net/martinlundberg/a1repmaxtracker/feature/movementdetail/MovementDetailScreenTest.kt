@@ -43,9 +43,10 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 11,
                 movementName = "Name of movement",
+                weightUnit = "kg",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
-                )
+                ),
             )
         }
 
@@ -58,7 +59,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 15,
                 movementName = "The name",
-                movementDetailUiState = MovementDetailUiState.Loading
+                weightUnit = "kg",
+                movementDetailUiState = MovementDetailUiState.Loading,
             )
         }
 
@@ -72,25 +74,26 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 2,
                 movementName = "Name",
+                weightUnit = "kg",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
                             OneRMInfo(
                                 id = 1,
                                 movementId = 2,
-                                weight = 70,
+                                weight = 70f,
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                             OneRMInfo(
                                 id = 2,
                                 movementId = 2,
-                                weight = 72,
+                                weight = 72f,
                                 offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                             OneRMInfo(
                                 id = 3,
                                 movementId = 2,
-                                weight = 75,
+                                weight = 75f,
                                 offsetDateTime = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                         )
@@ -113,6 +116,7 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 17,
                 movementName = "Name",
+                weightUnit = "lb",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -130,6 +134,7 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 17,
                 movementName = "Name",
+                weightUnit = "lb",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -148,10 +153,11 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 17,
                 movementName = "Name",
+                weightUnit = "kg",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = { _, _ ->
+                add1RM = { _, _, _ ->
                     add1RMCalled = true
                 }
             )
@@ -173,10 +179,11 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 movementId = 17,
                 movementName = "Name",
+                weightUnit = "kg",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = { _, _ ->
+                add1RM = { _, _, _ ->
                     add1RMCalled = true
                 }
             )
