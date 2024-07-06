@@ -14,6 +14,6 @@ fun OneRMInfo.asEntity() =
     OneRMEntity(
         oneRMid = id,
         movementId = movementId,
-        weight = weight,
+        weightInKilos = weight,
         date = offsetDateTime,
     )

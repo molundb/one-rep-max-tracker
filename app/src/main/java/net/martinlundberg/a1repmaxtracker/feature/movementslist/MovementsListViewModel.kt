@@ -14,6 +14,7 @@ import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.poundsToKilos
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -34,13 +35,19 @@ class MovementsListViewModel @Inject constructor(
         }
     }
 
-    fun addMovement(movement: Movement) {
+    fun addMovement(movement: Movement, weightUnit: String) {
         viewModelScope.launch {
             val movementId = movementsRepository.setMovement(movement)
             movement.weight?.let {
+                val weight = if (weightUnit == "lb") {
+                    it.poundsToKilos().toInt()
+                } else {
+                    it
+                }
+
                 oneRepMaxRepository.addOneRM(
                     OneRMInfo(
-                        weight = it,
+                        weight = weight,
                         offsetDateTime = OffsetDateTime.now(),
                         movementId = movementId
                     )

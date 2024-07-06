@@ -14,7 +14,7 @@ data class MovementEntity(
 fun Map.Entry<MovementEntity, List<OneRMEntity>>.asExternalMovement() = Movement(
     id = key.id,
     name = key.name,
-    weight = value.maxByOrNull { it.weight }?.weight
+    weight = value.maxByOrNull { it.weightInKilos }?.weightInKilos
 )
 
 fun List<OneRMEntity>.asExternalMovementDetail() = MovementDetail(

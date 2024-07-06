@@ -40,6 +40,8 @@ class WeightUnitService @Inject constructor() {
             } else {
                 "$this kg"
             }
+
+        fun Int.poundsToKilos() = this / 2.205
     }
 }
 

@@ -61,6 +61,7 @@ import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiS
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.poundsToKilos
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
@@ -439,8 +440,13 @@ private fun AddOrEditMovementDialog(
                                 Movement(
                                     id = movement.id,
                                     name = movementNameText,
-                                    weight = movementWeightText.toIntOrNull()
-                                )
+//                                    weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
+                                    weight = if (weightUnit == "lb") movementWeightText
+                                        .toInt()
+                                        .poundsToKilos()
+                                        .toInt() else movementWeightText.toIntOrNull() // TODO: Change to handle decimals
+                                ),
+                                weightUnit,
                             )
                         },
                         enabled = movementNameText.isNotBlank()
