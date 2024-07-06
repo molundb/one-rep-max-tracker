@@ -437,7 +437,7 @@ private fun AddOrEditMovementDialog(
                                 Movement(
                                     id = movement.id,
                                     name = movementNameText,
-                                    weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
+                                    weight = movementWeightText.toFloatOrNull()
                                 ),
                                 weightUnit,
                             )
@@ -473,8 +473,8 @@ private fun MovementsListScreenSuccessPreview() {
         MovementsListScreen(
             movementsListUiState = Success(
                 listOf(
-                    Movement(1, "Movement 1", 100),
-                    Movement(2, "Movement 4", 4),
+                    Movement(1, "Movement 1", 100f),
+                    Movement(2, "Movement 4", 4.4f),
                     Movement(3, "No weight", null),
                 )
             ),
@@ -490,7 +490,7 @@ private fun AddMovementDialogPreview() {
         AddOrEditMovementDialog(
             isAdd = true,
             weightUnit = "kg",
-            movement = Movement(id = 1, name = "Movement 1", weight = 100)
+            movement = Movement(id = 1, name = "Movement 1", weight = 102.25f)
         )
     }
 }
@@ -502,7 +502,7 @@ private fun EditMovementDialogPreview() {
         AddOrEditMovementDialog(
             isAdd = false,
             weightUnit = "kg",
-            movement = Movement(id = 1, name = "Movement 1", weight = 100)
+            movement = Movement(id = 1, name = "Movement 1", weight = 100.75f)
         )
     }
 }

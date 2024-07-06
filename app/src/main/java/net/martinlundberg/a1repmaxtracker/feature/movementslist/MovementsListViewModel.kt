@@ -40,7 +40,7 @@ class MovementsListViewModel @Inject constructor(
             val movementId = movementsRepository.setMovement(movement)
             movement.weight?.let {
                 val weight = if (weightUnit == "lb") {
-                    it.poundsToKilos().toInt()
+                    it.poundsToKilos().toFloat()
                 } else {
                     it
                 }

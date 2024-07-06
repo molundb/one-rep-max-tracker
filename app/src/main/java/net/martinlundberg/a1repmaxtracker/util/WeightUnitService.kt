@@ -31,14 +31,14 @@ class WeightUnitService @Inject constructor() {
         Round pounds to nearest quarter pound.
         Round kilograms to nearest quarter kilo.
          */
-        fun Int.weightWithUnit(isPounds: Boolean) =
+        fun Float.weightWithUnit(isPounds: Boolean) =
             if (isPounds) {
                 "${(this * 2.205).roundToNearestQuarter()} lb"
             } else {
                 "$this kg"
             }
 
-        fun Int.poundsToKilos() = this / 2.205
+        fun Float.poundsToKilos() = this / 2.205
     }
 }
 

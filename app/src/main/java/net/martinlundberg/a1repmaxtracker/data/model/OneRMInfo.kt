@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 data class OneRMInfo(
     val id: Long = 0, // Needs to be 0 to be overwritten by Room https://stackoverflow.com/questions/44109700/how-to-make-primary-key-as-autoincrement-for-room-persistence-lib#comment107992156_44109700
     val movementId: Long,
-    val weight: Int,
+    val weight: Float,
     val offsetDateTime: OffsetDateTime,
 )
 

@@ -91,7 +91,7 @@ fun MovementDetailScreen(
     weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
-    add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
+    add1RM: (weight: Float, movementId: Long) -> Unit = { _, _ -> },
     setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
@@ -198,7 +198,7 @@ fun MovementDetailScreen(
 fun OneRMCard(
     id: Long,
     movementName: String,
-    weight: Int?,
+    weight: Float?,
     weightUnit: String,
     date: String?,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
@@ -236,7 +236,7 @@ fun OneRMCard(
 @Composable
 fun Add1rmDialog(
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Int) -> Unit = {},
+    onConfirmation: (Float) -> Unit = {},
 ) {
     var weightText by remember { mutableStateOf("") }
 
@@ -269,7 +269,7 @@ fun Add1rmDialog(
                         Text("Dismiss")
                     }
                     TextButton(
-                        onClick = { onConfirmation(weightText.toInt()) },
+                        onClick = { onConfirmation(weightText.toFloat()) },
                         enabled = weightText.isNotBlank(),
                     ) {
                         Text("Add")
@@ -310,19 +310,19 @@ private fun MovementDetailScreenSuccessPreview() {
                         OneRMInfo(
                             id = 80,
                             movementId = 18,
-                            weight = 15,
+                            weight = 15.5f,
                             offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                         OneRMInfo(
                             id = 75,
                             movementId = 18,
-                            weight = 15,
+                            weight = 15f,
                             offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                         OneRMInfo(
                             id = 70,
                             movementId = 18,
-                            weight = 15,
+                            weight = 15f,
                             offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
                         ),
                     )

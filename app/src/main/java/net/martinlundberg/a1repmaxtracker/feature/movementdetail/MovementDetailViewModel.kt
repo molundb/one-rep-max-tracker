@@ -31,7 +31,7 @@ class MovementDetailViewModel @Inject constructor(
         }
     }
 
-    fun add1RM(weight: Int, movementId: Long) {
+    fun add1RM(weight: Float, movementId: Long) {
         viewModelScope.launch {
             oneRepMaxRepository.addOneRM(
                 OneRMInfo(

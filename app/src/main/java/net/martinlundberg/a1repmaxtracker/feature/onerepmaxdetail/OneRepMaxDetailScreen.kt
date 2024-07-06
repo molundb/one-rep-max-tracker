@@ -245,7 +245,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
                 oneRMInfo = OneRMInfo(
                     id = 1,
                     movementId = 15,
-                    weight = 100,
+                    weight = 100.5f,
                     offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             ),
