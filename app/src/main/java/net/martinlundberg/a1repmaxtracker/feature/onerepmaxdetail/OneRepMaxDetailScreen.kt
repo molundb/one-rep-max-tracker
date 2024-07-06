@@ -40,7 +40,9 @@ import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetai
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
+import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -49,16 +51,20 @@ fun OneRepMaxDetailRoute(
     oneRepMaxId: Long,
     movementName: String,
     oneRepMaxDetailViewModel: OneRepMaxDetailViewModel = hiltViewModel(),
+    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         oneRepMaxDetailViewModel.getOneRepMaxDetail(oneRepMaxId)
     }
 
     val oneRepMaxDetailUiState by oneRepMaxDetailViewModel.uiState.collectAsState()
+    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
+
     OneRepMaxDetailScreen(
         oneRepMaxId = oneRepMaxId,
         oneRepMaxDetailUiState = oneRepMaxDetailUiState,
         movementName = movementName,
+        weightUnit = weightUnit,
         updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail,
         onDeleteClick = oneRepMaxDetailViewModel::deleteOneRM,
     )
@@ -69,6 +75,7 @@ fun OneRepMaxDetailRoute(
 fun OneRepMaxDetailScreen(
     oneRepMaxId: Long,
     movementName: String,
+    weightUnit: String,
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
@@ -117,7 +124,11 @@ fun OneRepMaxDetailScreen(
             }
 
             is Success -> {
-                var weightText by remember { mutableStateOf("${oneRepMaxDetailUiState.oneRMInfo.weight} $weightUnit") }
+                var weightText by remember {
+                    mutableStateOf(
+                        "${oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")}"
+                    )
+                }
                 var notesText by remember { mutableStateOf("") }
                 var showDatePickerDialog by remember { mutableStateOf(false) }
                 var showTimePickerDialog by remember { mutableStateOf(false) }
@@ -197,6 +208,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "Back Squat",
+            weightUnit = "lb",
             oneRepMaxDetailUiState = Loading,
         )
     }
@@ -209,6 +221,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "The name",
+            weightUnit = "kg",
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,

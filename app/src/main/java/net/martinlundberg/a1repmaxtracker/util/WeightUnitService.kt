@@ -20,16 +20,13 @@ class WeightUnitService @Inject constructor() {
     val weightUnitFlow: StateFlow<String> = _weightUnitFlow.asStateFlow()
 
     fun setWeightUnitToPounds(usePounds: Boolean) {
-        weightUnit = if (usePounds) "lb" else "kg"
-
+        val weightUnit = if (usePounds) "lb" else "kg"
         _weightUnitFlow.update { weightUnit }
 
         // TODO: Store in Preferences DataStore
     }
 
     companion object {
-        var weightUnit = "kg" // TODO Should come from Preferences DataStore
-
         /*
         Round pounds to nearest quarter pound.
         Round kilograms to nearest quarter kilo.
