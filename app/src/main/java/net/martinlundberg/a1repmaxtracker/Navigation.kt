@@ -61,6 +61,7 @@ fun Navigation(
                 onOneRepMaxClick = { oneRepMaxId, movementName ->
                     navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
                 },
+                weightUnitService = weightUnitService,
             )
         }
         composable(

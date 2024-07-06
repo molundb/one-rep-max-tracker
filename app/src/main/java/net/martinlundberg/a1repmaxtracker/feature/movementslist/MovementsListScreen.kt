@@ -264,7 +264,7 @@ fun MovementCard(
                     )
                 } else {
                     Text(
-                        text = movement.weight.weightWithUnit(weightUnit == "lb"), // I want to know the weight unit here
+                        text = movement.weight.weightWithUnit(weightUnit == "lb"),
 //                        text = movement.weightWithUnit(weightUnit == "lb"),
 //                        text = "${movement.weight.kiloToPounds()} $weightUnit",
                         style = MaterialTheme.typography.titleLarge,

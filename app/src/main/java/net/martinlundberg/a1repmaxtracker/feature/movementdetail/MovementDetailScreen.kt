@@ -48,7 +48,8 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -59,14 +60,18 @@ fun MovementDetailRoute(
     movementName: String,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
+    weightUnitService: WeightUnitService,
 ) {
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)
     }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
+    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
+
     MovementDetailScreen(
         movementId = movementId,
         movementName = movementName,
+        weightUnit = weightUnit,
         movementDetailUiState = movementDetailUiState,
         onOneRepMaxClick = onOneRepMaxClick,
         add1RM = movementDetailViewModel::add1RM
@@ -78,6 +83,7 @@ fun MovementDetailRoute(
 fun MovementDetailScreen(
     movementId: Long,
     movementName: String,
+    weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
@@ -136,6 +142,7 @@ fun MovementDetailScreen(
                                     movementName = movementName,
                                     id = it.id,
                                     weight = it.weight,
+                                    weightUnit = weightUnit,
                                     date = it.offsetDateTime.formatTo("dd MMM yyyy"),
                                     onOneRepMaxClick = onOneRepMaxClick,
                                 )
@@ -170,6 +177,7 @@ fun OneRMCard(
     id: Long,
     movementName: String,
     weight: Int?,
+    weightUnit: String,
     date: String?,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
 ) {
@@ -189,7 +197,7 @@ fun OneRMCard(
                     text = "-", style = MaterialTheme.typography.titleLarge
                 )
             } else {
-                Text("$weight $weightUnit", style = MaterialTheme.typography.titleLarge)
+                Text(weight.weightWithUnit(weightUnit == "lb"), style = MaterialTheme.typography.titleLarge)
             }
             if (date == null) {
                 Text(
@@ -260,6 +268,7 @@ private fun MovementDetailLoadingPreview() {
         MovementDetailScreen(
             movementId = 1,
             movementName = "Bench Press",
+            weightUnit = "kg",
             movementDetailUiState = Loading,
         )
     }
@@ -272,6 +281,7 @@ private fun MovementDetailScreenSuccessPreview() {
         MovementDetailScreen(
             movementId = 111,
             movementName = "Back Squat",
+            weightUnit = "kg",
             movementDetailUiState = Success(
                 MovementDetail(
                     listOf(
