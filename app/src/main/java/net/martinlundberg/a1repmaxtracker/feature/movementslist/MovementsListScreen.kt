@@ -111,16 +111,20 @@ fun MovementsListScreen(
                 ),
                 title = { Text(text = "1RM Tracker") },
                 actions = {
-                    Switch(
-                        checked = weightUnit == "lb",
-                        onCheckedChange = {
-                            setWeightUnitToPounds(it)
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.primary,
-                            uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Box(modifier = Modifier.size(4.dp))
+                        Switch(
+                            checked = weightUnit == "lb",
+                            onCheckedChange = {
+                                setWeightUnitToPounds(it)
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
+                            )
                         )
-                    )
+                    }
                 }
             )
         },
