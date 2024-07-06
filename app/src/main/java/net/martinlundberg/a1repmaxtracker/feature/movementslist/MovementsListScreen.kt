@@ -268,8 +268,6 @@ fun MovementCard(
                 } else {
                     Text(
                         text = movement.weight.weightWithUnit(weightUnit == "lb"),
-//                        text = movement.weightWithUnit(weightUnit == "lb"),
-//                        text = "${movement.weight.kiloToPounds()} $weightUnit",
                         style = MaterialTheme.typography.titleLarge,
                     )
                 }
@@ -439,7 +437,6 @@ private fun AddOrEditMovementDialog(
                                 Movement(
                                     id = movement.id,
                                     name = movementNameText,
-//                                    weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
                                     weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
                                 ),
                                 weightUnit,
