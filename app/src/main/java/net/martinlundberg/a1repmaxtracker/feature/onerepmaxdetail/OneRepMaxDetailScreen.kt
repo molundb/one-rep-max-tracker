@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
@@ -67,6 +70,7 @@ fun OneRepMaxDetailRoute(
         weightUnit = weightUnit,
         updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail,
         onDeleteClick = oneRepMaxDetailViewModel::deleteOneRM,
+        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds
     )
 }
 
@@ -79,6 +83,7 @@ fun OneRepMaxDetailScreen(
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
+    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -89,6 +94,20 @@ fun OneRepMaxDetailScreen(
                 ),
                 title = { Text(text = movementName) },
                 actions = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Box(modifier = Modifier.size(4.dp))
+                        Switch(
+                            checked = weightUnit == "lb",
+                            onCheckedChange = {
+                                setWeightUnitToPounds(it)
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        )
+                    }
                     IconButton(
                         onClick = { onDeleteClick(oneRepMaxId) },
                     ) {

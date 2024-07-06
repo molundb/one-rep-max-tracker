@@ -1,6 +1,7 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -75,7 +78,8 @@ fun MovementDetailRoute(
         weightUnit = weightUnit,
         movementDetailUiState = movementDetailUiState,
         onOneRepMaxClick = onOneRepMaxClick,
-        add1RM = movementDetailViewModel::add1RM
+        add1RM = movementDetailViewModel::add1RM,
+        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
     )
 }
 
@@ -88,6 +92,7 @@ fun MovementDetailScreen(
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     add1RM: (weight: Int, movementId: Long) -> Unit = { _, _ -> },
+    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
 
@@ -99,6 +104,22 @@ fun MovementDetailScreen(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = { Text(text = movementName) },
+                actions = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Box(modifier = Modifier.size(4.dp))
+                        Switch(
+                            checked = weightUnit == "lb",
+                            onCheckedChange = {
+                                setWeightUnitToPounds(it)
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        )
+                    }
+                }
             )
         },
         modifier = Modifier.fillMaxSize(),
