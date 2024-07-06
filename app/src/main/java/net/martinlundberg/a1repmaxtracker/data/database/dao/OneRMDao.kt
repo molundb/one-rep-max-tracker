@@ -13,7 +13,7 @@ interface OneRMDao {
     suspend fun insert(oneRM: OneRMEntity)
 
     @Query("SELECT * FROM oneRMEntity WHERE oneRMid = :id")
-    fun getOneRM(id: Long): Flow<OneRMEntity>
+    fun getOneRM(id: Long): Flow<OneRMEntity?>
 
     @Query("SELECT * FROM oneRMEntity WHERE movementId = :id")
     fun getOneRMsForMovement(id: Long): Flow<List<OneRMEntity>>
