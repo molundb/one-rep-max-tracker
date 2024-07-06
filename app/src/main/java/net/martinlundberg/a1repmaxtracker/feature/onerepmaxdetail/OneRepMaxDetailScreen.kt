@@ -40,7 +40,7 @@ import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetai
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
-import net.martinlundberg.a1repmaxtracker.util.weightUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -82,7 +82,9 @@ fun OneRepMaxDetailScreen(
                 ),
                 title = { Text(text = movementName) },
                 actions = {
-                    IconButton(onClick = { onDeleteClick(oneRepMaxId) }) {
+                    IconButton(
+                        onClick = { onDeleteClick(oneRepMaxId) },
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete"

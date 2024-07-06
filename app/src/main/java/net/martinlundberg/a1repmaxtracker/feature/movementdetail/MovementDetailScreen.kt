@@ -48,8 +48,8 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
-import net.martinlundberg.a1repmaxtracker.util.weightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 

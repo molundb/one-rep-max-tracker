@@ -17,6 +17,7 @@ import net.martinlundberg.NavViewModel
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 
@@ -31,6 +32,8 @@ const val ONE_REP_MAX_ID = "oneRepMaxId"
 fun Navigation(
     navController: NavHostController = hiltViewModel<NavViewModel>().controller,
 ) {
+    val weightUnitService = WeightUnitService()
+
     NavHost(navController = navController, startDestination = MOVEMENTS_LIST_ROUTE) {
         composable(
             route = MOVEMENTS_LIST_ROUTE,
@@ -39,6 +42,7 @@ fun Navigation(
                 onMovementClick = { movement ->
                     navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
                 },
+                weightUnitService = weightUnitService,
             )
         }
         composable(

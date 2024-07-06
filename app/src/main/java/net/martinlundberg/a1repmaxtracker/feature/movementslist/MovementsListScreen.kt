@@ -30,6 +30,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -58,24 +60,29 @@ import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
-import net.martinlundberg.a1repmaxtracker.util.weightUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 
 @Composable
 fun MovementsListRoute(
     onMovementClick: (Movement) -> Unit = {},
     movementsListViewModel: MovementsListViewModel = hiltViewModel(),
+    weightUnitService: WeightUnitService,
 ) {
     LaunchedEffect(Unit) {
         movementsListViewModel.getMovements()
     }
 
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
+    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
+
     MovementsListScreen(
         movementsListUiState = movementsListUiState,
+        weightUnit = weightUnit,
         onAddMovementClick = movementsListViewModel::addMovement,
         onMovementClick = onMovementClick,
         onEditMovementClick = movementsListViewModel::editMovement,
-        onDeleteMovementClick = movementsListViewModel::deleteMovement
+        onDeleteMovementClick = movementsListViewModel::deleteMovement,
+        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds
     )
 }
 
@@ -83,10 +90,12 @@ fun MovementsListRoute(
 @Composable
 fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
+    weightUnit: String,
     onAddMovementClick: (Movement) -> Unit = {},
     onMovementClick: (Movement) -> Unit = {},
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
+    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
@@ -100,10 +109,22 @@ fun MovementsListScreen(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = { Text(text = "1RM Tracker") },
+                actions = {
+                    Switch(
+                        checked = weightUnit == "lb",
+                        onCheckedChange = {
+                            setWeightUnitToPounds(it)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+                }
             )
         },
-        modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
+
+        ) { innerPadding ->
         when (movementsListUiState) {
             Loading -> {
                 Column(
@@ -140,6 +161,7 @@ fun MovementsListScreen(
                         item {
                             MovementCard(
                                 movement = Movement(it.id, it.name, it.weight),
+                                weightUnit = weightUnit,
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
                                     movementToEdit = movement
@@ -201,6 +223,7 @@ fun MovementsListScreen(
 @Composable
 fun MovementCard(
     movement: Movement,
+    weightUnit: String,
     onMovementClick: (Movement) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Movement) -> Unit,
@@ -421,6 +444,7 @@ private fun MovementsListLoadingPreview() {
     _1RepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Loading,
+            weightUnit = "lb",
         )
     }
 }
@@ -437,6 +461,7 @@ private fun MovementsListScreenSuccessPreview() {
                     Movement(3, "No weight", null),
                 )
             ),
+            weightUnit = "kg"
         )
     }
 }
