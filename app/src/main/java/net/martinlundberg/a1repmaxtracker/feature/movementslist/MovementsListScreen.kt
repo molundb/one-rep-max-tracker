@@ -190,6 +190,7 @@ fun MovementsListScreen(
 
                 if (showAddMovementDialog) {
                     AddMovementDialog(
+                        weightUnit = weightUnit,
                         onDismissRequest = { showAddMovementDialog = false },
                         onConfirmation = {
                             onAddMovementClick(it)
@@ -201,6 +202,7 @@ fun MovementsListScreen(
                 movementToEdit?.let { movement ->
                     EditMovementDialog(
                         movement = movement,
+                        weightUnit = weightUnit,
                         onDismissRequest = { movementToEdit = null },
                         onConfirmation = {
                             onEditMovementClick(it)
@@ -355,11 +357,13 @@ fun DeleteMovementConfirmDialog(
 
 @Composable
 fun AddMovementDialog(
+    weightUnit: String,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
     AddOrEditMovementDialog(
         isAdd = true,
+        weightUnit = weightUnit,
         onDismissRequest = onDismissRequest,
         onConfirmation = onConfirmation
     )
@@ -368,12 +372,14 @@ fun AddMovementDialog(
 @Composable
 fun EditMovementDialog(
     movement: Movement,
+    weightUnit: String,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
     AddOrEditMovementDialog(
         isAdd = false,
         movement = movement,
+        weightUnit = weightUnit,
         onDismissRequest = onDismissRequest,
         onConfirmation = onConfirmation
     )
@@ -383,6 +389,7 @@ fun EditMovementDialog(
 private fun AddOrEditMovementDialog(
     isAdd: Boolean,
     movement: Movement = Movement(name = ""),
+    weightUnit: String,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement) -> Unit = {},
 ) {
@@ -413,7 +420,7 @@ private fun AddOrEditMovementDialog(
                     TextField(
                         value = movementWeightText,
                         onValueChange = { movementWeightText = it },
-                        label = { Text("Weight (kg)") },
+                        label = { Text("Weight ($weightUnit)") },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number
                         ),
@@ -483,6 +490,7 @@ private fun AddMovementDialogPreview() {
     _1RepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
+            weightUnit = "kg",
             movement = Movement(id = 1, name = "Movement 1", weight = 100)
         )
     }
@@ -494,6 +502,7 @@ private fun EditMovementDialogPreview() {
     _1RepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = false,
+            weightUnit = "kg",
             movement = Movement(id = 1, name = "Movement 1", weight = 100)
         )
     }
