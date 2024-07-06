@@ -61,7 +61,6 @@ import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiS
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.poundsToKilos
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
@@ -94,7 +93,7 @@ fun MovementsListRoute(
 fun MovementsListScreen(
     movementsListUiState: MovementsListUiState = Loading,
     weightUnit: String,
-    onAddMovementClick: (Movement) -> Unit = {},
+    onAddMovementClick: (Movement, String) -> Unit = { _, _ -> },
     onMovementClick: (Movement) -> Unit = {},
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
@@ -193,8 +192,8 @@ fun MovementsListScreen(
                     AddMovementDialog(
                         weightUnit = weightUnit,
                         onDismissRequest = { showAddMovementDialog = false },
-                        onConfirmation = {
-                            onAddMovementClick(it)
+                        onConfirmation = { movement, weightUnit ->
+                            onAddMovementClick(movement, weightUnit)
                             showAddMovementDialog = false
                         }
                     )
@@ -205,8 +204,8 @@ fun MovementsListScreen(
                         movement = movement,
                         weightUnit = weightUnit,
                         onDismissRequest = { movementToEdit = null },
-                        onConfirmation = {
-                            onEditMovementClick(it)
+                        onConfirmation = { editedMovement, _ ->
+                            onEditMovementClick(editedMovement)
                             movementToEdit = null
                         }
                     )
@@ -360,7 +359,7 @@ fun DeleteMovementConfirmDialog(
 fun AddMovementDialog(
     weightUnit: String,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement) -> Unit = {},
+    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
         isAdd = true,
@@ -375,7 +374,7 @@ fun EditMovementDialog(
     movement: Movement,
     weightUnit: String,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement) -> Unit = {},
+    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
         isAdd = false,
@@ -392,7 +391,7 @@ private fun AddOrEditMovementDialog(
     movement: Movement = Movement(name = ""),
     weightUnit: String,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement) -> Unit = {},
+    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
 ) {
     var movementNameText by remember { mutableStateOf(movement.name) }
     val weightInitialValue = movement.weight?.toString() ?: ""
@@ -441,10 +440,7 @@ private fun AddOrEditMovementDialog(
                                     id = movement.id,
                                     name = movementNameText,
 //                                    weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
-                                    weight = if (weightUnit == "lb") movementWeightText
-                                        .toInt()
-                                        .poundsToKilos()
-                                        .toInt() else movementWeightText.toIntOrNull() // TODO: Change to handle decimals
+                                    weight = movementWeightText.toIntOrNull() // TODO: Change to handle decimals
                                 ),
                                 weightUnit,
                             )
