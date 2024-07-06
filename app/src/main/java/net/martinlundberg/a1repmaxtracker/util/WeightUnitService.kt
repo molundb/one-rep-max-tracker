@@ -35,13 +35,19 @@ class WeightUnitService @Inject constructor() {
          */
         fun Float.weightWithUnit(isPounds: Boolean) =
             if (isPounds) {
-
-                "${(this * KILOS_TO_POUNDS_RATIO).roundToNearestQuarter()} lb"
+                "${(this * KILOS_TO_POUNDS_RATIO).roundToNearestQuarter().toStringWithoutTrailingZero()} lb"
             } else {
-                "${this.roundToNearestQuarter()} kg"
+                "${this.roundToNearestQuarter().toStringWithoutTrailingZero()} kg"
             }
 
-        fun Float.poundsToKilos() = this / KILOS_TO_POUNDS_RATIO
+        fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
+
+        fun Float.toStringWithoutTrailingZero() = if (this == this.toInt().toFloat()) {
+            this.toInt().toString()
+        } else {
+            this.toString()
+        }
+
     }
 }
 
