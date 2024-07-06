@@ -16,5 +16,3 @@ fun Movement.asEntity() =
         id = id,
         name = name,
     )
-
-

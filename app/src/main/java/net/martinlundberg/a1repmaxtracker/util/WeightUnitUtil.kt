@@ -18,10 +18,20 @@ class WeightUnitService {
         _weightUnitFlow.update { weightUnit }
 
         // TODO: Store in Preferences DataStore
-        // 1 kg = 2.205 lb
     }
 
     companion object {
         var weightUnit = "kg" // TODO Should come from Preferences DataStore
+
+        /*
+        Round pounds to nearest quarter pound.
+        Round kilograms to nearest quarter kilo.
+         */
+        fun Int.weightWithUnit(isPounds: Boolean) =
+            if (isPounds) {
+                "${(this * 2.205).roundToNearestQuarter()} lb"
+            } else {
+                "$this kg"
+            }
     }
 }

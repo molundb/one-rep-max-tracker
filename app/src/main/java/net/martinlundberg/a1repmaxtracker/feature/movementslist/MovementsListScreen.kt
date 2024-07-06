@@ -61,6 +61,7 @@ import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiS
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 
 @Composable
 fun MovementsListRoute(
@@ -203,7 +204,6 @@ fun MovementsListScreen(
                     )
                 }
 
-
                 movementToDelete?.let { movement ->
                     DeleteMovementConfirmDialog(
                         name = movement.name,
@@ -255,10 +255,16 @@ fun MovementCard(
                 if (movement.weight == null) {
                     Text(
                         modifier = Modifier.padding(end = 12.dp),
-                        text = "-", style = MaterialTheme.typography.titleLarge
+                        text = "-",
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 } else {
-                    Text("${movement.weight} $weightUnit", style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = movement.weight.weightWithUnit(weightUnit == "lb"), // I want to know the weight unit here
+//                        text = movement.weightWithUnit(weightUnit == "lb"),
+//                        text = "${movement.weight.kiloToPounds()} $weightUnit",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
                 }
             }
             movementDropDownMenuInfo?.let {
