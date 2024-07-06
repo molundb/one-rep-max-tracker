@@ -33,7 +33,7 @@ class OneRepMaxDetailViewModel @Inject constructor(
 
     fun updateOneRepMaxDetail(oneRMInfo: OneRMInfo) {
         viewModelScope.launch {
-            oneRepMaxRepository.addOneRM(oneRMInfo)
+            oneRepMaxRepository.addOneRM(oneRMInfo, "kg")
         }
     }
 

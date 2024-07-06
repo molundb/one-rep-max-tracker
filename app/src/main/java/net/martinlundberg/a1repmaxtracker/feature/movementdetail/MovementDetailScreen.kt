@@ -91,7 +91,7 @@ fun MovementDetailScreen(
     weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
-    add1RM: (weight: Float, movementId: Long) -> Unit = { _, _ -> },
+    add1RM: (weight: Float, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
     setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
@@ -183,7 +183,7 @@ fun MovementDetailScreen(
                         Add1rmDialog(
                             onDismissRequest = { showAdd1rmDialog = false },
                             onConfirmation = { weight ->
-                                add1RM(weight, movementId)
+                                add1RM(weight, weightUnit, movementId)
                                 showAdd1rmDialog = false
                             }
                         )

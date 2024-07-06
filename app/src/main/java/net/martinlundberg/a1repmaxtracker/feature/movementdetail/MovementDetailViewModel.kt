@@ -31,14 +31,15 @@ class MovementDetailViewModel @Inject constructor(
         }
     }
 
-    fun add1RM(weight: Float, movementId: Long) {
+    fun add1RM(weight: Float, weightUnit: String, movementId: Long) {
         viewModelScope.launch {
             oneRepMaxRepository.addOneRM(
                 OneRMInfo(
                     weight = weight,
                     offsetDateTime = OffsetDateTime.now(),
                     movementId = movementId
-                )
+                ),
+                weightUnit = weightUnit,
             )
         }
     }
