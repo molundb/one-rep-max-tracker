@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons.Filled
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,7 +26,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -35,7 +33,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,12 +45,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
@@ -106,11 +106,17 @@ fun MovementsListScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = { Text(text = "1RM Tracker") },
+                modifier = Modifier.padding(top = 24.dp),
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                    titleContentColor = MaterialTheme.colorScheme.primary,
+//                ),
+                title = {
+                    Text(
+                        text = "1RM Tracker",
+                        style = TextStyle(fontSize = 48.sp)
+                    )
+                },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
@@ -129,19 +135,20 @@ fun MovementsListScreen(
                 }
             )
         },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(all = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(text = "Your Top Scores", style = TextStyle(fontSize = 20.sp))
 
-        ) { innerPadding ->
-        when (movementsListUiState) {
-            Loading -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(top = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(text = "Loading...")
+            when (movementsListUiState) {
+                Loading -> {
+                    Box(modifier = Modifier.height(24.dp))
                     CircularProgressIndicator(
                         modifier = Modifier
                             .width(64.dp),
@@ -149,77 +156,83 @@ fun MovementsListScreen(
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     )
                 }
-            }
 
-            is Success -> Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(vertical = 8.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                LazyColumn(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                is Success -> Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    movementsListUiState.movements.map {
-                        item {
-                            MovementCard(
-                                movement = Movement(it.id, it.name, it.weight),
-                                weightUnit = weightUnit,
-                                onMovementClick = onMovementClick,
-                                onEditMovementClick = { movement ->
-                                    movementToEdit = movement
-                                },
-                                onDeleteMovementClick = { movement ->
-                                    movementToDelete = movement
-                                }
-                            )
+                    LazyColumn(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        movementsListUiState.movements.map {
+                            item {
+                                MovementCard(
+                                    movement = Movement(it.id, it.name, it.weight),
+                                    weightUnit = weightUnit,
+                                    onMovementClick = onMovementClick,
+                                    onEditMovementClick = { movement ->
+                                        movementToEdit = movement
+                                    },
+                                    onDeleteMovementClick = { movement ->
+                                        movementToDelete = movement
+                                    }
+                                )
+                            }
                         }
                     }
-                }
-                FloatingActionButton(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .semantics { contentDescription = "Add Movement" },
-                    onClick = { showAddMovementDialog = true },
-                ) {
-                    Icon(Filled.Add, "Floating action button.")
-                }
+                    FloatingActionButton(
+                        modifier = Modifier
+                            .semantics { contentDescription = "Add Movement" },
+                        onClick = { showAddMovementDialog = true },
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(
+                                horizontal = 24.dp,
+                                vertical = 12.dp
+                            ),
+                            text = "+ Add result",
+                            style = TextStyle(color = Color.White, fontSize = 18.sp)
+                        )
+                    }
 
-                if (showAddMovementDialog) {
-                    AddMovementDialog(
-                        weightUnit = weightUnit,
-                        onDismissRequest = { showAddMovementDialog = false },
-                        onConfirmation = { movement, weightUnit ->
-                            onAddMovementClick(movement, weightUnit)
-                            showAddMovementDialog = false
-                        }
-                    )
-                }
+                    if (showAddMovementDialog) {
+                        AddMovementDialog(
+                            weightUnit = weightUnit,
+                            onDismissRequest = { showAddMovementDialog = false },
+                            onConfirmation = { movement, weightUnit ->
+                                onAddMovementClick(movement, weightUnit)
+                                showAddMovementDialog = false
+                            }
+                        )
+                    }
 
-                movementToEdit?.let { movement ->
-                    EditMovementDialog(
-                        movement = movement,
-                        weightUnit = weightUnit,
-                        onDismissRequest = { movementToEdit = null },
-                        onConfirmation = { editedMovement, _ ->
-                            onEditMovementClick(editedMovement)
-                            movementToEdit = null
-                        }
-                    )
-                }
+                    movementToEdit?.let { movement ->
+                        EditMovementDialog(
+                            movement = movement,
+                            weightUnit = weightUnit,
+                            onDismissRequest = { movementToEdit = null },
+                            onConfirmation = { editedMovement, _ ->
+                                onEditMovementClick(editedMovement)
+                                movementToEdit = null
+                            }
+                        )
+                    }
 
-                movementToDelete?.let { movement ->
-                    DeleteMovementConfirmDialog(
-                        name = movement.name,
-                        onDismissRequest = { movementToDelete = null },
-                        onConfirmation = {
-                            onDeleteMovementClick(movement.id)
-                            movementToDelete = null
-                        }
-                    )
+                    movementToDelete?.let { movement ->
+                        DeleteMovementConfirmDialog(
+                            name = movement.name,
+                            onDismissRequest = { movementToDelete = null },
+                            onConfirmation = {
+                                onDeleteMovementClick(movement.id)
+                                movementToDelete = null
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -255,7 +268,7 @@ fun MovementCard(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp),
+                    .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(movement.name, style = MaterialTheme.typography.titleLarge)
@@ -455,7 +468,7 @@ private fun AddOrEditMovementDialog(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementsListLoadingPreview() {
     _1RepMaxTrackerTheme {

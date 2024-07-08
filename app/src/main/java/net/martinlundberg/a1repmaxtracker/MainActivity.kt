@@ -3,7 +3,6 @@ package net.martinlundberg.a1repmaxtracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
@@ -11,7 +10,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
 
         setContent {
             _1RepMaxTrackerTheme {
