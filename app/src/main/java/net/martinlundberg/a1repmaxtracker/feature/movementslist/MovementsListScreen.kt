@@ -190,13 +190,14 @@ fun MovementsListScreen(
                         modifier = Modifier
                             .semantics { contentDescription = "Add Movement" },
                         onClick = { showAddMovementDialog = true },
+                        shape = RoundedCornerShape(80.dp),
                     ) {
                         Text(
                             modifier = Modifier.padding(
                                 horizontal = 24.dp,
                                 vertical = 12.dp
                             ),
-                            text = "+ Add result",
+                            text = "+ Add movement",
                             style = TextStyle(color = Color.White, fontSize = 18.sp)
                         )
                     }
