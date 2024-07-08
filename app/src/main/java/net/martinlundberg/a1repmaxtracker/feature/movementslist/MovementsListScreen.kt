@@ -145,7 +145,7 @@ fun MovementsListScreen(
                 .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "Your Top Scores", style = MaterialTheme.typography.displayMedium.copy(fontSize = 20.sp))
+            Text(text = "Your top results", style = MaterialTheme.typography.displayMedium.copy(fontSize = 20.sp))
 
             when (movementsListUiState) {
                 Loading -> {
