@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,12 +116,12 @@ fun MovementsListScreen(
                 title = {
                     Text(
                         text = "1RM Tracker",
-                        style = TextStyle(fontSize = 48.sp)
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Text(text = weightUnit, style = MaterialTheme.typography.displayMedium)
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit == "lb",
@@ -146,7 +145,7 @@ fun MovementsListScreen(
                 .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "Your Top Scores", style = TextStyle(fontSize = 20.sp))
+            Text(text = "Your Top Scores", style = MaterialTheme.typography.displayMedium.copy(fontSize = 20.sp))
 
             when (movementsListUiState) {
                 Loading -> {
@@ -198,7 +197,7 @@ fun MovementsListScreen(
                                 vertical = 12.dp
                             ),
                             text = "+ Add movement",
-                            style = TextStyle(color = Color.White, fontSize = 18.sp)
+                            style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                         )
                     }
 
@@ -273,17 +272,17 @@ fun MovementCard(
                     .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(movement.name, style = MaterialTheme.typography.titleLarge)
+                Text(movement.name, style = MaterialTheme.typography.displayMedium)
                 Spacer(modifier = Modifier.weight(1f))
                 if (movement.weight == null) {
                     Text(
                         text = "-",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.displayMedium,
                     )
                 } else {
                     Text(
                         text = movement.weight.weightWithUnit(weightUnit == "lb"),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.displayMedium,
                     )
                 }
                 Box(modifier = Modifier.width(8.dp))
