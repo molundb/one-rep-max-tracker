@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,12 +29,13 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -116,12 +118,12 @@ fun MovementsListScreen(
                 title = {
                     Text(
                         text = "1RM Tracker",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.displayLarge,
                     )
                 },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.displayMedium)
+                        Text(text = weightUnit, style = MaterialTheme.typography.titleMedium)
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit == "lb",
@@ -145,7 +147,7 @@ fun MovementsListScreen(
                 .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "Your top results", style = MaterialTheme.typography.displayMedium.copy(fontSize = 20.sp))
+            Text(text = "Your top results", style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
 
             when (movementsListUiState) {
                 Loading -> {
@@ -272,17 +274,17 @@ fun MovementCard(
                     .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(movement.name, style = MaterialTheme.typography.displayMedium)
+                Text(movement.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
                 if (movement.weight == null) {
                     Text(
                         text = "-",
-                        style = MaterialTheme.typography.displayMedium,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 } else {
                     Text(
                         text = movement.weight.weightWithUnit(weightUnit == "lb"),
-                        style = MaterialTheme.typography.displayMedium,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
                 Box(modifier = Modifier.width(8.dp))
@@ -424,33 +426,53 @@ private fun AddOrEditMovementDialog(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                    .padding(all = 16.dp),
             ) {
-                TextField(
+                Text(
+                    text = if (isAdd) "Add movement" else "Edit Movement",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                Box(modifier = Modifier.height(24.dp))
+                Text("Name of exercise", style = MaterialTheme.typography.titleMedium)
+                Box(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
                     value = movementNameText,
                     onValueChange = { movementNameText = it },
-                    label = { Text("Name of exercise") },
-                    modifier = Modifier.focusRequester(focusRequester),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                 )
                 if (isAdd) {
-                    Spacer(modifier = Modifier.size(16.dp))
-                    TextField(
+                    Spacer(modifier = Modifier.size(24.dp))
+                    Text("Weight ($weightUnit)", style = MaterialTheme.typography.titleMedium)
+                    Box(modifier = Modifier.height(12.dp))
+                    OutlinedTextField(
                         value = movementWeightText,
                         onValueChange = { movementWeightText = it },
-                        label = { Text("Weight ($weightUnit)") },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number
                         ),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                 }
+                Box(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
                 ) {
-                    TextButton(onClick = { onDismissRequest() }) {
-                        Text("Dismiss")
+                    OutlinedButton(
+                        modifier = Modifier
+                            .weight(1f),
+                        onClick = { onDismissRequest() }
+                    ) {
+                        Text("Cancel")
                     }
-                    TextButton(
+                    Box(modifier = Modifier.width(32.dp))
+                    OutlinedButton(
+                        modifier = Modifier
+                            .weight(1f),
                         onClick = {
                             onConfirmation(
                                 Movement(
@@ -461,6 +483,12 @@ private fun AddOrEditMovementDialog(
                                 weightUnit,
                             )
                         },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            disabledContentColor = Color.White,
+                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        ),
                         enabled = movementNameText.isNotBlank()
                     ) {
                         Text(if (isAdd) "Add" else "Edit")
@@ -504,12 +532,24 @@ private fun MovementsListScreenSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddMovementDialogPreview() {
+private fun AddMovementDialogEnabledPreview() {
     _1RepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
             weightUnit = "kg",
             movement = Movement(id = 1, name = "Movement 1", weight = 102.25f)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddMovementDialogDisabledPreview() {
+    _1RepMaxTrackerTheme {
+        AddOrEditMovementDialog(
+            isAdd = true,
+            weightUnit = "kg",
+            movement = Movement(id = 1, name = "", weight = 102.25f)
         )
     }
 }

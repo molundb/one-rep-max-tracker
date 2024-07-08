@@ -16,39 +16,33 @@ val notoSansFamily = FontFamily(
 )
 
 val Typography = Typography(
-    bodySmall = TextStyle(
-        fontFamily = notoSansFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+    displayLarge = TextStyle(
+        fontFamily = antonFamily,
+        fontSize = 48.sp,
     ),
-    bodyMedium = TextStyle(
+    headlineLarge = TextStyle(
+        fontFamily = antonFamily,
+        fontSize = 24.sp,
+    ),
+    titleMedium = TextStyle(
         fontFamily = notoSansFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
     ),
     bodyLarge = TextStyle(
         fontFamily = notoSansFamily,
-        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
     ),
-    titleLarge = TextStyle(
-        fontFamily = antonFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 48.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    displayMedium = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = notoSansFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
+    ),
+    bodySmall = TextStyle(
+        fontFamily = notoSansFamily,
+        fontSize = 12.sp,
     ),
     labelLarge = TextStyle(
         fontFamily = antonFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
+        fontSize = 16.sp,
     )
 )
 
