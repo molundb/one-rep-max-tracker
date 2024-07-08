@@ -2,6 +2,7 @@ package net.martinlundberg.a1repmaxtracker.feature.movementslist
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -56,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
@@ -142,7 +145,6 @@ fun MovementsListScreen(
                 .padding(innerPadding)
                 .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "Your Top Scores", style = TextStyle(fontSize = 20.sp))
 
@@ -160,14 +162,13 @@ fun MovementsListScreen(
                 is Success -> Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 24.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     LazyColumn(
                         modifier = Modifier.padding(horizontal = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
                         movementsListUiState.movements.map {
                             item {
@@ -269,12 +270,12 @@ fun MovementCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(movement.name, style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.weight(1f))
                 if (movement.weight == null) {
                     Text(
-                        modifier = Modifier.padding(end = 12.dp),
                         text = "-",
                         style = MaterialTheme.typography.titleLarge,
                     )
@@ -284,6 +285,11 @@ fun MovementCard(
                         style = MaterialTheme.typography.titleLarge,
                     )
                 }
+                Box(modifier = Modifier.width(8.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.movement_list_item_nav_icon),
+                    contentDescription = "Navigation icon",
+                )
             }
             movementDropDownMenuInfo?.let {
                 MovementDropDownMenu(
