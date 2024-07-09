@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -35,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -53,6 +51,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -228,7 +227,7 @@ fun MovementsListScreen(
 
                     movementToDelete?.let { movement ->
                         DeleteMovementConfirmDialog(
-                            name = movement.name,
+                            movementName = movement.name,
                             onDismissRequest = { movementToDelete = null },
                             onConfirmation = {
                                 onDeleteMovementClick(movement.id)
@@ -260,8 +259,7 @@ fun MovementCard(
                     onClick = { onMovementClick(movement) },
                     onLongClick = {
                         view.performHapticFeedback(
-                            HapticFeedbackConstants.LONG_PRESS,
-                            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                            HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                         )
                         movementDropDownMenuInfo = movement
                     },
@@ -344,34 +342,58 @@ fun MovementDropDownMenu(
 
 @Composable
 fun DeleteMovementConfirmDialog(
-    name: String,
+    movementName: String,
     onDismissRequest: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
-    AlertDialog(
-        modifier = Modifier.semantics { contentDescription = "Delete Movement Confirmation Dialog" },
-        title = { Text("Delete Movement") },
-        text = { Text("Are you sure you want to delete $name?") },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(224.dp),
+            shape = RoundedCornerShape(4.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(all = 16.dp),
             ) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
+                Text(
+                    text = "Delete movement",
+                    style = MaterialTheme.typography.headlineLarge,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "Are you sure you want to delete:",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Box(modifier = Modifier.height(12.dp))
+                Text(
+                    text = movementName,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    OutlinedButton(modifier = Modifier.weight(1f), onClick = { onDismissRequest() }) {
+                        Text("Cancel")
+                    }
+                    Box(modifier = Modifier.width(32.dp))
+                    OutlinedButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = { onConfirmation() },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        ),
+                    ) {
+                        Text("Yes, delete")
+                    }
                 }
-            ) {
-                Text("Dismiss")
             }
         }
-    )
+    }
 }
 
 @Composable
@@ -570,6 +592,6 @@ private fun EditMovementDialogPreview() {
 @Composable
 private fun DeleteMovementConfirmDialogPreview() {
     _1RepMaxTrackerTheme {
-        DeleteMovementConfirmDialog(name = "Movement 1")
+        DeleteMovementConfirmDialog(movementName = "Movement 1")
     }
 }
