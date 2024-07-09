@@ -57,6 +57,7 @@ fun Navigation(
                 onOneRepMaxClick = { oneRepMaxId, movementName ->
                     navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
                 },
+                navigateBack = { navController.popBackStack() }
             )
         }
         composable(

@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,11 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -64,6 +68,7 @@ fun MovementDetailRoute(
     movementId: Long,
     movementName: String,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
+    navigateBack: () -> Unit = {},
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
     weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
@@ -79,6 +84,7 @@ fun MovementDetailRoute(
         weightUnit = weightUnit,
         movementDetailUiState = movementDetailUiState,
         onOneRepMaxClick = onOneRepMaxClick,
+        navigateBack = navigateBack,
         add1RM = movementDetailViewModel::add1RM,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
@@ -93,6 +99,7 @@ fun MovementDetailScreen(
     weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
+    navigateBack: () -> Unit = {},
     add1RM: (weight: Float, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     setWeightUnitToPounds: (Boolean) -> Unit = {},
@@ -136,7 +143,29 @@ fun MovementDetailScreen(
                 .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = movementName, style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = movementName,
+                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clickable(onClick = navigateBack)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Back button"
+                    )
+                }
+            }
 
             when (movementDetailUiState) {
                 Loading -> {
@@ -159,7 +188,6 @@ fun MovementDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         LazyColumn(
-                            modifier = Modifier.padding(horizontal = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(24.dp)
                         ) {
                             movementDetailUiState.movement.oneRMs.map {
