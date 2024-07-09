@@ -13,7 +13,7 @@ class DefaultMovementsRepository @Inject constructor(
     private val movementDao: MovementDao,
     private val oneRMDao: OneRMDao,
 ) : MovementsRepository {
-    override fun getMovements(): Flow<List<Movement>> =
+    override suspend fun getMovements(): Flow<List<Movement>> =
         movementDao.getMovements().map { map ->
             map.entries.map {
                 it.asExternalMovement()

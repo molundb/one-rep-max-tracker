@@ -16,7 +16,7 @@ class DefaultOneRepMaxRepository @Inject constructor(
     private val oneRMDao: OneRMDao,
 ) : OneRepMaxRepository {
 
-    override fun getMovementDetail(id: Long): Flow<MovementDetail> =
+    override suspend fun getMovementDetail(id: Long): Flow<MovementDetail> =
         oneRMDao.getOneRMsForMovement(id).map { it.asExternalMovementDetail() }
 
     override suspend fun addOneRM(oneRM: OneRMInfo, weightUnit: String) {
@@ -28,7 +28,7 @@ class DefaultOneRepMaxRepository @Inject constructor(
         oneRMDao.insert(oneRM.copy(weight = weight).asEntity())
     }
 
-    override fun getOneRM(id: Long): Flow<OneRMInfo> =
+    override suspend fun getOneRM(id: Long): Flow<OneRMInfo> =
         oneRMDao.getOneRM(id).filterNotNull().map { it.asExternalModel() }
 
     override suspend fun deleteOneRM(id: Long) = oneRMDao.deleteByOneRMId(id)

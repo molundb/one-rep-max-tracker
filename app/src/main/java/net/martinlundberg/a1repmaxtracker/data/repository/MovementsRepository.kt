@@ -5,7 +5,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.Movement
 
 interface MovementsRepository {
 
-    fun getMovements(): Flow<List<Movement>>
+    suspend fun getMovements(): Flow<List<Movement>>
 
     suspend fun setMovement(movement: Movement): Long
 
