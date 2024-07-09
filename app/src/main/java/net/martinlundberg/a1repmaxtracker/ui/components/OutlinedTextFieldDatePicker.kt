@@ -3,6 +3,7 @@ package net.martinlundberg.a1repmaxtracker.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import net.martinlundberg.a1repmaxtracker.ui.theme.Black
+import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.formatTo
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -24,8 +29,9 @@ import java.time.ZoneOffset
 fun OutlinedTextFieldDatePicker(
     currentDateTime: OffsetDateTime,
     showDialog: Boolean,
+    textStyle: TextStyle,
     setDialogVisibility: (Boolean) -> Unit = {},
-    updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
+    onAccept: (OffsetDateTime) -> Unit = {},
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -34,6 +40,7 @@ fun OutlinedTextFieldDatePicker(
         enabled = false,
         value = currentDateTime.formatTo("dd MMM yyyy"),
         onValueChange = {},
+        textStyle = textStyle,
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
             disabledBorderColor = MaterialTheme.colorScheme.outline,
@@ -53,7 +60,7 @@ fun OutlinedTextFieldDatePicker(
                         .atZone(ZoneOffset.UTC)
                         .toLocalDateTime()
 
-                    updateOneRepMaxDetail(
+                    onAccept(
                         currentDateTime
                             .withMonth(selectedDate.monthValue)
                             .withDayOfMonth(selectedDate.dayOfMonth)
@@ -76,38 +83,68 @@ private fun CustomDatePickerDialog(
 ) {
     val state = rememberDatePickerState()
 
-    DatePickerDialog(
-        modifier = Modifier.semantics { contentDescription = "Date Picker Dialog" },
-        onDismissRequest = onCancel,
-        confirmButton = {
-            Button(onClick = { onAccept(state.selectedDateMillis) }) {
-                Text("Accept")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onCancel) {
-                Text("Cancel")
-            }
-        }
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            onSurface = Black,
+        )
     ) {
-        DatePicker(state = state)
+        DatePickerDialog(
+            modifier = Modifier.semantics { contentDescription = "Date Picker Dialog" },
+            onDismissRequest = onCancel,
+            confirmButton = {
+                Button(
+                    onClick = { onAccept(state.selectedDateMillis) },
+                ) {
+                    Text("Accept")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = onCancel
+                ) {
+                    Text("Cancel")
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = White,
+            )
+        ) {
+            DatePicker(state = state)
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun OutlinedTextFieldDatePickerPreview() {
-    OutlinedTextFieldDatePicker(
-        currentDateTime = OffsetDateTime.now(),
-        showDialog = false,
-    )
+    OneRepMaxTrackerTheme {
+        OutlinedTextFieldDatePicker(
+            currentDateTime = OffsetDateTime.now(),
+            showDialog = false,
+            MaterialTheme.typography.bodyLarge,
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun OutlinedTextFieldDatePickerDialogPreview() {
+    OneRepMaxTrackerTheme {
+        OutlinedTextFieldDatePicker(
+            currentDateTime = OffsetDateTime.now(),
+            showDialog = true,
+            textStyle = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OutlinedTextFieldDatePickerDialogPreview2() {
     OutlinedTextFieldDatePicker(
         currentDateTime = OffsetDateTime.now(),
         showDialog = true,
+        textStyle = MaterialTheme.typography.bodyLarge,
     )
+
 }

@@ -7,8 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
+import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.ui.theme.Red
-import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            _1RepMaxTrackerTheme {
+            OneRepMaxTrackerTheme {
                 Navigation()
             }
         }

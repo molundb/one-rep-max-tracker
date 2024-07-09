@@ -30,7 +30,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -61,7 +60,10 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
-import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
+import net.martinlundberg.a1repmaxtracker.ui.theme.Black
+import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.kilosToPounds
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
@@ -128,17 +130,17 @@ fun MovementDetailScreen(
                 },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = weightUnit,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = White,
+                        )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit == "lb",
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
-                            )
                         )
                     }
                 }
@@ -346,6 +348,8 @@ fun AddOrEditResultDialog(
     }
 
     var weightText by rememberSaveable { mutableStateOf(weightInitialValue) }
+    var date by rememberSaveable { mutableStateOf(oneRMInfo.offsetDateTime) }
+    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
@@ -376,6 +380,18 @@ fun AddOrEditResultDialog(
                     modifier = Modifier.focusRequester(focusRequester),
                 )
                 Box(modifier = Modifier.height(24.dp))
+                Text("Date", style = MaterialTheme.typography.titleMedium)
+                Box(modifier = Modifier.height(12.dp))
+                OutlinedTextFieldDatePicker(
+                    currentDateTime = date,
+                    showDialog = showDatePickerDialog,
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                    setDialogVisibility = { showDatePickerDialog = it },
+                    onAccept = { offsetDateTime ->
+                        date = offsetDateTime
+                    },
+                )
+                Box(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -383,7 +399,11 @@ fun AddOrEditResultDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp),
-                        onClick = { onDismissRequest() }
+                        onClick = { onDismissRequest() },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Black,
+                            containerColor = White,
+                        ),
                     ) {
                         Text("Cancel")
                     }
@@ -398,14 +418,14 @@ fun AddOrEditResultDialog(
                                     id = oneRMInfo.id,
                                     movementId = oneRMInfo.movementId,
                                     weight = weightText.toFloat(),
-                                    offsetDateTime = oneRMInfo.offsetDateTime
+                                    offsetDateTime = date
                                 )
                             )
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.White,
+                            contentColor = White,
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            disabledContentColor = Color.White,
+                            disabledContentColor = White,
                             disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                         ),
                         enabled = weightText.isNotBlank(),
@@ -423,7 +443,7 @@ fun AddOrEditResultDialog(
                             onDeleteClicked(oneRMInfo.id)
                         },
                     ) {
-                        Text(text = "Delete result", color = MaterialTheme.colorScheme.tertiary)
+                        Text(text = "Delete result")
                     }
                 }
             }
@@ -437,7 +457,7 @@ fun AddOrEditResultDialog(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementDetailLoadingPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         MovementDetailScreen(
             movementId = 1,
             movementName = "Bench Press",
@@ -450,7 +470,7 @@ private fun MovementDetailLoadingPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementDetailScreenSuccessPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         MovementDetailScreen(
             movementId = 111,
             movementName = "Back Squat",
@@ -486,7 +506,7 @@ private fun MovementDetailScreenSuccessPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AddResultDialogEnabledPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = true,
             oneRMInfo = OneRMInfo(
@@ -502,7 +522,7 @@ private fun AddResultDialogEnabledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AddResultDialogDisabledPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = true,
             oneRMInfo = OneRMInfo(
@@ -518,7 +538,7 @@ private fun AddResultDialogDisabledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun EditResultDialogEnabledPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = false,
             oneRMInfo = OneRMInfo(

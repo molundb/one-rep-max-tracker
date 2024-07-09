@@ -32,7 +32,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,7 +61,9 @@ import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
-import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.theme.Black
+import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
@@ -118,17 +119,17 @@ fun MovementsListScreen(
                 },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = weightUnit,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit == "lb",
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface
-                            )
                         )
                     }
                 }
@@ -307,32 +308,39 @@ fun MovementDropDownMenu(
     onDeleteMovementClick: (Movement) -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentSize(Alignment.TopEnd)
-            .semantics { contentDescription = "Movement Drop Down Menu" }
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            surface = White,
+            onSurface = Black,
+        )
     ) {
-        DropdownMenu(
-            expanded = true,
-            onDismissRequest = {
-                onDismiss()
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.TopEnd)
+                .semantics { contentDescription = "Movement Drop Down Menu" }
         ) {
-            DropdownMenuItem(
-                text = { Text("Edit") },
-                onClick = {
+            DropdownMenu(
+                expanded = true,
+                onDismissRequest = {
                     onDismiss()
-                    onEditMovementClick(movement)
                 }
-            )
-            DropdownMenuItem(
-                text = { Text("Delete") },
-                onClick = {
-                    onDismiss()
-                    onDeleteMovementClick(movement)
-                }
-            )
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Edit") },
+                    onClick = {
+                        onDismiss()
+                        onEditMovementClick(movement)
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Delete") },
+                    onClick = {
+                        onDismiss()
+                        onDeleteMovementClick(movement)
+                    }
+                )
+            }
         }
     }
 }
@@ -373,7 +381,13 @@ fun DeleteMovementConfirmDialog(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    OutlinedButton(modifier = Modifier.weight(1f), onClick = { onDismissRequest() }) {
+                    OutlinedButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = { onDismissRequest() },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Black,
+                        ),
+                    ) {
                         Text("Cancel")
                     }
                     Box(modifier = Modifier.width(32.dp))
@@ -452,7 +466,10 @@ private fun AddOrEditMovementDialog(
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Box(modifier = Modifier.height(24.dp))
-                Text("Name of exercise", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = "Name",
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Box(modifier = Modifier.height(12.dp))
                 OutlinedTextField(
                     value = movementNameText,
@@ -464,7 +481,10 @@ private fun AddOrEditMovementDialog(
                 )
                 if (isAdd) {
                     Spacer(modifier = Modifier.size(24.dp))
-                    Text("Weight ($weightUnit)", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = "Weight ($weightUnit)",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Box(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
                         value = movementWeightText,
@@ -485,7 +505,10 @@ private fun AddOrEditMovementDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp),
-                        onClick = { onDismissRequest() }
+                        onClick = { onDismissRequest() },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Black,
+                        ),
                     ) {
                         Text("Cancel")
                     }
@@ -526,7 +549,7 @@ private fun AddOrEditMovementDialog(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementsListLoadingPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Loading,
             weightUnit = "lb",
@@ -537,7 +560,7 @@ private fun MovementsListLoadingPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementsListScreenSuccessPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         MovementsListScreen(
             movementsListUiState = Success(
                 listOf(
@@ -554,7 +577,7 @@ private fun MovementsListScreenSuccessPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AddMovementDialogEnabledPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
             weightUnit = "kg",
@@ -566,7 +589,7 @@ private fun AddMovementDialogEnabledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AddMovementDialogDisabledPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
             weightUnit = "kg",
@@ -578,7 +601,7 @@ private fun AddMovementDialogDisabledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun EditMovementDialogPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = false,
             weightUnit = "kg",
@@ -590,7 +613,7 @@ private fun EditMovementDialogPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DeleteMovementConfirmDialogPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         DeleteMovementConfirmDialog(movementName = "Movement 1")
     }
 }

@@ -28,10 +28,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,7 @@ import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetai
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePicker
-import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
+import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
@@ -143,14 +144,14 @@ fun OneRepMaxDetailScreen(
             }
 
             is Success -> {
-                var weightText by remember {
+                var weightText by rememberSaveable {
                     mutableStateOf(
                         "${oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")}"
                     )
                 }
-                var notesText by remember { mutableStateOf("") }
-                var showDatePickerDialog by remember { mutableStateOf(false) }
-                var showTimePickerDialog by remember { mutableStateOf(false) }
+                var notesText by rememberSaveable { mutableStateOf("") }
+                var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+                var showTimePickerDialog by rememberSaveable { mutableStateOf(false) }
 
                 Column(
                     modifier = Modifier
@@ -182,8 +183,9 @@ fun OneRepMaxDetailScreen(
                             OutlinedTextFieldDatePicker(
                                 currentDateTime = oneRepMaxDetailUiState.oneRMInfo.offsetDateTime,
                                 showDialog = showDatePickerDialog,
+                                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                                 setDialogVisibility = { showDatePickerDialog = it },
-                                updateOneRepMaxDetail = { offsetDateTime ->
+                                onAccept = { offsetDateTime ->
                                     updateOneRepMaxDetail(
                                         oneRepMaxDetailUiState.oneRMInfo.copy(offsetDateTime = offsetDateTime),
                                     )
@@ -223,7 +225,7 @@ fun OneRepMaxDetailScreen(
 @Preview(showBackground = true)
 @Composable
 private fun OneRepMaxDetailScreenLoadingPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "Back Squat",
@@ -236,7 +238,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun OneRepMaxDetailScreenSuccessPreview() {
-    _1RepMaxTrackerTheme {
+    OneRepMaxTrackerTheme {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "The name",
