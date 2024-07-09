@@ -31,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +50,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
 import net.martinlundberg.a1repmaxtracker.ui.theme._1RepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
@@ -78,6 +80,7 @@ fun MovementDetailRoute(
         movementDetailUiState = movementDetailUiState,
         onOneRepMaxClick = onOneRepMaxClick,
         add1RM = movementDetailViewModel::add1RM,
+        onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
     )
 }
@@ -91,9 +94,11 @@ fun MovementDetailScreen(
     movementDetailUiState: MovementDetailUiState = Loading,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     add1RM: (weight: Float, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
+    onDeleteMovementClick: (Long) -> Unit = {},
     setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
     var showAdd1rmDialog by remember { mutableStateOf(false) }
+    var showDeleteMovementConfirmDialog by rememberSaveable { mutableStateOf<Boolean>(false) }
 
     Scaffold(
         topBar = {
@@ -178,7 +183,7 @@ fun MovementDetailScreen(
                                 modifier = Modifier
                                     .width(120.dp)
                                     .semantics { contentDescription = "Add 1RM" },
-                                onClick = { showAdd1rmDialog = true },
+                                onClick = { showDeleteMovementConfirmDialog = true },
                             ) {
                                 Text(
                                     modifier = Modifier.padding(
@@ -213,6 +218,17 @@ fun MovementDetailScreen(
                                 onConfirmation = { weight ->
                                     add1RM(weight, weightUnit, movementId)
                                     showAdd1rmDialog = false
+                                }
+                            )
+                        }
+
+                        if (showDeleteMovementConfirmDialog) {
+                            DeleteMovementConfirmDialog(
+                                movementName = movementName,
+                                onDismissRequest = { showDeleteMovementConfirmDialog = false },
+                                onConfirmation = {
+                                    onDeleteMovementClick(movementId)
+                                    showDeleteMovementConfirmDialog = false
                                 }
                             )
                         }
