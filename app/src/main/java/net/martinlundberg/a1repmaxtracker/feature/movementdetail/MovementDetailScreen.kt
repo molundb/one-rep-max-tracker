@@ -243,9 +243,9 @@ fun MovementDetailScreen(
 fun OneRMCard(
     id: Long,
     movementName: String,
-    weight: Float?,
+    weight: Float,
     weightUnit: String,
-    date: String?,
+    date: String,
     onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
 ) {
     Card(
@@ -259,22 +259,8 @@ fun OneRMCard(
                 .padding(vertical = 8.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (weight == null) {
-                Text(
-                    modifier = Modifier.padding(end = 12.dp),
-                    text = "-", style = MaterialTheme.typography.titleLarge
-                )
-            } else {
-                Text(weight.weightWithUnit(weightUnit == "lb"), style = MaterialTheme.typography.titleLarge)
-            }
-            if (date == null) {
-                Text(
-                    modifier = Modifier.padding(end = 12.dp),
-                    text = "-", style = MaterialTheme.typography.titleLarge
-                )
-            } else {
-                Text(date, style = MaterialTheme.typography.titleLarge)
-            }
+            Text(weight.weightWithUnit(weightUnit == "lb"), style = MaterialTheme.typography.titleMedium)
+            Text(date, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
