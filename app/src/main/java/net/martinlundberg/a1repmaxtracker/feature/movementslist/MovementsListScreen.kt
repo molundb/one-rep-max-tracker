@@ -110,10 +110,6 @@ fun MovementsListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 modifier = Modifier.padding(top = 24.dp),
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                    titleContentColor = MaterialTheme.colorScheme.primary,
-//                ),
                 title = {
                     Text(
                         text = "1RM Tracker",
@@ -265,6 +261,7 @@ fun MovementCard(
                     },
                 )
                 .semantics { contentDescription = "Movement Card" },
+            shape = RoundedCornerShape(8.dp),
         ) {
             Row(
                 modifier = Modifier
@@ -535,7 +532,7 @@ private fun MovementsListLoadingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementsListScreenSuccessPreview() {
     _1RepMaxTrackerTheme {

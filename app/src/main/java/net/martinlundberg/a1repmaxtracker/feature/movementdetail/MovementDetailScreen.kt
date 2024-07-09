@@ -6,20 +6,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons.Filled
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -27,7 +25,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,11 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
@@ -99,14 +98,16 @@ fun MovementDetailScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = { Text(text = movementName) },
+                modifier = Modifier.padding(top = 24.dp),
+                title = {
+                    Text(
+                        text = "1RM Tracker",
+                        style = MaterialTheme.typography.displayLarge,
+                    )
+                },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Text(text = weightUnit, style = MaterialTheme.typography.titleMedium)
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit == "lb",
@@ -122,19 +123,19 @@ fun MovementDetailScreen(
                 }
             )
         },
-        modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
-        when (movementDetailUiState) {
-            Loading -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(top = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(text = "Loading...")
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(all = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(text = movementName, style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
+
+            when (movementDetailUiState) {
+                Loading -> {
+                    Box(modifier = Modifier.height(24.dp))
                     CircularProgressIndicator(
                         modifier = Modifier
                             .width(64.dp)
@@ -143,50 +144,78 @@ fun MovementDetailScreen(
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     )
                 }
-            }
 
-            is Success -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(vertical = 8.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                is Success -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(vertical = 24.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        movementDetailUiState.movement.oneRMs.map {
-                            item {
-                                OneRMCard(
-                                    movementName = movementName,
-                                    id = it.id,
-                                    weight = it.weight,
-                                    weightUnit = weightUnit,
-                                    date = it.offsetDateTime.formatTo("dd MMM yyyy"),
-                                    onOneRepMaxClick = onOneRepMaxClick,
+                        LazyColumn(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                        ) {
+                            movementDetailUiState.movement.oneRMs.map {
+                                item {
+                                    OneRMCard(
+                                        movementName = movementName,
+                                        id = it.id,
+                                        weight = it.weight,
+                                        weightUnit = weightUnit,
+                                        date = it.offsetDateTime.formatTo("dd MMM yyyy"),
+                                        onOneRepMaxClick = onOneRepMaxClick,
+                                    )
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TextButton(
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .semantics { contentDescription = "Add 1RM" },
+                                onClick = { showAdd1rmDialog = true },
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        horizontal = 24.dp,
+                                        vertical = 12.dp
+                                    ),
+                                    text = "Delete",
+                                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                                )
+                            }
+                            FloatingActionButton(
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .semantics { contentDescription = "Add 1RM" },
+                                onClick = { showAdd1rmDialog = true },
+                                shape = RoundedCornerShape(80.dp),
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        horizontal = 24.dp,
+                                        vertical = 12.dp
+                                    ),
+                                    text = "+ Add new",
+                                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                                 )
                             }
                         }
-                    }
-                    FloatingActionButton(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .semantics { contentDescription = "Add 1RM" },
-                        onClick = { showAdd1rmDialog = true },
-                    ) {
-                        Icon(Filled.Add, "Floating action button.")
-                    }
-                    if (showAdd1rmDialog) {
-                        Add1rmDialog(
-                            onDismissRequest = { showAdd1rmDialog = false },
-                            onConfirmation = { weight ->
-                                add1RM(weight, weightUnit, movementId)
-                                showAdd1rmDialog = false
-                            }
-                        )
+
+                        if (showAdd1rmDialog) {
+                            Add1rmDialog(
+                                onDismissRequest = { showAdd1rmDialog = false },
+                                onConfirmation = { weight ->
+                                    add1RM(weight, weightUnit, movementId)
+                                    showAdd1rmDialog = false
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -205,12 +234,13 @@ fun OneRMCard(
 ) {
     Card(
         modifier = Modifier.semantics { contentDescription = "Movement Card" },
-        onClick = { onOneRepMaxClick(id, movementName) }
+        onClick = { onOneRepMaxClick(id, movementName) },
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(vertical = 8.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             if (weight == null) {
@@ -283,7 +313,7 @@ fun Add1rmDialog(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementDetailLoadingPreview() {
     _1RepMaxTrackerTheme {
@@ -296,7 +326,7 @@ private fun MovementDetailLoadingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovementDetailScreenSuccessPreview() {
     _1RepMaxTrackerTheme {
