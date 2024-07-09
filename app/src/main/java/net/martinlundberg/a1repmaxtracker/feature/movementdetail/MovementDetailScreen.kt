@@ -48,7 +48,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,6 +71,7 @@ import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.kilos
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.toStringWithoutTrailingZero
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -343,11 +346,18 @@ fun AddOrEditResultDialog(
         if (weightUnit == "lb") {
             oneRMInfo.weight.kilosToPounds()
         } else {
-            oneRMInfo.weight.toString()
+            oneRMInfo.weight.toStringWithoutTrailingZero()
         }
     }
 
-    var weightText by rememberSaveable { mutableStateOf(weightInitialValue) }
+    var weightText by remember {
+        mutableStateOf(
+            TextFieldValue(
+                weightInitialValue,
+                TextRange(weightInitialValue.length)
+            )
+        )
+    }
     var date by rememberSaveable { mutableStateOf(oneRMInfo.offsetDateTime) }
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -417,7 +427,7 @@ fun AddOrEditResultDialog(
                                 OneRMInfo(
                                     id = oneRMInfo.id,
                                     movementId = oneRMInfo.movementId,
-                                    weight = weightText.toFloat(),
+                                    weight = weightText.text.toFloat(),
                                     offsetDateTime = date
                                 )
                             )
@@ -428,7 +438,7 @@ fun AddOrEditResultDialog(
                             disabledContentColor = White,
                             disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                         ),
-                        enabled = weightText.isNotBlank(),
+                        enabled = weightText.text.isNotBlank(),
                     ) {
                         Text(if (isAdd) "Add result" else "Edit result")
                     }

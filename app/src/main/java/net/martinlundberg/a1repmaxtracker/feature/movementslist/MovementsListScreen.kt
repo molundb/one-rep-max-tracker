@@ -50,8 +50,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -445,7 +447,7 @@ private fun AddOrEditMovementDialog(
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement, String) -> Unit = { _, _ -> },
 ) {
-    var movementNameText by remember { mutableStateOf(movement.name) }
+    var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
     var movementWeightText by remember { mutableStateOf(weightInitialValue) }
 
@@ -521,7 +523,7 @@ private fun AddOrEditMovementDialog(
                             onConfirmation(
                                 Movement(
                                     id = movement.id,
-                                    name = movementNameText,
+                                    name = movementNameText.text,
                                     weight = movementWeightText.toFloatOrNull()
                                 ),
                                 weightUnit,
@@ -533,7 +535,7 @@ private fun AddOrEditMovementDialog(
                             disabledContentColor = Color.White,
                             disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                         ),
-                        enabled = movementNameText.isNotBlank()
+                        enabled = movementNameText.text.isNotBlank()
                     ) {
                         Text(if (isAdd) "Add" else "Edit")
                     }

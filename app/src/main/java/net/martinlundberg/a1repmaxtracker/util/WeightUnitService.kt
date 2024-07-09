@@ -41,13 +41,6 @@ class WeightUnitService @Inject constructor() {
 
         fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
         fun Float.kilosToPounds() = (this * KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
-
-        private fun Float.toStringWithoutTrailingZero() = if (this == this.toInt().toFloat()) {
-            this.toInt().toString()
-        } else {
-            this.toString()
-        }
-
     }
 }
 
