@@ -284,7 +284,7 @@ fun MovementCard(
                 }
                 Box(modifier = Modifier.width(8.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.movement_list_item_nav_icon),
+                    painter = painterResource(id = R.drawable.ic_nav),
                     contentDescription = "Navigation icon",
                 )
             }
