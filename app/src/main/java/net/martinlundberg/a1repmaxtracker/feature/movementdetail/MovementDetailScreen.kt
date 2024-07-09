@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,12 +26,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -250,7 +252,8 @@ fun MovementDetailScreen(
                                 onConfirmation = { weight ->
                                     add1RM(weight, weightUnit, movementId)
                                     showAdd1rmDialog = false
-                                }
+                                },
+                                weightUnit = weightUnit,
                             )
                         }
 
@@ -307,8 +310,10 @@ fun OneRMCard(
 fun Add1rmDialog(
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Float) -> Unit = {},
+    initialWeight: String = "",
+    weightUnit: String,
 ) {
-    var weightText by remember { mutableStateOf("") }
+    var weightText by remember { mutableStateOf(initialWeight) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
@@ -320,29 +325,51 @@ fun Add1rmDialog(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp, end = 8.dp),
+                    .padding(all = 16.dp),
             ) {
-                TextField(
+                Text(
+                    text = "Add new result",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                Box(modifier = Modifier.height(24.dp))
+                Text("Weight ($weightUnit)", style = MaterialTheme.typography.titleMedium)
+                Box(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
                     value = weightText,
                     onValueChange = { weightText = it },
-                    label = { Text("Weight") },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
                     modifier = Modifier.focusRequester(focusRequester),
                 )
+                Box(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
                 ) {
-                    TextButton(onClick = { onDismissRequest() }) {
-                        Text("Dismiss")
+                    OutlinedButton(
+                        modifier = Modifier
+                            .weight(1f),
+                        onClick = { onDismissRequest() }
+                    ) {
+                        Text("Cancel")
                     }
-                    TextButton(
-                        onClick = { onConfirmation(weightText.toFloat()) },
+                    Box(modifier = Modifier.width(32.dp))
+                    OutlinedButton(
+                        modifier = Modifier
+                            .weight(1f),
+                        onClick = {
+                            onConfirmation(weightText.toFloat())
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            disabledContentColor = Color.White,
+                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        ),
                         enabled = weightText.isNotBlank(),
                     ) {
-                        Text("Add")
+                        Text("Add result")
                     }
                 }
             }
@@ -404,8 +431,21 @@ private fun MovementDetailScreenSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun Add1rmDialogPreview() {
+private fun Add1rmDialogEnabledPreview() {
     _1RepMaxTrackerTheme {
-        Add1rmDialog()
+        Add1rmDialog(
+            initialWeight = "55",
+            weightUnit = "kg"
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Add1rmDialogDisabledPreview() {
+    _1RepMaxTrackerTheme {
+        Add1rmDialog(
+            weightUnit = "lb"
+        )
     }
 }
