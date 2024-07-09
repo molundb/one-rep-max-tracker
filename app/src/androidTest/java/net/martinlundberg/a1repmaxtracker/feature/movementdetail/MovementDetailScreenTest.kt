@@ -125,7 +125,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertIsDisplayed()
     }
 
     @Test
@@ -157,7 +157,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = { _, _, _ ->
+                addResult = { _, _, _ ->
                     add1RMCalled = true
                 }
             )
@@ -168,7 +168,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithText("Add").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
         assertTrue(add1RMCalled)
     }
 
@@ -183,7 +183,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                add1RM = { _, _, _ ->
+                addResult = { _, _, _ ->
                     add1RMCalled = true
                 }
             )
@@ -194,7 +194,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithText("Add").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
         assertTrue(add1RMCalled)
     }
 }

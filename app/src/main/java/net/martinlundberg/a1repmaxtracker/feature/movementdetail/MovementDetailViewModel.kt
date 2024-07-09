@@ -15,7 +15,6 @@ import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,12 +34,13 @@ class MovementDetailViewModel @Inject constructor(
         }
     }
 
-    fun add1RM(weight: Float, weightUnit: String, movementId: Long) {
+    fun add1RM(oneRMInfo: OneRMInfo, weightUnit: String, movementId: Long) {
         viewModelScope.launch {
             oneRepMaxRepository.addOneRM(
                 OneRMInfo(
-                    weight = weight,
-                    offsetDateTime = OffsetDateTime.now(),
+                    id = oneRMInfo.id,
+                    weight = oneRMInfo.weight,
+                    offsetDateTime = oneRMInfo.offsetDateTime,
                     movementId = movementId
                 ),
                 weightUnit = weightUnit,
@@ -52,6 +52,12 @@ class MovementDetailViewModel @Inject constructor(
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
             navigationService.navController.popBackStack()
+        }
+    }
+
+    fun deleteResult(id: Long) {
+        viewModelScope.launch {
+            oneRepMaxRepository.deleteOneRM(id)
         }
     }
 }

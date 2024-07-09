@@ -483,7 +483,8 @@ private fun AddOrEditMovementDialog(
                 ) {
                     OutlinedButton(
                         modifier = Modifier
-                            .weight(1f),
+                            .weight(1f)
+                            .height(40.dp),
                         onClick = { onDismissRequest() }
                     ) {
                         Text("Cancel")
@@ -491,7 +492,8 @@ private fun AddOrEditMovementDialog(
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
                         modifier = Modifier
-                            .weight(1f),
+                            .weight(1f)
+                            .height(40.dp),
                         onClick = {
                             onConfirmation(
                                 Movement(

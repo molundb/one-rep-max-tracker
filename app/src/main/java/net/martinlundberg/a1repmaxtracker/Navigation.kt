@@ -54,9 +54,9 @@ fun Navigation(
             MovementDetailRoute(
                 movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
-                onOneRepMaxClick = { oneRepMaxId, movementName ->
-                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
-                },
+//                onOneRepMaxClick = { oneRepMaxId, movementName ->
+//                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
+//                },
                 navigateBack = { navController.popBackStack() }
             )
         }
