@@ -54,7 +54,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenStateIsLoading_thenLoadingIndicatorAndTextAreDisplayed() {
+    fun givenStateIsLoading_thenLoadingIndicatorIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 15,
@@ -68,7 +68,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenListOf1RMs_thenListInfoIsDisplayed() {
+    fun givenResults_thenInfoIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 2,
@@ -110,7 +110,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun whenAdd1RMButtonIsClicked_thenAddResultDialogIsDisplayed() {
+    fun whenAddResultButtonIsClicked_thenAddResultDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -146,7 +146,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenAddResultDialogWithWeight_whenAddButtonIsClicked_thenDialogIsClosedAndNew1RMIsAdded() {
+    fun givenAddResultDialogWithWeight_whenAddButtonIsClicked_thenDialogIsClosedAndResultIsAdded() {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
@@ -172,7 +172,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun givenAddResultDialogWithWeight_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNew1RMIsAdded() {
+    fun givenAddResultDialogWithWeight_whenDismissButtonIsClicked_thenDialogIsClosedAndNoResultIsAdded() {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(

@@ -97,7 +97,7 @@ fun MovementDetailRoute(
         movementDetailUiState = movementDetailUiState,
 //        onOneRepMaxClick = onOneRepMaxClick,
         navigateBack = navigateBack,
-        addResult = movementDetailViewModel::add1RM,
+        addResult = movementDetailViewModel::addResult,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
         setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
