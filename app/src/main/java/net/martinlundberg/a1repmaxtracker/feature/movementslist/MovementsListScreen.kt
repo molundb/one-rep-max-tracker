@@ -166,7 +166,6 @@ fun MovementsListScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     LazyColumn(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
                         movementsListUiState.movements.map {
@@ -251,54 +250,53 @@ fun MovementCard(
 ) {
     var movementDropDownMenuInfo by rememberSaveable { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
-    Box {
-        Card(
+    Card(
+        modifier = Modifier
+            .combinedClickable(
+                onClick = { onMovementClick(movement) },
+                onLongClick = {
+                    view.performHapticFeedback(
+                        HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                    )
+                    movementDropDownMenuInfo = movement
+                },
+            )
+            .semantics { contentDescription = "Movement Card" },
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Row(
             modifier = Modifier
-                .combinedClickable(
-                    onClick = { onMovementClick(movement) },
-                    onLongClick = {
-                        view.performHapticFeedback(
-                            HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
-                        )
-                        movementDropDownMenuInfo = movement
-                    },
-                )
-                .semantics { contentDescription = "Movement Card" },
-            shape = RoundedCornerShape(8.dp),
+                .fillMaxWidth()
+                .height(48.dp) // Minimum recommended height for clickable cards
+                .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(movement.name, style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.weight(1f))
-                if (movement.weight == null) {
-                    Text(
-                        text = "-",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                } else {
-                    Text(
-                        text = movement.weight.weightWithUnit(weightUnit == "lb"),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-                Box(modifier = Modifier.width(8.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.ic_nav),
-                    contentDescription = "Navigation icon",
+            Text(movement.name, style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.weight(1f))
+            if (movement.weight == null) {
+                Text(
+                    text = "-",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            } else {
+                Text(
+                    text = movement.weight.weightWithUnit(weightUnit == "lb"),
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
-            movementDropDownMenuInfo?.let {
-                MovementDropDownMenu(
-                    movement = it,
-                    onEditMovementClick = onEditMovementClick,
-                    onDeleteMovementClick = onDeleteMovementClick,
-                    onDismiss = { movementDropDownMenuInfo = null }
-                )
-            }
+            Box(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.ic_nav),
+                contentDescription = "Navigation icon",
+            )
+        }
+        movementDropDownMenuInfo?.let {
+            MovementDropDownMenu(
+                movement = it,
+                onEditMovementClick = onEditMovementClick,
+                onDeleteMovementClick = onDeleteMovementClick,
+                onDismiss = { movementDropDownMenuInfo = null }
+            )
         }
     }
 }

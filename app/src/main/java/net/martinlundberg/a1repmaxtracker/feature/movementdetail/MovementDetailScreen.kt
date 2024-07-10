@@ -315,8 +315,9 @@ fun OneRMCard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 8.dp, horizontal = 12.dp),
+                .fillMaxWidth()
+                .height(48.dp) // Minimum recommended height for clickable cards
+                .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(oneRMInfo.weight.weightWithUnit(weightUnit == "lb"), style = MaterialTheme.typography.titleMedium)
