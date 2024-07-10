@@ -442,7 +442,12 @@ fun AddOrEditResultDialog(
                         ),
                         enabled = weightText.text.isNotBlank(),
                     ) {
-                        Text(if (isAdd) "Add result" else "Edit result")
+                        Text(
+                            text = if (isAdd) "Add result" else "Edit result",
+                            modifier = Modifier.semantics {
+                                contentDescription = if (isAdd) "Add result button" else "Edit result button"
+                            },
+                        )
                     }
                 }
                 Box(modifier = Modifier.height(24.dp))

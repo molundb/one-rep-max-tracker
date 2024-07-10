@@ -2,6 +2,7 @@ package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -110,6 +111,48 @@ class MovementDetailScreenTest {
     }
 
     @Test
+    fun whenDeleteButtonIsClicked_thenDeleteMovementConfirmationDialogIsDisplayed() {
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
+                weightUnit = "lb",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail()
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Delete").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenDeleteMovementConfirmDialog_whenConfirmIsClicked_thenMenuIsDismissedAndMovementIsDeleted() {
+        var deleteMovementCalled = false
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Name",
+                weightUnit = "lb",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail()
+                ),
+                onDeleteMovementClick = { deleteMovementCalled = true }
+            )
+        }
+
+        composeTestRule.onNodeWithText("Delete").performClick()
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Yes, delete").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertDoesNotExist()
+        assertTrue(deleteMovementCalled)
+    }
+
+    @Test
     fun whenAddResultButtonIsClicked_thenAddResultDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
@@ -194,6 +237,136 @@ class MovementDetailScreenTest {
         composeTestRule.onNodeWithText("Add result").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
+        assertTrue(addResultCalled)
+    }
+
+    @Test
+    fun whenResultIsClicked_thenEditResultDialogIsDisplayed() {
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Back Squat",
+                weightUnit = "kg",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail(
+                        listOf(
+                            OneRMInfo(
+                                id = 1,
+                                movementId = 2,
+                                weight = 70f,
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("70 kg").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenEditDialog_whenDeleteIsClicked_thenDialogIsClosedAndResultIsDeleted() {
+        var deleteCalled = false
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Back Squat",
+                weightUnit = "kg",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail(
+                        listOf(
+                            OneRMInfo(
+                                id = 1,
+                                movementId = 2,
+                                weight = 70f,
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                            )
+                        )
+                    )
+                ),
+                onDeleteResultClick = {
+                    deleteCalled = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithText("70 kg").performClick()
+        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Delete result").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
+        assertTrue(deleteCalled)
+    }
+
+    @Test
+    fun givenEditDialog_whenDateIsClicked_thenCalendarDialogIsDisplayed() {
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Back Squat",
+                weightUnit = "kg",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail(
+                        listOf(
+                            OneRMInfo(
+                                id = 1,
+                                movementId = 2,
+                                weight = 70f,
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("70 kg").performClick()
+        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+
+        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+    }
+
+    @Test
+    fun givenCalendarDialog_whenDateIsSelectedAndAcceptButtonIsClicked_thenDialogIsClosedAndAddResultIsCalled() {
+        var addResultCalled = false
+        composeTestRule.setContent {
+            MovementDetailScreen(
+                movementId = 17,
+                movementName = "Back Squat",
+                weightUnit = "kg",
+                movementDetailUiState = MovementDetailUiState.Success(
+                    MovementDetail(
+                        listOf(
+                            OneRMInfo(
+                                id = 1,
+                                movementId = 2,
+                                weight = 70f,
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                            )
+                        )
+                    )
+                ),
+                addResult = { _, _, _ ->
+                    addResultCalled = true
+                },
+            )
+        }
+
+        composeTestRule.onNodeWithText("70 kg").performClick()
+        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+
+        composeTestRule.onNodeWithText("Wednesday, July 17, 2024").performClick()
+        composeTestRule.onNodeWithText("Accept").performClick()
+        composeTestRule.onNodeWithContentDescription("Edit result button").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
         assertTrue(addResultCalled)
     }
 }
