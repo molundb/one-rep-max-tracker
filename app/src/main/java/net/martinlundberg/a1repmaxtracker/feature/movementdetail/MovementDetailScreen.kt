@@ -221,7 +221,7 @@ fun MovementDetailScreen(
                             TextButton(
                                 modifier = Modifier
                                     .width(120.dp)
-                                    .semantics { contentDescription = "Add 1RM" },
+                                    .semantics { contentDescription = "Delete result" },
                                 onClick = { showDeleteMovementConfirmDialog = true },
                             ) {
                                 Text(
@@ -236,7 +236,7 @@ fun MovementDetailScreen(
                             FloatingActionButton(
                                 modifier = Modifier
                                     .width(120.dp)
-                                    .semantics { contentDescription = "Add 1RM" },
+                                    .semantics { contentDescription = "Add result" },
                                 onClick = { showAddResultDialog = true },
                                 shape = RoundedCornerShape(80.dp),
                             ) {
@@ -387,7 +387,9 @@ fun AddOrEditResultDialog(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .semantics { contentDescription = "Weight Text Field" },
                 )
                 Box(modifier = Modifier.height(24.dp))
                 Text("Date", style = MaterialTheme.typography.titleMedium)

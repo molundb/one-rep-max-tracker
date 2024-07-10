@@ -64,7 +64,6 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Loading...").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Circular Progress Indicator").assertIsDisplayed()
     }
 
@@ -111,7 +110,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun whenAdd1RMButtonIsClicked_thenAdd1RMDialogIsDisplayed() {
+    fun whenAdd1RMButtonIsClicked_thenAddResultDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -123,13 +122,13 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertIsDisplayed()
     }
 
     @Test
-    fun givenAdd1RMDialogWithNoWeight_thenAddButtonIsDisabled() {
+    fun givenAddResultDialogWithNoWeight_thenAddButtonIsDisabled() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -141,14 +140,14 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result").performClick()
 
-        composeTestRule.onNodeWithText("Add").assertIsNotEnabled()
+        composeTestRule.onNodeWithText("Add result").assertIsNotEnabled()
     }
 
     @Test
-    fun givenAdd1RMDialogWithWeight_whenAddButtonIsClicked_thenDialogIsClosedAndNew1RMIsAdded() {
-        var add1RMCalled = false
+    fun givenAddResultDialogWithWeight_whenAddButtonIsClicked_thenDialogIsClosedAndNew1RMIsAdded() {
+        var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -158,23 +157,23 @@ class MovementDetailScreenTest {
                     MovementDetail()
                 ),
                 addResult = { _, _, _ ->
-                    add1RMCalled = true
+                    addResultCalled = true
                 }
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
-        composeTestRule.onNodeWithText("Weight").performTextInput("780")
+        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add").performClick()
+        composeTestRule.onNodeWithText("Add result").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
-        assertTrue(add1RMCalled)
+        assertTrue(addResultCalled)
     }
 
     @Test
-    fun givenAdd1RMDialogWithWeight_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNew1RMIsAdded() {
-        var add1RMCalled = false
+    fun givenAddResultDialogWithWeight_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNew1RMIsAdded() {
+        var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
                 movementId = 17,
@@ -184,17 +183,17 @@ class MovementDetailScreenTest {
                     MovementDetail()
                 ),
                 addResult = { _, _, _ ->
-                    add1RMCalled = true
+                    addResultCalled = true
                 }
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add 1RM").performClick()
-        composeTestRule.onNodeWithText("Weight").performTextInput("780")
+        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add").performClick()
+        composeTestRule.onNodeWithText("Add result").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
-        assertTrue(add1RMCalled)
+        assertTrue(addResultCalled)
     }
 }

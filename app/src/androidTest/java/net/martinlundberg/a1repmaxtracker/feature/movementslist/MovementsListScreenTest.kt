@@ -81,7 +81,7 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
+        composeTestRule.onNodeWithContentDescription("Movement Name Text Field").performTextInput("movement test name")
 
         // When
         composeTestRule.onNodeWithText("Add").performClick()
@@ -124,10 +124,10 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithText("Name of exercise").performTextInput("movement test name")
+        composeTestRule.onNodeWithContentDescription("Movement Name Text Field").performTextInput("movement test name")
 
         // When
-        composeTestRule.onNodeWithText("Dismiss").performClick()
+        composeTestRule.onNodeWithText("Cancel").performClick()
 
         // Then
         composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
@@ -250,7 +250,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Delete").performClick()
 
         // When
-        composeTestRule.onNodeWithText("Confirm").performClick()
+        composeTestRule.onNodeWithText("Yes, delete").performClick()
 
         // Then
         composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertDoesNotExist()

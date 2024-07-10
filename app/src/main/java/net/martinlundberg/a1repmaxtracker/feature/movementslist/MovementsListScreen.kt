@@ -353,11 +353,14 @@ fun DeleteMovementConfirmDialog(
     onDismissRequest: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(
+        onDismissRequest = { onDismissRequest() }
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(224.dp),
+                .height(224.dp)
+                .semantics { contentDescription = "Delete Movement Confirmation Dialog" },
             shape = RoundedCornerShape(4.dp),
         ) {
             Column(
@@ -479,7 +482,8 @@ private fun AddOrEditMovementDialog(
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .focusRequester(focusRequester)
+                        .semantics { contentDescription = "Movement Name Text Field" },
                 )
                 if (isAdd) {
                     Spacer(modifier = Modifier.size(24.dp))
