@@ -25,7 +25,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -58,7 +57,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
@@ -72,7 +70,7 @@ import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 @Composable
 fun MovementsListRoute(
-    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+    innerPadding: PaddingValues,
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementsListViewModel: MovementsListViewModel = hiltViewModel(),
     weightUnitService: WeightUnitService = provideWeightUnitService(),
@@ -85,7 +83,7 @@ fun MovementsListRoute(
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
     MovementsListScreen(
-        scaffold = scaffold,
+        innerPadding = innerPadding,
         movementsListUiState = movementsListUiState,
         weightUnit = weightUnit,
         onAddMovementClick = movementsListViewModel::addMovement,
@@ -95,10 +93,9 @@ fun MovementsListRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementsListScreen(
-    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+    innerPadding: PaddingValues,
     movementsListUiState: MovementsListUiState = Loading,
     weightUnit: String,
     onAddMovementClick: (Movement, String) -> Unit = { _, _ -> },
@@ -110,102 +107,100 @@ fun MovementsListScreen(
     var showAddMovementDialog by remember { mutableStateOf(false) }
     var movementToDelete by remember { mutableStateOf<Movement?>(null) }
 
-    scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(all = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(text = "Your top results", style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(all = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = "Your top results", style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
 
-            when (movementsListUiState) {
-                Loading -> {
-                    Box(modifier = Modifier.height(24.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(64.dp),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        when (movementsListUiState) {
+            Loading -> {
+                Box(modifier = Modifier.height(24.dp))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(64.dp),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+
+            is Success -> Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 24.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    movementsListUiState.movements.map {
+                        item {
+                            MovementCard(
+                                movement = Movement(it.id, it.name, it.weight),
+                                weightUnit = weightUnit,
+                                onMovementClick = onMovementClick,
+                                onEditMovementClick = { movement ->
+                                    movementToEdit = movement
+                                },
+                                onDeleteMovementClick = { movement ->
+                                    movementToDelete = movement
+                                }
+                            )
+                        }
+                    }
+                }
+                FloatingActionButton(
+                    modifier = Modifier
+                        .semantics { contentDescription = "Add Movement" },
+                    onClick = { showAddMovementDialog = true },
+                    shape = RoundedCornerShape(80.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.padding(
+                            horizontal = 24.dp,
+                            vertical = 12.dp
+                        ),
+                        text = "+ Add movement",
+                        style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                     )
                 }
 
-                is Success -> Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 24.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(24.dp)
-                    ) {
-                        movementsListUiState.movements.map {
-                            item {
-                                MovementCard(
-                                    movement = Movement(it.id, it.name, it.weight),
-                                    weightUnit = weightUnit,
-                                    onMovementClick = onMovementClick,
-                                    onEditMovementClick = { movement ->
-                                        movementToEdit = movement
-                                    },
-                                    onDeleteMovementClick = { movement ->
-                                        movementToDelete = movement
-                                    }
-                                )
-                            }
+                if (showAddMovementDialog) {
+                    AddMovementDialog(
+                        weightUnit = weightUnit,
+                        onDismissRequest = { showAddMovementDialog = false },
+                        onConfirmation = { movement, weightUnit ->
+                            onAddMovementClick(movement, weightUnit)
+                            showAddMovementDialog = false
                         }
-                    }
-                    FloatingActionButton(
-                        modifier = Modifier
-                            .semantics { contentDescription = "Add Movement" },
-                        onClick = { showAddMovementDialog = true },
-                        shape = RoundedCornerShape(80.dp),
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(
-                                horizontal = 24.dp,
-                                vertical = 12.dp
-                            ),
-                            text = "+ Add movement",
-                            style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
-                        )
-                    }
+                    )
+                }
 
-                    if (showAddMovementDialog) {
-                        AddMovementDialog(
-                            weightUnit = weightUnit,
-                            onDismissRequest = { showAddMovementDialog = false },
-                            onConfirmation = { movement, weightUnit ->
-                                onAddMovementClick(movement, weightUnit)
-                                showAddMovementDialog = false
-                            }
-                        )
-                    }
+                movementToEdit?.let { movement ->
+                    EditMovementDialog(
+                        movement = movement,
+                        weightUnit = weightUnit,
+                        onDismissRequest = { movementToEdit = null },
+                        onConfirmation = { editedMovement, _ ->
+                            onEditMovementClick(editedMovement)
+                            movementToEdit = null
+                        }
+                    )
+                }
 
-                    movementToEdit?.let { movement ->
-                        EditMovementDialog(
-                            movement = movement,
-                            weightUnit = weightUnit,
-                            onDismissRequest = { movementToEdit = null },
-                            onConfirmation = { editedMovement, _ ->
-                                onEditMovementClick(editedMovement)
-                                movementToEdit = null
-                            }
-                        )
-                    }
-
-                    movementToDelete?.let { movement ->
-                        DeleteMovementConfirmDialog(
-                            movementName = movement.name,
-                            onDismissRequest = { movementToDelete = null },
-                            onConfirmation = {
-                                onDeleteMovementClick(movement.id)
-                                movementToDelete = null
-                            }
-                        )
-                    }
+                movementToDelete?.let { movement ->
+                    DeleteMovementConfirmDialog(
+                        movementName = movement.name,
+                        onDismissRequest = { movementToDelete = null },
+                        onConfirmation = {
+                            onDeleteMovementClick(movement.id)
+                            movementToDelete = null
+                        }
+                    )
                 }
             }
         }
@@ -530,11 +525,7 @@ private fun AddOrEditMovementDialog(
 private fun MovementsListLoadingPreview() {
     OneRepMaxTrackerTheme {
         MovementsListScreen(
-            scaffold = { content ->
-                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
-                    content(innerPadding)
-                })
-            },
+            innerPadding = PaddingValues(24.dp),
             movementsListUiState = Loading,
             weightUnit = "lb",
         )
@@ -546,11 +537,7 @@ private fun MovementsListLoadingPreview() {
 private fun MovementsListScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
         MovementsListScreen(
-            scaffold = { content ->
-                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
-                    content(innerPadding)
-                })
-            },
+            innerPadding = PaddingValues(24.dp),
             movementsListUiState = Success(
                 listOf(
                     Movement(1, "Movement 1", 100f),

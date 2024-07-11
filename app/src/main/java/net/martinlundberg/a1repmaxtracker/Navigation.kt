@@ -56,51 +56,6 @@ fun Navigation(
 ) {
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
-//    Scaffold(
-//        topBar = {
-//            CenterAlignedTopAppBar(
-//                modifier = Modifier.padding(top = 24.dp),
-//                title = {
-//                    Text(
-//                        text = "1RM Tracker",
-//                        style = MaterialTheme.typography.displayLarge,
-//                    )
-//                },
-//                actions = {
-//                    Row(verticalAlignment = Alignment.CenterVertically) {
-//                        Text(
-//                            text = weightUnit,
-//                            style = MaterialTheme.typography.titleMedium,
-//                            color = MaterialTheme.colorScheme.onSurface
-//                        )
-//                        Box(modifier = Modifier.size(4.dp))
-//                        Switch(
-//                            checked = weightUnit == "lb",
-//                            onCheckedChange = {
-//                                weightUnitService.setWeightUnitToPounds(it)
-//                            },
-//                        )
-//                    }
-//                }
-//            )
-//        },
-//        content = { innerPadding ->
-//            NavigationHost(navController, innerPadding)
-//        }
-//    )
-
-    NavigationHost(navController) { content ->
-        DefaultScaffold(weightUnit, weightUnitService::setWeightUnitToPounds, content)
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun DefaultScaffold(
-    weightUnit: String,
-    setWeightUnitToPounds: (Boolean) -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit,
-) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -122,7 +77,7 @@ fun DefaultScaffold(
                         Switch(
                             checked = weightUnit == "lb",
                             onCheckedChange = {
-                                setWeightUnitToPounds(it)
+                                weightUnitService.setWeightUnitToPounds(it)
                             },
                         )
                     }
@@ -130,7 +85,7 @@ fun DefaultScaffold(
             )
         },
         content = { innerPadding ->
-            content(innerPadding)
+            NavigationHost(navController, innerPadding)
         }
     )
 }
@@ -138,7 +93,7 @@ fun DefaultScaffold(
 @Composable
 private fun NavigationHost(
     navController: NavHostController,
-    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+    innerPadding: PaddingValues,
 ) {
     NavHost(
         navController = navController,
@@ -150,7 +105,7 @@ private fun NavigationHost(
             enterTransition = slideInFromLeft,
         ) {
             MovementsListRoute(
-                scaffold = scaffold,
+                innerPadding = innerPadding,
                 onMovementClick = { movement, lifeCycleState ->
                     if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
                         navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
@@ -168,7 +123,7 @@ private fun NavigationHost(
             popExitTransition = slideOutToRight,
         ) { backStackEntry ->
             MovementDetailRoute(
-                scaffold = scaffold,
+                innerPadding = innerPadding,
                 movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
                 //                onOneRepMaxClick = { oneRepMaxId, movementName ->

@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
@@ -75,7 +74,7 @@ import java.time.ZoneOffset
 
 @Composable
 fun MovementDetailRoute(
-    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+    innerPadding: PaddingValues,
     movementId: Long,
     movementName: String,
 //    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
@@ -89,8 +88,8 @@ fun MovementDetailRoute(
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
-    MovementDetailScreenWithScaffold(
-        scaffold = scaffold,
+    MovementDetailScreen(
+        innerPadding = innerPadding,
         movementId = movementId,
         movementName = movementName,
         weightUnit = weightUnit,
@@ -101,33 +100,6 @@ fun MovementDetailRoute(
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
     )
-}
-
-@Composable
-fun MovementDetailScreenWithScaffold(
-    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
-    movementId: Long,
-    movementName: String,
-    weightUnit: String,
-    movementDetailUiState: MovementDetailUiState = Loading,
-    navigateBack: (Lifecycle.State) -> Unit = {},
-    addResult: (oneRMInfo: OneRMInfo, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
-    onDeleteMovementClick: (Long) -> Unit = {},
-    onDeleteResultClick: (Long) -> Unit = {},
-) {
-    scaffold { innerPadding ->
-        MovementDetailScreen(
-            innerPadding = innerPadding,
-            movementId = movementId,
-            movementName = movementName,
-            weightUnit = weightUnit,
-            movementDetailUiState = movementDetailUiState,
-            navigateBack = navigateBack,
-            addResult = addResult,
-            onDeleteMovementClick = onDeleteMovementClick,
-            onDeleteResultClick = onDeleteResultClick,
-        )
-    }
 }
 
 @Composable
@@ -472,12 +444,8 @@ fun AddOrEditResultDialog(
 @Composable
 private fun MovementDetailLoadingPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreenWithScaffold(
-            scaffold = { content ->
-                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
-                    content(innerPadding)
-                })
-            },
+        MovementDetailScreen(
+            innerPadding = PaddingValues(24.dp),
             movementId = 1,
             movementName = "Bench Press",
             weightUnit = "kg",
@@ -490,12 +458,8 @@ private fun MovementDetailLoadingPreview() {
 @Composable
 private fun MovementDetailScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreenWithScaffold(
-            scaffold = { content ->
-                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
-                    content(innerPadding)
-                })
-            },
+        MovementDetailScreen(
+            innerPadding = PaddingValues(24.dp),
             movementId = 111L,
             movementName = "Back Squat",
             weightUnit = "kg",
