@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
@@ -524,11 +525,13 @@ private fun AddOrEditMovementDialog(
 @Composable
 private fun MovementsListLoadingPreview() {
     OneRepMaxTrackerTheme {
-        MovementsListScreen(
-            innerPadding = PaddingValues(24.dp),
-            movementsListUiState = Loading,
-            weightUnit = "lb",
-        )
+        DefaultScaffold { innerPadding ->
+            MovementsListScreen(
+                innerPadding = innerPadding,
+                movementsListUiState = Loading,
+                weightUnit = "lb",
+            )
+        }
     }
 }
 
@@ -536,17 +539,19 @@ private fun MovementsListLoadingPreview() {
 @Composable
 private fun MovementsListScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
-        MovementsListScreen(
-            innerPadding = PaddingValues(24.dp),
-            movementsListUiState = Success(
-                listOf(
-                    Movement(1, "Movement 1", 100f),
-                    Movement(2, "Movement 4", 4.4f),
-                    Movement(3, "No weight", null),
-                )
-            ),
-            weightUnit = "kg",
-        )
+        DefaultScaffold { innerPadding ->
+            MovementsListScreen(
+                innerPadding = innerPadding,
+                movementsListUiState = Success(
+                    listOf(
+                        Movement(1, "Movement 1", 100f),
+                        Movement(2, "Movement 4", 4.4f),
+                        Movement(3, "No weight", null),
+                    )
+                ),
+                weightUnit = "kg",
+            )
+        }
     }
 }
 

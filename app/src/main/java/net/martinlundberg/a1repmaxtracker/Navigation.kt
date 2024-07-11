@@ -48,7 +48,6 @@ const val ONE_REP_MAX_ID = "oneRepMaxId"
 
 const val animation_duration = 300
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation(
     navController: NavHostController = hiltViewModel<NavViewModel>().controller,
@@ -56,6 +55,21 @@ fun Navigation(
 ) {
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
+    DefaultScaffold(
+        weightUnit = weightUnit,
+        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
+    ) { innerPadding ->
+        NavigationHost(navController, innerPadding)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun DefaultScaffold(
+    weightUnit: String = "kg",
+    setWeightUnitToPounds: (Boolean) -> Unit = {},
+    content: @Composable (PaddingValues) -> Unit,
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -77,7 +91,7 @@ fun Navigation(
                         Switch(
                             checked = weightUnit == "lb",
                             onCheckedChange = {
-                                weightUnitService.setWeightUnitToPounds(it)
+                                setWeightUnitToPounds(it)
                             },
                         )
                     }
@@ -85,7 +99,7 @@ fun Navigation(
             )
         },
         content = { innerPadding ->
-            NavigationHost(navController, innerPadding)
+            content(innerPadding)
         }
     )
 }

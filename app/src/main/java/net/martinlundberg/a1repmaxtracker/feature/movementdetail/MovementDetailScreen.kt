@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
@@ -444,13 +445,15 @@ fun AddOrEditResultDialog(
 @Composable
 private fun MovementDetailLoadingPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreen(
-            innerPadding = PaddingValues(24.dp),
-            movementId = 1,
-            movementName = "Bench Press",
-            weightUnit = "kg",
-            movementDetailUiState = Loading,
-        )
+        DefaultScaffold { innerPadding ->
+            MovementDetailScreen(
+                innerPadding = innerPadding,
+                movementId = 1,
+                movementName = "Bench Press",
+                weightUnit = "kg",
+                movementDetailUiState = Loading,
+            )
+        }
     }
 }
 
@@ -458,36 +461,38 @@ private fun MovementDetailLoadingPreview() {
 @Composable
 private fun MovementDetailScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreen(
-            innerPadding = PaddingValues(24.dp),
-            movementId = 111L,
-            movementName = "Back Squat",
-            weightUnit = "kg",
-            movementDetailUiState = Success(
-                MovementDetail(
-                    listOf(
-                        OneRMInfo(
-                            id = 80,
-                            movementId = 18,
-                            weight = 15.5f,
-                            offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
-                        ),
-                        OneRMInfo(
-                            id = 75,
-                            movementId = 18,
-                            weight = 15f,
-                            offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
-                        ),
-                        OneRMInfo(
-                            id = 70,
-                            movementId = 18,
-                            weight = 15f,
-                            offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
-                        ),
+        DefaultScaffold { innerPadding ->
+            MovementDetailScreen(
+                innerPadding = innerPadding,
+                movementId = 111L,
+                movementName = "Back Squat",
+                weightUnit = "kg",
+                movementDetailUiState = Success(
+                    MovementDetail(
+                        listOf(
+                            OneRMInfo(
+                                id = 80,
+                                movementId = 18,
+                                weight = 15.5f,
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
+                            OneRMInfo(
+                                id = 75,
+                                movementId = 18,
+                                weight = 15f,
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
+                            OneRMInfo(
+                                id = 70,
+                                movementId = 18,
+                                weight = 15f,
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                            ),
+                        )
                     )
-                )
-            ),
-        )
+                ),
+            )
+        }
     }
 }
 
