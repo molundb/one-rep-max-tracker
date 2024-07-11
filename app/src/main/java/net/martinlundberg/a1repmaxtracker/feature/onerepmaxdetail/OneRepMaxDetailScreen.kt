@@ -28,7 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -144,14 +144,14 @@ fun OneRepMaxDetailScreen(
             }
 
             is Success -> {
-                var weightText by rememberSaveable {
+                var weightText by remember {
                     mutableStateOf(
                         "${oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")}"
                     )
                 }
-                var notesText by rememberSaveable { mutableStateOf("") }
-                var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-                var showTimePickerDialog by rememberSaveable { mutableStateOf(false) }
+                var notesText by remember { mutableStateOf("") }
+                var showDatePickerDialog by remember { mutableStateOf(false) }
+                var showTimePickerDialog by remember { mutableStateOf(false) }
 
                 Column(
                     modifier = Modifier

@@ -7,6 +7,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,8 +30,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,13 +37,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -59,6 +57,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
@@ -72,7 +72,8 @@ import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 @Composable
 fun MovementsListRoute(
-    onMovementClick: (Movement) -> Unit = {},
+    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+    onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementsListViewModel: MovementsListViewModel = hiltViewModel(),
     weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
@@ -84,60 +85,32 @@ fun MovementsListRoute(
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
     MovementsListScreen(
+        scaffold = scaffold,
         movementsListUiState = movementsListUiState,
         weightUnit = weightUnit,
         onAddMovementClick = movementsListViewModel::addMovement,
         onMovementClick = onMovementClick,
         onEditMovementClick = movementsListViewModel::editMovement,
         onDeleteMovementClick = movementsListViewModel::deleteMovement,
-        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovementsListScreen(
+    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
     movementsListUiState: MovementsListUiState = Loading,
     weightUnit: String,
     onAddMovementClick: (Movement, String) -> Unit = { _, _ -> },
-    onMovementClick: (Movement) -> Unit = {},
+    onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
-    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
-    var movementToEdit by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
-    var movementToDelete by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementToDelete by remember { mutableStateOf<Movement?>(null) }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.padding(top = 24.dp),
-                title = {
-                    Text(
-                        text = "1RM Tracker",
-                        style = MaterialTheme.typography.displayLarge,
-                    )
-                },
-                actions = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = weightUnit,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Box(modifier = Modifier.size(4.dp))
-                        Switch(
-                            checked = weightUnit == "lb",
-                            onCheckedChange = {
-                                setWeightUnitToPounds(it)
-                            },
-                        )
-                    }
-                }
-            )
-        },
-    ) { innerPadding ->
+    scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -244,16 +217,18 @@ fun MovementsListScreen(
 fun MovementCard(
     movement: Movement,
     weightUnit: String,
-    onMovementClick: (Movement) -> Unit,
+    onMovementClick: (Movement, Lifecycle.State) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Movement) -> Unit,
 ) {
-    var movementDropDownMenuInfo by rememberSaveable { mutableStateOf<Movement?>(null) }
+    var movementDropDownMenuInfo by remember { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     Card(
         modifier = Modifier
             .combinedClickable(
-                onClick = { onMovementClick(movement) },
+                onClick = { onMovementClick(movement, lifecycleOwner.lifecycle.currentState) },
                 onLongClick = {
                     view.performHapticFeedback(
                         HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
@@ -555,6 +530,11 @@ private fun AddOrEditMovementDialog(
 private fun MovementsListLoadingPreview() {
     OneRepMaxTrackerTheme {
         MovementsListScreen(
+            scaffold = { content ->
+                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
+                    content(innerPadding)
+                })
+            },
             movementsListUiState = Loading,
             weightUnit = "lb",
         )
@@ -566,6 +546,11 @@ private fun MovementsListLoadingPreview() {
 private fun MovementsListScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
         MovementsListScreen(
+            scaffold = { content ->
+                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
+                    content(innerPadding)
+                })
+            },
             movementsListUiState = Success(
                 listOf(
                     Movement(1, "Movement 1", 100f),
@@ -573,7 +558,7 @@ private fun MovementsListScreenSuccessPreview() {
                     Movement(3, "No weight", null),
                 )
             ),
-            weightUnit = "kg"
+            weightUnit = "kg",
         )
     }
 }

@@ -5,8 +5,25 @@ import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,6 +34,8 @@ import net.martinlundberg.NavViewModel
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 
@@ -27,17 +46,115 @@ const val MOVEMENT_NAME = "movementName"
 const val ONE_REP_MAX_DETAIL_ROUTE = "one_rep_max_detail_route"
 const val ONE_REP_MAX_ID = "oneRepMaxId"
 
+const val animation_duration = 300
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation(
     navController: NavHostController = hiltViewModel<NavViewModel>().controller,
+    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
-    NavHost(navController = navController, startDestination = MOVEMENTS_LIST_ROUTE) {
+    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
+
+//    Scaffold(
+//        topBar = {
+//            CenterAlignedTopAppBar(
+//                modifier = Modifier.padding(top = 24.dp),
+//                title = {
+//                    Text(
+//                        text = "1RM Tracker",
+//                        style = MaterialTheme.typography.displayLarge,
+//                    )
+//                },
+//                actions = {
+//                    Row(verticalAlignment = Alignment.CenterVertically) {
+//                        Text(
+//                            text = weightUnit,
+//                            style = MaterialTheme.typography.titleMedium,
+//                            color = MaterialTheme.colorScheme.onSurface
+//                        )
+//                        Box(modifier = Modifier.size(4.dp))
+//                        Switch(
+//                            checked = weightUnit == "lb",
+//                            onCheckedChange = {
+//                                weightUnitService.setWeightUnitToPounds(it)
+//                            },
+//                        )
+//                    }
+//                }
+//            )
+//        },
+//        content = { innerPadding ->
+//            NavigationHost(navController, innerPadding)
+//        }
+//    )
+
+    NavigationHost(navController) { content ->
+        DefaultScaffold(weightUnit, weightUnitService::setWeightUnitToPounds, content)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun DefaultScaffold(
+    weightUnit: String,
+    setWeightUnitToPounds: (Boolean) -> Unit = {},
+    content: @Composable (PaddingValues) -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                modifier = Modifier.padding(top = 24.dp),
+                title = {
+                    Text(
+                        text = "1RM Tracker",
+                        style = MaterialTheme.typography.displayLarge,
+                    )
+                },
+                actions = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = weightUnit,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Box(modifier = Modifier.size(4.dp))
+                        Switch(
+                            checked = weightUnit == "lb",
+                            onCheckedChange = {
+                                setWeightUnitToPounds(it)
+                            },
+                        )
+                    }
+                }
+            )
+        },
+        content = { innerPadding ->
+            content(innerPadding)
+        }
+    )
+}
+
+@Composable
+private fun NavigationHost(
+    navController: NavHostController,
+    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = MOVEMENTS_LIST_ROUTE,
+    ) {
         composable(
             route = MOVEMENTS_LIST_ROUTE,
+            exitTransition = slideOutToLeft,
+            enterTransition = slideInFromLeft,
         ) {
             MovementsListRoute(
-                onMovementClick = { movement ->
-                    navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
+                scaffold = scaffold,
+                onMovementClick = { movement, lifeCycleState ->
+                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
+                    }
                 },
             )
         }
@@ -47,17 +164,21 @@ fun Navigation(
                 navArgument(MOVEMENT_ID) { type = NavType.LongType },
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
-            enterTransition = slideInRight,
-            popEnterTransition = null,
-            popExitTransition = slideOutRight,
+            enterTransition = slideInFromRight,
+            popExitTransition = slideOutToRight,
         ) { backStackEntry ->
             MovementDetailRoute(
+                scaffold = scaffold,
                 movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
-//                onOneRepMaxClick = { oneRepMaxId, movementName ->
-//                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
-//                },
-                navigateBack = { navController.popBackStack() }
+                //                onOneRepMaxClick = { oneRepMaxId, movementName ->
+                //                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
+                //                },
+                navigateBack = { lifeCycleState ->
+                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        navController.popBackStack()
+                    }
+                }
             )
         }
         composable(
@@ -66,9 +187,9 @@ fun Navigation(
                 navArgument(ONE_REP_MAX_ID) { type = NavType.LongType },
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
-            enterTransition = slideInRight,
+            enterTransition = slideInFromRight,
             popEnterTransition = null,
-            popExitTransition = slideOutRight,
+            popExitTransition = slideOutToRight,
         ) { backStackEntry ->
             OneRepMaxDetailRoute(
                 oneRepMaxId = backStackEntry.arguments?.getLong(ONE_REP_MAX_ID) ?: -1,
@@ -78,16 +199,34 @@ fun Navigation(
     }
 }
 
-private val slideInRight: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
+private val slideInFromRight: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
     slideIntoContainer(
         SlideDirection.Left,
-        animationSpec = tween(700)
+        animationSpec = tween(animation_duration)
     )
 }
 
-private val slideOutRight: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
+private val slideInFromLeft: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
+    slideIntoContainer(
+        SlideDirection.Right,
+        animationSpec = tween(animation_duration)
+    )
+}
+
+private val slideOutToRight: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
     slideOutOfContainer(
         SlideDirection.Right,
-        animationSpec = tween(700)
+        animationSpec = tween(animation_duration)
     )
+}
+
+private val slideOutToLeft: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
+    slideOutOfContainer(
+        SlideDirection.Left,
+        animationSpec = tween(animation_duration)
+    )
+}
+
+private val noTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
+    ExitTransition.None
 }

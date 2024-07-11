@@ -5,13 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,16 +20,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,13 +34,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -56,6 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
@@ -77,10 +75,11 @@ import java.time.ZoneOffset
 
 @Composable
 fun MovementDetailRoute(
+    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
     movementId: Long,
     movementName: String,
 //    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
-    navigateBack: () -> Unit = {},
+    navigateBack: (Lifecycle.State) -> Unit = {},
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
     weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
@@ -90,7 +89,8 @@ fun MovementDetailRoute(
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
     val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
-    MovementDetailScreen(
+    MovementDetailScreenWithScaffold(
+        scaffold = scaffold,
         movementId = movementId,
         movementName = movementName,
         weightUnit = weightUnit,
@@ -100,201 +100,197 @@ fun MovementDetailRoute(
         addResult = movementDetailViewModel::addResult,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
-        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovementDetailScreen(
+fun MovementDetailScreenWithScaffold(
+    scaffold: @Composable (@Composable (PaddingValues) -> Unit) -> Unit,
     movementId: Long,
     movementName: String,
     weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
-    navigateBack: () -> Unit = {},
+    navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (oneRMInfo: OneRMInfo, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
-    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
-    var showAddResultDialog by rememberSaveable { mutableStateOf(false) }
-    var oneRMInfoToEdit by rememberSaveable { mutableStateOf<OneRMInfo?>(null) }
-    var showDeleteMovementConfirmDialog by rememberSaveable { mutableStateOf(false) }
+    scaffold { innerPadding ->
+        MovementDetailScreen(
+            innerPadding = innerPadding,
+            movementId = movementId,
+            movementName = movementName,
+            weightUnit = weightUnit,
+            movementDetailUiState = movementDetailUiState,
+            navigateBack = navigateBack,
+            addResult = addResult,
+            onDeleteMovementClick = onDeleteMovementClick,
+            onDeleteResultClick = onDeleteResultClick,
+        )
+    }
+}
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.padding(top = 24.dp),
-                title = {
-                    Text(
-                        text = "1RM Tracker",
-                        style = MaterialTheme.typography.displayLarge,
-                    )
-                },
-                actions = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = weightUnit,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = White,
-                        )
-                        Box(modifier = Modifier.size(4.dp))
-                        Switch(
-                            checked = weightUnit == "lb",
-                            onCheckedChange = {
-                                setWeightUnitToPounds(it)
-                            },
-                        )
-                    }
-                }
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(all = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+@Composable
+fun MovementDetailScreen(
+    innerPadding: PaddingValues,
+    movementId: Long,
+    movementName: String,
+    weightUnit: String,
+    movementDetailUiState: MovementDetailUiState = Loading,
+    navigateBack: (Lifecycle.State) -> Unit = {},
+    addResult: (oneRMInfo: OneRMInfo, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
+    onDeleteMovementClick: (Long) -> Unit = {},
+    onDeleteResultClick: (Long) -> Unit = {},
+) {
+    var showAddResultDialog by remember { mutableStateOf(false) }
+    var oneRMInfoToEdit by remember { mutableStateOf<OneRMInfo?>(null) }
+    var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(all = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.BottomStart
         ) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.BottomStart
+                contentAlignment = Alignment.Center,
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = movementName,
-                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
-                    )
-                }
-                Box(
+                Text(
+                    text = movementName,
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clickable(onClick = { navigateBack(lifecycleOwner.lifecycle.currentState) })
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "Back button"
+                )
+            }
+        }
+
+        when (movementDetailUiState) {
+            Loading -> {
+                Box(modifier = Modifier.height(24.dp))
+                CircularProgressIndicator(
                     modifier = Modifier
-                        .clickable(onClick = navigateBack)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Back button"
-                    )
-                }
+                        .width(64.dp)
+                        .semantics { contentDescription = "Circular Progress Indicator" },
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
             }
 
-            when (movementDetailUiState) {
-                Loading -> {
-                    Box(modifier = Modifier.height(24.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(64.dp)
-                            .semantics { contentDescription = "Circular Progress Indicator" },
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
-
-                is Success -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 24.dp),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+            is Success -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 24.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(24.dp)
-                        ) {
-                            movementDetailUiState.movement.oneRMs.map {
-                                item {
-                                    OneRMCard(
-                                        oneRMInfo = it,
-                                        weightUnit = weightUnit,
-                                        onOneRepMaxClick = { oneRMInfoToEdit = it },
-                                    )
-                                }
-                            }
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextButton(
-                                modifier = Modifier
-                                    .width(120.dp)
-                                    .semantics { contentDescription = "Delete result" },
-                                onClick = { showDeleteMovementConfirmDialog = true },
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(
-                                        horizontal = 24.dp,
-                                        vertical = 12.dp
-                                    ),
-                                    text = "Delete",
-                                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
-                                )
-                            }
-                            FloatingActionButton(
-                                modifier = Modifier
-                                    .width(120.dp)
-                                    .semantics { contentDescription = "Add result" },
-                                onClick = { showAddResultDialog = true },
-                                shape = RoundedCornerShape(80.dp),
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(
-                                        horizontal = 24.dp,
-                                        vertical = 12.dp
-                                    ),
-                                    text = "+ Add new",
-                                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                        movementDetailUiState.movement.oneRMs.map {
+                            item {
+                                OneRMCard(
+                                    oneRMInfo = it,
+                                    weightUnit = weightUnit,
+                                    onOneRepMaxClick = { oneRMInfoToEdit = it },
                                 )
                             }
                         }
-
-                        if (showAddResultDialog) {
-                            AddOrEditResultDialog(
-                                isAdd = true,
-                                oneRMInfo = OneRMInfo(
-                                    movementId = movementId,
-                                    weight = 0f,
-                                    offsetDateTime = OffsetDateTime.now()
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TextButton(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .semantics { contentDescription = "Delete result" },
+                            onClick = { showDeleteMovementConfirmDialog = true },
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    horizontal = 24.dp,
+                                    vertical = 12.dp
                                 ),
-                                weightUnit = weightUnit,
-                                onDismissRequest = { showAddResultDialog = false },
-                                onConfirmation = { weight ->
-                                    addResult(weight, weightUnit, movementId)
-                                    showAddResultDialog = false
-                                },
+                                text = "Delete",
+                                style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                             )
                         }
+                        FloatingActionButton(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .semantics { contentDescription = "Add result" },
+                            onClick = { showAddResultDialog = true },
+                            shape = RoundedCornerShape(80.dp),
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    horizontal = 24.dp,
+                                    vertical = 12.dp
+                                ),
+                                text = "+ Add new",
+                                style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                            )
+                        }
+                    }
 
-                        oneRMInfoToEdit?.let {
-                            AddOrEditResultDialog(
-                                isAdd = false,
-                                oneRMInfo = it,
-                                weightUnit = weightUnit,
-                                onDismissRequest = { oneRMInfoToEdit = null },
-                                onConfirmation = { weight ->
-                                    addResult(weight, weightUnit, movementId)
-                                    oneRMInfoToEdit = null
-                                },
-                                onDeleteClicked = { resultId ->
-                                    onDeleteResultClick(resultId)
-                                    oneRMInfoToEdit = null
-                                },
-                            )
-                        }
+                    if (showAddResultDialog) {
+                        AddOrEditResultDialog(
+                            isAdd = true,
+                            oneRMInfo = OneRMInfo(
+                                movementId = movementId,
+                                weight = 0f,
+                                offsetDateTime = OffsetDateTime.now()
+                            ),
+                            weightUnit = weightUnit,
+                            onDismissRequest = { showAddResultDialog = false },
+                            onConfirmation = { weight ->
+                                addResult(weight, weightUnit, movementId)
+                                showAddResultDialog = false
+                            },
+                        )
+                    }
 
-                        if (showDeleteMovementConfirmDialog) {
-                            DeleteMovementConfirmDialog(
-                                movementName = movementName,
-                                onDismissRequest = { showDeleteMovementConfirmDialog = false },
-                                onConfirmation = {
-                                    onDeleteMovementClick(movementId)
-                                    showDeleteMovementConfirmDialog = false
-                                }
-                            )
-                        }
+                    oneRMInfoToEdit?.let {
+                        AddOrEditResultDialog(
+                            isAdd = false,
+                            oneRMInfo = it,
+                            weightUnit = weightUnit,
+                            onDismissRequest = { oneRMInfoToEdit = null },
+                            onConfirmation = { weight ->
+                                addResult(weight, weightUnit, movementId)
+                                oneRMInfoToEdit = null
+                            },
+                            onDeleteClicked = { resultId ->
+                                onDeleteResultClick(resultId)
+                                oneRMInfoToEdit = null
+                            },
+                        )
+                    }
+
+                    if (showDeleteMovementConfirmDialog) {
+                        DeleteMovementConfirmDialog(
+                            movementName = movementName,
+                            onDismissRequest = { showDeleteMovementConfirmDialog = false },
+                            onConfirmation = {
+                                onDeleteMovementClick(movementId)
+                                showDeleteMovementConfirmDialog = false
+                            }
+                        )
                     }
                 }
             }
@@ -359,8 +355,8 @@ fun AddOrEditResultDialog(
             )
         )
     }
-    var date by rememberSaveable { mutableStateOf(oneRMInfo.offsetDateTime) }
-    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+    var date by remember { mutableStateOf(oneRMInfo.offsetDateTime) }
+    var showDatePickerDialog by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
@@ -476,7 +472,12 @@ fun AddOrEditResultDialog(
 @Composable
 private fun MovementDetailLoadingPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreen(
+        MovementDetailScreenWithScaffold(
+            scaffold = { content ->
+                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
+                    content(innerPadding)
+                })
+            },
             movementId = 1,
             movementName = "Bench Press",
             weightUnit = "kg",
@@ -489,8 +490,13 @@ private fun MovementDetailLoadingPreview() {
 @Composable
 private fun MovementDetailScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
-        MovementDetailScreen(
-            movementId = 111,
+        MovementDetailScreenWithScaffold(
+            scaffold = { content ->
+                DefaultScaffold(weightUnit = "kg", content = { innerPadding ->
+                    content(innerPadding)
+                })
+            },
+            movementId = 111L,
             movementName = "Back Squat",
             weightUnit = "kg",
             movementDetailUiState = Success(
