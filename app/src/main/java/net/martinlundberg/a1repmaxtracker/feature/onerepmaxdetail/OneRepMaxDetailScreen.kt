@@ -146,7 +146,7 @@ fun OneRepMaxDetailScreen(
             is Success -> {
                 var weightText by remember {
                     mutableStateOf(
-                        "${oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")}"
+                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")
                     )
                 }
                 var notesText by remember { mutableStateOf("") }

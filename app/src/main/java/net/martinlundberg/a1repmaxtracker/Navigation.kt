@@ -195,7 +195,3 @@ private val slideOutToLeft: AnimatedContentTransitionScope<NavBackStackEntry>.()
         animationSpec = tween(animation_duration)
     )
 }
-
-private val noTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
-    ExitTransition.None
-}
