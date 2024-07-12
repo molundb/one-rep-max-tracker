@@ -14,6 +14,7 @@ import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class MovementsListViewModel @Inject constructor(
         }
     }
 
-    fun addMovement(movement: Movement, weightUnit: String) {
+    fun addMovement(movement: Movement, weightUnit: WeightUnit) {
         viewModelScope.launch {
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {

@@ -35,6 +35,7 @@ import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailR
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
@@ -66,7 +67,7 @@ fun Navigation(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun DefaultScaffold(
-    weightUnit: String = "kg",
+    weightUnit: WeightUnit = WeightUnit.KILOGRAMS,
     setWeightUnitToPounds: (Boolean) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -83,13 +84,13 @@ fun DefaultScaffold(
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = weightUnit,
+                            text = weightUnit.toString(),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
-                            checked = weightUnit == "lb",
+                            checked = weightUnit.isPounds(),
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },

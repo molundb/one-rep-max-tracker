@@ -1,10 +1,12 @@
 package net.martinlundberg.a1repmaxtracker.util
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,13 +16,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeightUnitService @Inject constructor() {
+class WeightUnitService @Inject constructor(
+    @ApplicationContext private val context: Context,
+) {
 
-    private val _weightUnitFlow: MutableStateFlow<String> = MutableStateFlow("kg")
-    val weightUnitFlow: StateFlow<String> = _weightUnitFlow.asStateFlow()
+    private val _weightUnitFlow: MutableStateFlow<WeightUnit> = MutableStateFlow(WeightUnit.KILOGRAMS)
+    val weightUnitFlow: StateFlow<WeightUnit> = _weightUnitFlow.asStateFlow()
 
     fun setWeightUnitToPounds(usePounds: Boolean) {
-        val weightUnit = if (usePounds) "lb" else "kg"
+        val weightUnit = if (usePounds) WeightUnit.POUNDS else WeightUnit.KILOGRAMS
         _weightUnitFlow.update { weightUnit }
 
         // TODO: Store in Preferences DataStore
@@ -41,6 +45,18 @@ class WeightUnitService @Inject constructor() {
 
         fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
         fun Float.kilosToPounds() = (this * KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
+    }
+
+    enum class WeightUnit {
+        KILOGRAMS,
+        POUNDS;
+
+        fun isPounds() = this == POUNDS
+
+        override fun toString() = when (this) {
+            KILOGRAMS -> "kg"
+            POUNDS -> "lb"
+        }
     }
 }
 

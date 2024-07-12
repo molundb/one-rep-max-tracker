@@ -67,6 +67,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.kilosToPounds
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.toStringWithoutTrailingZero
@@ -108,10 +109,10 @@ fun MovementDetailScreen(
     innerPadding: PaddingValues,
     movementId: Long,
     movementName: String,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     movementDetailUiState: MovementDetailUiState = Loading,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    addResult: (oneRMInfo: OneRMInfo, weightUnit: String) -> Unit = { _, _ -> },
+    addResult: (oneRMInfo: OneRMInfo, weightUnit: WeightUnit) -> Unit = { _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
 ) {
@@ -274,7 +275,7 @@ fun MovementDetailScreen(
 @Composable
 fun OneRMCard(
     oneRMInfo: OneRMInfo,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onOneRepMaxClick: (OneRMInfo) -> Unit = { },
 ) {
     Card(
@@ -289,7 +290,7 @@ fun OneRMCard(
                 .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(oneRMInfo.weight.weightWithUnit(weightUnit == "lb"), style = MaterialTheme.typography.titleMedium)
+            Text(oneRMInfo.weight.weightWithUnit(weightUnit.isPounds()), style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.weight(1f))
             Text(oneRMInfo.offsetDateTime.formatTo("dd MMM yyyy"), style = MaterialTheme.typography.titleMedium)
             Box(modifier = Modifier.width(8.dp))
@@ -305,7 +306,7 @@ fun OneRMCard(
 fun AddOrEditResultDialog(
     isAdd: Boolean,
     oneRMInfo: OneRMInfo,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (OneRMInfo) -> Unit = {},
     onDeleteClicked: (Long) -> Unit = {},
@@ -313,7 +314,7 @@ fun AddOrEditResultDialog(
     val weightInitialValue = if (oneRMInfo.weight == 0f) {
         ""
     } else {
-        if (weightUnit == "lb") {
+        if (weightUnit.isPounds()) {
             oneRMInfo.weight.kilosToPounds()
         } else {
             oneRMInfo.weight.toStringWithoutTrailingZero()
@@ -450,7 +451,7 @@ private fun MovementDetailLoadingPreview() {
                 innerPadding = innerPadding,
                 movementId = 1,
                 movementName = "Bench Press",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = Loading,
             )
         }
@@ -466,7 +467,7 @@ private fun MovementDetailScreenSuccessPreview() {
                 innerPadding = innerPadding,
                 movementId = 111L,
                 movementName = "Back Squat",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = Success(
                     MovementDetail(
                         listOf(
@@ -507,7 +508,7 @@ private fun AddResultDialogEnabledPreview() {
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now()
             ),
-            weightUnit = "kg"
+            weightUnit = WeightUnit.KILOGRAMS,
         )
     }
 }
@@ -523,7 +524,7 @@ private fun AddResultDialogDisabledPreview() {
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now()
             ),
-            weightUnit = "lb"
+            weightUnit = WeightUnit.POUNDS,
         )
     }
 }
@@ -539,7 +540,7 @@ private fun EditResultDialogEnabledPreview() {
                 weight = 5f,
                 offsetDateTime = OffsetDateTime.now()
             ),
-            weightUnit = "lb"
+            weightUnit = WeightUnit.POUNDS,
         )
     }
 }

@@ -12,6 +12,7 @@ import junit.framework.TestCase.assertTrue
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,7 +30,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
             )
         }
 
@@ -42,7 +43,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Loading,
             )
         }
@@ -57,7 +58,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -81,7 +82,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -104,7 +105,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -134,7 +135,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -164,7 +165,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -187,7 +188,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,
@@ -217,7 +218,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 oneRepMaxDetailUiState = Success(
                     oneRMInfo = OneRMInfo(
                         movementId = 55,

@@ -10,6 +10,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.data.model.asEntity
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.poundsToKilos
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import javax.inject.Inject
 
 class DefaultOneRepMaxRepository @Inject constructor(
@@ -19,8 +20,8 @@ class DefaultOneRepMaxRepository @Inject constructor(
     override suspend fun getMovementDetail(id: Long): Flow<MovementDetail> =
         oneRMDao.getOneRMsForMovement(id).map { it.asExternalMovementDetail() }
 
-    override suspend fun addOneRM(oneRM: OneRMInfo, weightUnit: String) {
-        val weight = if (weightUnit == "lb") {
+    override suspend fun addOneRM(oneRM: OneRMInfo, weightUnit: WeightUnit) {
+        val weight = if (weightUnit.isPounds()) {
             oneRM.weight.poundsToKilos().toFloat()
         } else {
             oneRM.weight

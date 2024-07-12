@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">1 Rep Max Tracker</string>
+    <string name="movement_list_screen_list_title">Your top results</string>
+    <string name="movement_list_screen_add_movement_button">+ Add movement</string>
+    <string name="movement_list_screen_add_movement_button_content_description">Add Movement</string>
+    <string name="movement_list_screen_movement_card_content_description">Movement Card</string>
+    <string name="weight_unit_kilograms">kg</string>
+    <string name="weight_unit_pounds">lb</string>
 </resources>

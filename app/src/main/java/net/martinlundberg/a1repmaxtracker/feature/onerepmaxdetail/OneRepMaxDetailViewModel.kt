@@ -13,6 +13,7 @@ import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +34,7 @@ class OneRepMaxDetailViewModel @Inject constructor(
 
     fun updateOneRepMaxDetail(oneRMInfo: OneRMInfo) {
         viewModelScope.launch {
-            oneRepMaxRepository.addOneRM(oneRMInfo, "kg")
+            oneRepMaxRepository.addOneRM(oneRMInfo, WeightUnit.KILOGRAMS)
         }
     }
 

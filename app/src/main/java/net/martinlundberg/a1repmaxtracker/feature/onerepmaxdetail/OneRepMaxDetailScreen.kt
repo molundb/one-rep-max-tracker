@@ -46,6 +46,7 @@ import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePic
 import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -80,7 +81,7 @@ fun OneRepMaxDetailRoute(
 fun OneRepMaxDetailScreen(
     oneRepMaxId: Long,
     movementName: String,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
@@ -96,10 +97,10 @@ fun OneRepMaxDetailScreen(
                 title = { Text(text = movementName) },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit, style = MaterialTheme.typography.titleLarge)
+                        Text(text = weightUnit.toString(), style = MaterialTheme.typography.titleLarge)
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
-                            checked = weightUnit == "lb",
+                            checked = weightUnit.isPounds(),
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },
@@ -146,7 +147,7 @@ fun OneRepMaxDetailScreen(
             is Success -> {
                 var weightText by remember {
                     mutableStateOf(
-                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit == "lb")
+                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit.isPounds())
                     )
                 }
                 var notesText by remember { mutableStateOf("") }
@@ -229,7 +230,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "Back Squat",
-            weightUnit = "lb",
+            weightUnit = WeightUnit.POUNDS,
             oneRepMaxDetailUiState = Loading,
         )
     }
@@ -242,7 +243,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "The name",
-            weightUnit = "kg",
+            weightUnit = WeightUnit.KILOGRAMS,
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,

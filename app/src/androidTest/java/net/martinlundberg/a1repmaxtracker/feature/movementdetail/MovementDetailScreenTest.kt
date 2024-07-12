@@ -14,6 +14,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
 import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +47,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 11,
                 movementName = "Name of movement",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
@@ -63,7 +64,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 15,
                 movementName = "The name",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Loading,
             )
         }
@@ -78,7 +79,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 2,
                 movementName = "Name",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -121,7 +122,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "lb",
+                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -141,7 +142,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "lb",
+                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
@@ -165,7 +166,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "lb",
+                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -184,7 +185,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "lb",
+                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 )
@@ -204,11 +205,11 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                addResult = { _, _, _ ->
+                addResult = { _, _ ->
                     addResultCalled = true
                 }
             )
@@ -231,11 +232,11 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail()
                 ),
-                addResult = { _, _, _ ->
+                addResult = { _, _ ->
                     addResultCalled = true
                 }
             )
@@ -257,7 +258,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -286,7 +287,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -321,7 +322,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -353,7 +354,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -366,7 +367,7 @@ class MovementDetailScreenTest {
                         )
                     )
                 ),
-                addResult = { _, _, _ ->
+                addResult = { _, _ ->
                     addResultCalled = true
                 },
             )

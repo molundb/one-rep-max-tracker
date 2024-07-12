@@ -15,6 +15,7 @@ import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +35,7 @@ class MovementDetailViewModel @Inject constructor(
         }
     }
 
-    fun addResult(oneRMInfo: OneRMInfo, weightUnit: String) {
+    fun addResult(oneRMInfo: OneRMInfo, weightUnit: WeightUnit) {
         viewModelScope.launch {
             oneRepMaxRepository.addOneRM(
                 OneRMInfo(

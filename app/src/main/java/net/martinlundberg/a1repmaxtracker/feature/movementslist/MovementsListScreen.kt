@@ -42,9 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
@@ -67,6 +69,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
+import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 @Composable
@@ -98,8 +101,8 @@ fun MovementsListRoute(
 fun MovementsListScreen(
     innerPadding: PaddingValues,
     movementsListUiState: MovementsListUiState = Loading,
-    weightUnit: String,
-    onAddMovementClick: (Movement, String) -> Unit = { _, _ -> },
+    weightUnit: WeightUnit,
+    onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
@@ -115,7 +118,10 @@ fun MovementsListScreen(
             .padding(all = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = "Your top results", style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp))
+        Text(
+            text = stringResource(R.string.movement_list_screen_list_title),
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+        )
 
         when (movementsListUiState) {
             Loading -> {
@@ -154,9 +160,13 @@ fun MovementsListScreen(
                         }
                     }
                 }
+                val context = LocalContext.current
                 FloatingActionButton(
                     modifier = Modifier
-                        .semantics { contentDescription = "Add Movement" },
+                        .semantics {
+                            contentDescription =
+                                context.getString(R.string.movement_list_screen_add_movement_button_content_description)
+                        },
                     onClick = { showAddMovementDialog = true },
                     shape = RoundedCornerShape(80.dp),
                 ) {
@@ -165,7 +175,7 @@ fun MovementsListScreen(
                             horizontal = 24.dp,
                             vertical = 12.dp
                         ),
-                        text = "+ Add movement",
+                        text = stringResource(R.string.movement_list_screen_add_movement_button),
                         style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                     )
                 }
@@ -212,7 +222,7 @@ fun MovementsListScreen(
 @Composable
 fun MovementCard(
     movement: Movement,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onMovementClick: (Movement, Lifecycle.State) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Movement) -> Unit,
@@ -220,6 +230,7 @@ fun MovementCard(
     var movementDropDownMenuInfo by remember { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -232,7 +243,9 @@ fun MovementCard(
                     movementDropDownMenuInfo = movement
                 },
             )
-            .semantics { contentDescription = "Movement Card" },
+            .semantics {
+                contentDescription = context.getString(R.string.movement_list_screen_movement_card_content_description)
+            },
         shape = RoundedCornerShape(8.dp),
     ) {
         Row(
@@ -251,7 +264,7 @@ fun MovementCard(
                 )
             } else {
                 Text(
-                    text = movement.weight.weightWithUnit(weightUnit == "lb"),
+                    text = movement.weight.weightWithUnit(weightUnit.isPounds()),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -383,9 +396,9 @@ fun DeleteMovementConfirmDialog(
 
 @Composable
 fun AddMovementDialog(
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
+    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
         isAdd = true,
@@ -398,9 +411,9 @@ fun AddMovementDialog(
 @Composable
 fun EditMovementDialog(
     movement: Movement,
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
+    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
         isAdd = false,
@@ -415,9 +428,9 @@ fun EditMovementDialog(
 private fun AddOrEditMovementDialog(
     isAdd: Boolean,
     movement: Movement = Movement(name = ""),
-    weightUnit: String,
+    weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (Movement, String) -> Unit = { _, _ -> },
+    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
@@ -529,7 +542,7 @@ private fun MovementsListLoadingPreview() {
             MovementsListScreen(
                 innerPadding = innerPadding,
                 movementsListUiState = Loading,
-                weightUnit = "lb",
+                weightUnit = WeightUnit.POUNDS,
             )
         }
     }
@@ -549,7 +562,7 @@ private fun MovementsListScreenSuccessPreview() {
                         Movement(3, "No weight", null),
                     )
                 ),
-                weightUnit = "kg",
+                weightUnit = WeightUnit.KILOGRAMS,
             )
         }
     }
@@ -561,7 +574,7 @@ private fun AddMovementDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
-            weightUnit = "kg",
+            weightUnit = WeightUnit.KILOGRAMS,
             movement = Movement(id = 1, name = "Movement 1", weight = 102.25f)
         )
     }
@@ -573,7 +586,7 @@ private fun AddMovementDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = true,
-            weightUnit = "kg",
+            weightUnit = WeightUnit.KILOGRAMS,
             movement = Movement(id = 1, name = "", weight = 102.25f)
         )
     }
@@ -585,7 +598,7 @@ private fun EditMovementDialogPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditMovementDialog(
             isAdd = false,
-            weightUnit = "kg",
+            weightUnit = WeightUnit.KILOGRAMS,
             movement = Movement(id = 1, name = "Movement 1", weight = 100.75f)
         )
     }

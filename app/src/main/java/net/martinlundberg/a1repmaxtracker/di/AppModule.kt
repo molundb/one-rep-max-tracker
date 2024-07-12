@@ -41,8 +41,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeightUnitService(): WeightUnitService {
-        return WeightUnitService()
+    fun provideWeightUnitService(@ApplicationContext appContext: Context): WeightUnitService {
+        return WeightUnitService(appContext)
     }
 
     @Provides
