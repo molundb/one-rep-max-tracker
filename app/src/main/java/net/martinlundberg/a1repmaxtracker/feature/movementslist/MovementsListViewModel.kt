@@ -36,15 +36,15 @@ class MovementsListViewModel @Inject constructor(
 
     fun addMovement(movement: Movement, weightUnit: String) {
         viewModelScope.launch {
-            val movementId = movementsRepository.setMovement(movement)
+            val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
                 oneRepMaxRepository.addOneRM(
                     OneRMInfo(
                         weight = it,
                         offsetDateTime = OffsetDateTime.now(),
-                        movementId = movementId
+                        movementId = movementId,
                     ),
-                    weightUnit = weightUnit
+                    weightUnit = weightUnit,
                 )
             }
         }

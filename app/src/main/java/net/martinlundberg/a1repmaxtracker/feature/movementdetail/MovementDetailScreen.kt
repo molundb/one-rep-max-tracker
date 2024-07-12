@@ -111,12 +111,12 @@ fun MovementDetailScreen(
     weightUnit: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    addResult: (oneRMInfo: OneRMInfo, weightUnit: String, movementId: Long) -> Unit = { _, _, _ -> },
+    addResult: (oneRMInfo: OneRMInfo, weightUnit: String) -> Unit = { _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
 ) {
-    var showAddResultDialog by remember { mutableStateOf(false) }
     var oneRMInfoToEdit by remember { mutableStateOf<OneRMInfo?>(null) }
+    var showAddResultDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -231,8 +231,8 @@ fun MovementDetailScreen(
                             ),
                             weightUnit = weightUnit,
                             onDismissRequest = { showAddResultDialog = false },
-                            onConfirmation = { weight ->
-                                addResult(weight, weightUnit, movementId)
+                            onConfirmation = { oneRMInfo ->
+                                addResult(oneRMInfo, weightUnit)
                                 showAddResultDialog = false
                             },
                         )
@@ -244,8 +244,8 @@ fun MovementDetailScreen(
                             oneRMInfo = it,
                             weightUnit = weightUnit,
                             onDismissRequest = { oneRMInfoToEdit = null },
-                            onConfirmation = { weight ->
-                                addResult(weight, weightUnit, movementId)
+                            onConfirmation = { oneRMInfo ->
+                                addResult(oneRMInfo, weightUnit)
                                 oneRMInfoToEdit = null
                             },
                             onDeleteClicked = { resultId ->
