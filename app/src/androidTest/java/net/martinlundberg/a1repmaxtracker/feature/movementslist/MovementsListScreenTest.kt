@@ -62,7 +62,7 @@ class MovementsListScreenTest {
         }
 
         // When
-        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
 
         // Then
         composeTestRule.onNodeWithContentDescription("Add movement dialog").assertIsDisplayed()
@@ -85,7 +85,7 @@ class MovementsListScreenTest {
                 }
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
         composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When
@@ -108,7 +108,7 @@ class MovementsListScreenTest {
                 )
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
 
         // Then
         composeTestRule.onNodeWithText("Add").assertIsNotEnabled()
@@ -130,7 +130,7 @@ class MovementsListScreenTest {
                 }
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
         composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When
@@ -235,7 +235,7 @@ class MovementsListScreenTest {
         // Then
         composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
         composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertIsDisplayed()
     }
 
     @Test
@@ -265,7 +265,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Yes, delete").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertDoesNotExist()
         assertTrue(deleteMovementCalled)
     }
 

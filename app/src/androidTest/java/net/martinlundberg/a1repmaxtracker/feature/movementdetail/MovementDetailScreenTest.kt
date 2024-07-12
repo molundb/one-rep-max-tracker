@@ -175,7 +175,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithContentDescription("Add result button").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add result dialog").assertIsDisplayed()
     }
 
     @Test
@@ -194,7 +194,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithContentDescription("Add result button").performClick()
 
-        composeTestRule.onNodeWithText("Add result button").assertIsNotEnabled()
+        composeTestRule.onNodeWithText("Add result").assertIsNotEnabled()
     }
 
     @Test
@@ -216,11 +216,11 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithContentDescription("Add result button").performClick()
-        composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
+        composeTestRule.onNodeWithContentDescription("Weight text field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add result button").performClick()
+        composeTestRule.onNodeWithText("Add result").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add result dialog").assertDoesNotExist()
         assertTrue(addResultCalled)
     }
 
@@ -243,11 +243,11 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithContentDescription("Add result button").performClick()
-        composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
+        composeTestRule.onNodeWithContentDescription("Weight text field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add result button").performClick()
+        composeTestRule.onNodeWithText("Add result").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add result dialog").assertDoesNotExist()
         assertTrue(addResultCalled)
     }
 
@@ -276,7 +276,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithText("70 kg").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
     }
 
     @Test
@@ -307,11 +307,11 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithText("70 kg").performClick()
-        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Delete result button").performClick()
+        composeTestRule.onNodeWithText("Delete result").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add result dialog").assertDoesNotExist()
         assertTrue(deleteCalled)
     }
 
@@ -339,7 +339,7 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithText("70 kg").performClick()
-        composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
 
         composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
 
