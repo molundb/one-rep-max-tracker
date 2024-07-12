@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -145,9 +146,13 @@ fun OneRepMaxDetailScreen(
             }
 
             is Success -> {
+                val context = LocalContext.current
                 var weightText by remember {
                     mutableStateOf(
-                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(weightUnit.isPounds())
+                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(
+                            weightUnit.isPounds(),
+                            context,
+                        )
                     )
                 }
                 var notesText by remember { mutableStateOf("") }

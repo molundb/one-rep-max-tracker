@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import net.martinlundberg.a1repmaxtracker.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,11 +37,19 @@ class WeightUnitService @Inject constructor(
         /*
         Round pounds and kilograms to nearest quarter.
         */
-        fun Float.weightWithUnit(isPounds: Boolean) =
+        fun Float.weightWithUnit(isPounds: Boolean, context: Context) =
             if (isPounds) {
-                "${(this * KILOS_TO_POUNDS_RATIO).roundToNearestQuarter().toStringWithoutTrailingZero()} lb"
+                "${
+                    (this * KILOS_TO_POUNDS_RATIO)
+                        .roundToNearestQuarter()
+                        .toStringWithoutTrailingZero()
+                } ${context.getString(R.string.weight_unit_pounds)}"
             } else {
-                "${this.roundToNearestQuarter().toStringWithoutTrailingZero()} kg"
+                "${
+                    this
+                        .roundToNearestQuarter()
+                        .toStringWithoutTrailingZero()
+                } ${context.getString(R.string.weight_unit_kilograms)}"
             }
 
         fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
@@ -53,9 +62,9 @@ class WeightUnitService @Inject constructor(
 
         fun isPounds() = this == POUNDS
 
-        override fun toString() = when (this) {
-            KILOGRAMS -> "kg"
-            POUNDS -> "lb"
+        fun toString(context: Context) = when (this) {
+            KILOGRAMS -> context.getString(R.string.weight_unit_kilograms)
+            POUNDS -> context.getString(R.string.weight_unit_pounds)
         }
     }
 }

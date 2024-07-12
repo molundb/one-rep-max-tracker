@@ -264,7 +264,7 @@ fun MovementCard(
                 )
             } else {
                 Text(
-                    text = movement.weight.weightWithUnit(weightUnit.isPounds()),
+                    text = movement.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -470,7 +470,7 @@ private fun AddOrEditMovementDialog(
                 if (isAdd) {
                     Spacer(modifier = Modifier.size(24.dp))
                     Text(
-                        text = "Weight ($weightUnit)",
+                        text = "Weight (${weightUnit.toString(LocalContext.current)})",
                         style = MaterialTheme.typography.titleMedium
                     )
                     Box(modifier = Modifier.height(12.dp))

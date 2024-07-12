@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -290,7 +291,10 @@ fun OneRMCard(
                 .padding(start = 12.dp, top = 8.dp, bottom = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(oneRMInfo.weight.weightWithUnit(weightUnit.isPounds()), style = MaterialTheme.typography.titleMedium)
+            Text(
+                oneRMInfo.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
+                style = MaterialTheme.typography.titleMedium
+            )
             Spacer(modifier = Modifier.weight(1f))
             Text(oneRMInfo.offsetDateTime.formatTo("dd MMM yyyy"), style = MaterialTheme.typography.titleMedium)
             Box(modifier = Modifier.width(8.dp))
@@ -349,7 +353,10 @@ fun AddOrEditResultDialog(
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Box(modifier = Modifier.height(24.dp))
-                Text("Weight ($weightUnit)", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "Weight (${weightUnit.toString(LocalContext.current)})",
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Box(modifier = Modifier.height(12.dp))
                 OutlinedTextField(
                     value = weightText,
