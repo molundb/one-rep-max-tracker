@@ -32,13 +32,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import net.martinlundberg.NavViewModel
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
-import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 
@@ -53,16 +50,15 @@ const val animation_duration = 300
 
 @Composable
 fun Navigation(
-    navController: NavHostController = hiltViewModel<NavViewModel>().controller,
-    weightUnitService: WeightUnitService = provideWeightUnitService(),
+    navViewModel: NavViewModel = hiltViewModel(),
 ) {
-    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
+    val weightUnit by navViewModel.weightUnitFlow.collectAsState()
 
     DefaultScaffold(
         weightUnit = weightUnit,
-        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds,
+        setWeightUnit = navViewModel::setWeightUnit,
     ) { innerPadding ->
-        NavigationHost(navController, innerPadding)
+        NavigationHost(navViewModel.controller, innerPadding)
     }
 }
 
@@ -70,7 +66,7 @@ fun Navigation(
 @OptIn(ExperimentalMaterial3Api::class)
 fun DefaultScaffold(
     weightUnit: WeightUnit = WeightUnit.KILOGRAMS,
-    setWeightUnitToPounds: (Boolean) -> Unit = {},
+    setWeightUnit: (Boolean) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -93,8 +89,8 @@ fun DefaultScaffold(
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
                             checked = weightUnit.isPounds(),
-                            onCheckedChange = {
-                                setWeightUnitToPounds(it)
+                            onCheckedChange = { isPounds ->
+                                setWeightUnit(isPounds)
                             },
                         )
                     }

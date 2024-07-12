@@ -6,30 +6,39 @@ import androidx.compose.ui.platform.LocalContext
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.R
+import net.martinlundberg.a1repmaxtracker.data.DataStorePreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class WeightUnitService @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val dataStorePreferences: DataStorePreferences,
 ) {
+    private val scope = MainScope()
 
     private val _weightUnitFlow: MutableStateFlow<WeightUnit> = MutableStateFlow(WeightUnit.KILOGRAMS)
     val weightUnitFlow: StateFlow<WeightUnit> = _weightUnitFlow.asStateFlow()
 
-    fun setWeightUnitToPounds(usePounds: Boolean) {
-        val weightUnit = if (usePounds) WeightUnit.POUNDS else WeightUnit.KILOGRAMS
-        _weightUnitFlow.update { weightUnit }
-
-        // TODO: Store in Preferences DataStore
+    init {
+        scope.launch {
+            collectWeightUnit()
+        }
     }
+
+    private suspend fun collectWeightUnit() {
+        dataStorePreferences.weightUnitFlow.collect {
+            _weightUnitFlow.value = if (it) WeightUnit.POUNDS else WeightUnit.KILOGRAMS
+        }
+    }
+
+    suspend fun setWeightUnit(isPounds: Boolean) = dataStorePreferences.storeWeightUnit(isPounds)
 
     companion object {
         private const val KILOS_TO_POUNDS_RATIO = 2.205f

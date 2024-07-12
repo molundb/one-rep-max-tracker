@@ -45,10 +45,8 @@ import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetai
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
-import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -57,23 +55,20 @@ fun OneRepMaxDetailRoute(
     oneRepMaxId: Long,
     movementName: String,
     oneRepMaxDetailViewModel: OneRepMaxDetailViewModel = hiltViewModel(),
-    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         oneRepMaxDetailViewModel.getOneRepMaxDetail(oneRepMaxId)
     }
 
     val oneRepMaxDetailUiState by oneRepMaxDetailViewModel.uiState.collectAsState()
-    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
     OneRepMaxDetailScreen(
         oneRepMaxId = oneRepMaxId,
         oneRepMaxDetailUiState = oneRepMaxDetailUiState,
         movementName = movementName,
-        weightUnit = weightUnit,
         updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail,
         onDeleteClick = oneRepMaxDetailViewModel::deleteOneRM,
-        setWeightUnitToPounds = weightUnitService::setWeightUnitToPounds
+        setWeightUnitToPounds = oneRepMaxDetailViewModel::setWeightUnit
     )
 }
 
@@ -82,8 +77,7 @@ fun OneRepMaxDetailRoute(
 fun OneRepMaxDetailScreen(
     oneRepMaxId: Long,
     movementName: String,
-    weightUnit: WeightUnit,
-    oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading,
+    oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading(WeightUnit.KILOGRAMS),
     updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
     setWeightUnitToPounds: (Boolean) -> Unit = {},
@@ -98,10 +92,13 @@ fun OneRepMaxDetailScreen(
                 title = { Text(text = movementName) },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = weightUnit.toString(), style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = oneRepMaxDetailUiState.weightUnit.toString(),
+                            style = MaterialTheme.typography.titleLarge
+                        )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
-                            checked = weightUnit.isPounds(),
+                            checked = oneRepMaxDetailUiState.weightUnit.isPounds(),
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },
@@ -125,7 +122,7 @@ fun OneRepMaxDetailScreen(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         when (oneRepMaxDetailUiState) {
-            Loading -> {
+            is Loading -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -150,7 +147,7 @@ fun OneRepMaxDetailScreen(
                 var weightText by remember {
                     mutableStateOf(
                         oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(
-                            weightUnit.isPounds(),
+                            oneRepMaxDetailUiState.weightUnit.isPounds(),
                             context,
                         )
                     )
@@ -235,8 +232,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "Back Squat",
-            weightUnit = WeightUnit.POUNDS,
-            oneRepMaxDetailUiState = Loading,
+            oneRepMaxDetailUiState = Loading(WeightUnit.POUNDS),
         )
     }
 }
@@ -248,14 +244,14 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "The name",
-            weightUnit = WeightUnit.KILOGRAMS,
             oneRepMaxDetailUiState = Success(
                 oneRMInfo = OneRMInfo(
                     id = 1,
                     movementId = 15,
                     weight = 100.5f,
                     offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
-                )
+                ),
+                weightUnit = WeightUnit.KILOGRAMS,
             ),
         )
     }

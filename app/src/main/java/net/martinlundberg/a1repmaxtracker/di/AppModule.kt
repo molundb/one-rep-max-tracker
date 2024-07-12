@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import net.martinlundberg.a1repmaxtracker.data.DataStorePreferences
 import net.martinlundberg.a1repmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
 import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
@@ -41,8 +42,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeightUnitService(@ApplicationContext appContext: Context): WeightUnitService {
-        return WeightUnitService(appContext)
+    fun provideDataStorePreferences(@ApplicationContext appContext: Context): DataStorePreferences {
+        return DataStorePreferences(appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeightUnitService(dataStorePreferences: DataStorePreferences): WeightUnitService {
+        return WeightUnitService(dataStorePreferences)
     }
 
     @Provides
@@ -53,7 +60,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOneRepMaxRepository(db: OneRepMaxTrackerDatabase): OneRepMaxRepository {
-        return DefaultOneRepMaxRepository(db.oneRMDao())
+    fun provideOneRepMaxRepository(
+        db: OneRepMaxTrackerDatabase,
+        weightUnitService: WeightUnitService,
+    ): OneRepMaxRepository {
+        return DefaultOneRepMaxRepository(db.oneRMDao(), weightUnitService)
     }
 }

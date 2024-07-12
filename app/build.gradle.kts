@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.room.compiler)
