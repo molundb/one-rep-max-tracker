@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.isDisplayed
@@ -42,6 +43,7 @@ class MovementDetailScreenTest {
     fun givenMovementName_thenNameOfMovementIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 11,
                 movementName = "Name of movement",
                 weightUnit = "kg",
@@ -58,6 +60,7 @@ class MovementDetailScreenTest {
     fun givenStateIsLoading_thenLoadingIndicatorIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 15,
                 movementName = "The name",
                 weightUnit = "kg",
@@ -72,6 +75,7 @@ class MovementDetailScreenTest {
     fun givenResults_thenInfoIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 2,
                 movementName = "Name",
                 weightUnit = "kg",
@@ -114,6 +118,7 @@ class MovementDetailScreenTest {
     fun whenDeleteButtonIsClicked_thenDeleteMovementConfirmationDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "lb",
@@ -133,6 +138,7 @@ class MovementDetailScreenTest {
         var deleteMovementCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "lb",
@@ -156,6 +162,7 @@ class MovementDetailScreenTest {
     fun whenAddResultButtonIsClicked_thenAddResultDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "lb",
@@ -174,6 +181,7 @@ class MovementDetailScreenTest {
     fun givenAddResultDialogWithNoWeight_thenAddButtonIsDisabled() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "lb",
@@ -193,6 +201,7 @@ class MovementDetailScreenTest {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "kg",
@@ -219,6 +228,7 @@ class MovementDetailScreenTest {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
                 weightUnit = "kg",
@@ -244,6 +254,7 @@ class MovementDetailScreenTest {
     fun whenResultIsClicked_thenEditResultDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
                 weightUnit = "kg",
@@ -272,6 +283,7 @@ class MovementDetailScreenTest {
         var deleteCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
                 weightUnit = "kg",
@@ -306,6 +318,7 @@ class MovementDetailScreenTest {
     fun givenEditDialog_whenDateIsClicked_thenCalendarDialogIsDisplayed() {
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
                 weightUnit = "kg",
@@ -337,6 +350,7 @@ class MovementDetailScreenTest {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
+                innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
                 weightUnit = "kg",
