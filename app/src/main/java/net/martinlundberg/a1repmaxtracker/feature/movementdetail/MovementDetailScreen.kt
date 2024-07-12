@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
@@ -148,18 +149,22 @@ fun MovementDetailScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Back button"
+                    contentDescription = stringResource(R.string.movement_detail_screen_back_button_content_description)
                 )
             }
         }
 
+        val context = LocalContext.current
         when (movementDetailUiState) {
             Loading -> {
                 Box(modifier = Modifier.height(24.dp))
                 CircularProgressIndicator(
                     modifier = Modifier
                         .width(64.dp)
-                        .semantics { contentDescription = "Circular Progress Indicator" },
+                        .semantics {
+                            contentDescription =
+                                context.getString(R.string.movement_detail_screen_loading_indicator_content_description)
+                        },
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
@@ -193,7 +198,10 @@ fun MovementDetailScreen(
                         TextButton(
                             modifier = Modifier
                                 .width(120.dp)
-                                .semantics { contentDescription = "Delete result" },
+                                .semantics {
+                                    contentDescription =
+                                        context.getString(R.string.movement_detail_screen_delete_result_button_content_description)
+                                },
                             onClick = { showDeleteMovementConfirmDialog = true },
                         ) {
                             Text(
@@ -201,14 +209,17 @@ fun MovementDetailScreen(
                                     horizontal = 24.dp,
                                     vertical = 12.dp
                                 ),
-                                text = "Delete",
+                                text = stringResource(R.string.movement_detail_screen_delete_result_button),
                                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                             )
                         }
                         FloatingActionButton(
                             modifier = Modifier
                                 .width(120.dp)
-                                .semantics { contentDescription = "Add result" },
+                                .semantics {
+                                    contentDescription =
+                                        context.getString(R.string.movement_detail_screen_add_result_button_content_description)
+                                },
                             onClick = { showAddResultDialog = true },
                             shape = RoundedCornerShape(80.dp),
                         ) {
@@ -217,7 +228,7 @@ fun MovementDetailScreen(
                                     horizontal = 24.dp,
                                     vertical = 12.dp
                                 ),
-                                text = "+ Add new",
+                                text = stringResource(R.string.movement_detail_screen_add_result_button),
                                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                             )
                         }
@@ -279,8 +290,11 @@ fun OneRMCard(
     weightUnit: WeightUnit,
     onOneRepMaxClick: (OneRMInfo) -> Unit = { },
 ) {
+    val context = LocalContext.current
     Card(
-        modifier = Modifier.semantics { contentDescription = "Movement Card" },
+        modifier = Modifier.semantics {
+            contentDescription = context.getString(R.string.movement_detail_screen_result_card_content_description)
+        },
         onClick = { onOneRepMaxClick(oneRMInfo) },
         shape = RoundedCornerShape(8.dp),
     ) {
@@ -300,7 +314,7 @@ fun OneRMCard(
             Box(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_edit),
-                contentDescription = "Navigation icon",
+                contentDescription = context.getString(R.string.movement_list_screen_movement_card_nav_icon_content_description),
             )
         }
     }
@@ -335,13 +349,18 @@ fun AddOrEditResultDialog(
     }
     var date by remember { mutableStateOf(oneRMInfo.offsetDateTime) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = if (isAdd) "Add Result Dialog" else "Edit Result Dialog" },
+                .semantics {
+                    contentDescription =
+                        if (isAdd) context.getString(R.string.movement_detail_screen_add_result_dialog_content_description)
+                        else context.getString(R.string.movement_detail_screen_edit_result_dialog_content_description)
+                },
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -349,12 +368,16 @@ fun AddOrEditResultDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    text = if (isAdd) "Add new result" else "Edit result",
-                    style = MaterialTheme.typography.headlineLarge
+                    text = if (isAdd) stringResource(R.string.movement_detail_screen_add_result_dialog_title)
+                    else stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
+                    style = MaterialTheme.typography.headlineLarge,
                 )
                 Box(modifier = Modifier.height(24.dp))
                 Text(
-                    "Weight (${weightUnit.toString(LocalContext.current)})",
+                    text = stringResource(
+                        R.string.movement_detail_screen_add_or_edit_result_dialog_weight_label,
+                        weightUnit.toString(LocalContext.current)
+                    ),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Box(modifier = Modifier.height(12.dp))
@@ -367,10 +390,16 @@ fun AddOrEditResultDialog(
                     ),
                     modifier = Modifier
                         .focusRequester(focusRequester)
-                        .semantics { contentDescription = "Weight Text Field" },
+                        .semantics {
+                            contentDescription =
+                                context.getString(R.string.movement_detail_screen_add_or_edit_result_dialog_weight_field_content_description)
+                        },
                 )
                 Box(modifier = Modifier.height(24.dp))
-                Text("Date", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.movement_detail_screen_add_or_edit_result_dialog_date_label),
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Box(modifier = Modifier.height(12.dp))
                 OutlinedTextFieldDatePicker(
                     currentDateTime = date,
@@ -395,7 +424,7 @@ fun AddOrEditResultDialog(
                             containerColor = White,
                         ),
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.movement_detail_screen_add_or_edit_result_dialog_cancel_button))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
@@ -421,9 +450,12 @@ fun AddOrEditResultDialog(
                         enabled = weightText.text.isNotBlank(),
                     ) {
                         Text(
-                            text = if (isAdd) "Add result" else "Edit result",
+                            text = if (isAdd) stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button)
+                            else stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button),
                             modifier = Modifier.semantics {
-                                contentDescription = if (isAdd) "Add result button" else "Edit result button"
+                                contentDescription =
+                                    if (isAdd) context.getString(R.string.movement_detail_screen_add_result_dialog_confirm_button_content_description)
+                                    else context.getString(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description)
                             },
                         )
                     }
@@ -438,7 +470,7 @@ fun AddOrEditResultDialog(
                             onDeleteClicked(oneRMInfo.id)
                         },
                     ) {
-                        Text(text = "Delete result")
+                        Text(text = stringResource(R.string.movement_detail_screen_edit_result_dialog_delete_button))
                     }
                 }
             }

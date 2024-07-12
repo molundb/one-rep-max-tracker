@@ -138,7 +138,7 @@ fun OneRepMaxDetailScreen(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .width(64.dp)
-                            .semantics { contentDescription = "Circular Progress Indicator" },
+                            .semantics { contentDescription = "Circular progress indicator" },
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     )

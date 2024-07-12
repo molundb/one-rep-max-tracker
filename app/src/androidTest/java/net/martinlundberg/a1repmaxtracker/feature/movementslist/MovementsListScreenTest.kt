@@ -65,7 +65,7 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Add movement dialog").assertIsDisplayed()
     }
 
     @Test
@@ -86,13 +86,13 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithContentDescription("Movement Name Text Field").performTextInput("movement test name")
+        composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When
         composeTestRule.onNodeWithText("Add").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add movement dialog").assertDoesNotExist()
         assertTrue(addMovementCalled)
     }
 
@@ -131,13 +131,13 @@ class MovementsListScreenTest {
             )
         }
         composeTestRule.onNodeWithContentDescription("Add Movement").performClick()
-        composeTestRule.onNodeWithContentDescription("Movement Name Text Field").performTextInput("movement test name")
+        composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When
         composeTestRule.onNodeWithText("Cancel").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Add Movement Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Add movement dialog").assertDoesNotExist()
         assertFalse(addMovementCalled)
     }
 
@@ -289,8 +289,8 @@ class MovementsListScreenTest {
         composeTestRule.onNodeWithText("Edit").performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription("Movement Drop Down Menu").assertIsNotDisplayed()
-        composeTestRule.onNodeWithContentDescription("Edit Movement Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Movement drop down menu").assertIsNotDisplayed()
+        composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertIsDisplayed()
     }
 
     @Test

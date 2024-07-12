@@ -49,7 +49,7 @@ class OneRepMaxDetailScreenTest {
         }
 
         composeTestRule.onNodeWithText("Loading...").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("Circular Progress Indicator").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Circular progress indicator").assertIsDisplayed()
     }
 
     @Test

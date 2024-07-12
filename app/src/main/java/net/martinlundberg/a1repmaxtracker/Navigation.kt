@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -78,7 +79,7 @@ fun DefaultScaffold(
                 modifier = Modifier.padding(top = 24.dp),
                 title = {
                     Text(
-                        text = "1RM Tracker",
+                        text = stringResource(R.string.top_bar_title),
                         style = MaterialTheme.typography.displayLarge,
                     )
                 },

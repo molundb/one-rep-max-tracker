@@ -69,7 +69,7 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Circular Progress Indicator").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Circular progress indicator").assertIsDisplayed()
     }
 
     @Test
@@ -131,7 +131,7 @@ class MovementDetailScreenTest {
 
         composeTestRule.onNodeWithText("Delete").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertIsDisplayed()
     }
 
     @Test
@@ -151,11 +151,11 @@ class MovementDetailScreenTest {
         }
 
         composeTestRule.onNodeWithText("Delete").performClick()
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Yes, delete").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Delete Movement Confirmation Dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertDoesNotExist()
         assertTrue(deleteMovementCalled)
     }
 
@@ -173,7 +173,7 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result button").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertIsDisplayed()
     }
@@ -192,9 +192,9 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result button").performClick()
 
-        composeTestRule.onNodeWithText("Add result").assertIsNotEnabled()
+        composeTestRule.onNodeWithText("Add result button").assertIsNotEnabled()
     }
 
     @Test
@@ -215,10 +215,10 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result button").performClick()
         composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add result").performClick()
+        composeTestRule.onNodeWithText("Add result button").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
         assertTrue(addResultCalled)
@@ -242,10 +242,10 @@ class MovementDetailScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Add result").performClick()
+        composeTestRule.onNodeWithContentDescription("Add result button").performClick()
         composeTestRule.onNodeWithContentDescription("Weight Text Field").performTextInput("780")
 
-        composeTestRule.onNodeWithText("Add result").performClick()
+        composeTestRule.onNodeWithText("Add result button").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
         assertTrue(addResultCalled)
@@ -309,7 +309,7 @@ class MovementDetailScreenTest {
         composeTestRule.onNodeWithText("70 kg").performClick()
         composeTestRule.onNodeWithContentDescription("Edit Result Dialog").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Delete result").performClick()
+        composeTestRule.onNodeWithText("Delete result button").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add Result Dialog").assertDoesNotExist()
         assertTrue(deleteCalled)
