@@ -315,14 +315,14 @@ fun MovementDropDownMenu(
                 }
             ) {
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.movement_list_screen_movement_drop_down_menu_edit_item)) },
+                    text = { Text(stringResource(R.string.edit)) },
                     onClick = {
                         onDismiss()
                         onEditMovementClick(movement)
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.movement_list_screen_movement_drop_down_menu_delete_item)) },
+                    text = { Text(stringResource(R.string.delete)) },
                     onClick = {
                         onDismiss()
                         onDeleteMovementClick(movement)
@@ -383,7 +383,7 @@ fun DeleteMovementConfirmDialog(
                             contentColor = Black,
                         ),
                     ) {
-                        Text(stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_cancel_button))
+                        Text(stringResource(R.string.cancel))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
@@ -518,7 +518,7 @@ private fun AddOrEditMovementDialog(
                             contentColor = Black,
                         ),
                     ) {
-                        Text(stringResource(R.string.movement_list_screen_add_or_edit_movement_dialog_cancel_button))
+                        Text(stringResource(R.string.cancel))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
@@ -545,7 +545,7 @@ private fun AddOrEditMovementDialog(
                     ) {
                         Text(
                             if (isAdd) stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button)
-                            else stringResource(R.string.movement_list_screen_edit_movement_dialog_confirm_button)
+                            else stringResource(R.string.edit)
                         )
                     }
                 }

@@ -209,7 +209,7 @@ fun MovementDetailScreen(
                                     horizontal = 24.dp,
                                     vertical = 12.dp
                                 ),
-                                text = stringResource(R.string.movement_detail_screen_delete_result_button),
+                                text = stringResource(R.string.delete),
                                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                             )
                         }
@@ -424,7 +424,7 @@ fun AddOrEditResultDialog(
                             containerColor = White,
                         ),
                     ) {
-                        Text(stringResource(R.string.movement_detail_screen_add_or_edit_result_dialog_cancel_button))
+                        Text(stringResource(R.string.cancel))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
