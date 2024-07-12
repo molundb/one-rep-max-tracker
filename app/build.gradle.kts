@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "net.martinlundberg.a1repmaxtracker"
+    namespace = "net.martinlundberg.onerepmaxtracker"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "net.martinlundberg.a1repmaxtracker"
+        applicationId = "net.martinlundberg.onerepmaxtracker"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

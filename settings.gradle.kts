@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "1 Rep Max Tracker"
+rootProject.name = "One Rep Max Tracker"
 include(":app")
  
