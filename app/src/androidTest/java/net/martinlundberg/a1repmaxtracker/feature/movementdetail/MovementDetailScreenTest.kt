@@ -13,7 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import org.junit.Before
 import org.junit.Rule
@@ -81,19 +81,19 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
-                            OneRMInfo(
+                            Result(
                                 id = 2,
                                 movementId = 2,
                                 weight = 72f,
                                 offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
-                            OneRMInfo(
+                            Result(
                                 id = 3,
                                 movementId = 2,
                                 weight = 75f,
@@ -260,7 +260,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
@@ -289,7 +289,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
@@ -325,7 +325,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
@@ -357,7 +357,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,

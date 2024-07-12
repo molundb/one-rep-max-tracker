@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
-import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiState.Success
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MovementsListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
-    private val oneRepMaxRepository: OneRepMaxRepository,
+    private val resultRepository: ResultRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
@@ -31,7 +31,7 @@ class MovementsListViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 movementsRepository.getMovements(),
-                oneRepMaxRepository.getWeightUnitFlow(),
+                resultRepository.getWeightUnitFlow(),
             ) { movements, weightUnit ->
                 Success(movements, weightUnit)
             }.collect { newState ->
@@ -44,8 +44,8 @@ class MovementsListViewModel @Inject constructor(
         viewModelScope.launch {
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
-                oneRepMaxRepository.addOneRM(
-                    OneRMInfo(
+                resultRepository.addResult(
+                    Result(
                         weight = it,
                         offsetDateTime = OffsetDateTime.now(),
                         movementId = movementId,

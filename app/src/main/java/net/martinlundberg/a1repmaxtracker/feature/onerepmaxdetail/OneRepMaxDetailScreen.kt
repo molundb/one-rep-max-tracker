@@ -39,7 +39,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePicker
@@ -57,17 +57,17 @@ fun OneRepMaxDetailRoute(
     oneRepMaxDetailViewModel: OneRepMaxDetailViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        oneRepMaxDetailViewModel.getOneRepMaxDetail(oneRepMaxId)
+        oneRepMaxDetailViewModel.getResult(oneRepMaxId)
     }
 
     val oneRepMaxDetailUiState by oneRepMaxDetailViewModel.uiState.collectAsState()
 
     OneRepMaxDetailScreen(
         oneRepMaxId = oneRepMaxId,
-        oneRepMaxDetailUiState = oneRepMaxDetailUiState,
+        resultDetailUiState = oneRepMaxDetailUiState,
         movementName = movementName,
-        updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateOneRepMaxDetail,
-        onDeleteClick = oneRepMaxDetailViewModel::deleteOneRM,
+        updateOneRepMaxDetail = oneRepMaxDetailViewModel::updateResult,
+        onDeleteClick = oneRepMaxDetailViewModel::deleteResult,
         setWeightUnitToPounds = oneRepMaxDetailViewModel::setWeightUnit
     )
 }
@@ -77,8 +77,8 @@ fun OneRepMaxDetailRoute(
 fun OneRepMaxDetailScreen(
     oneRepMaxId: Long,
     movementName: String,
-    oneRepMaxDetailUiState: OneRepMaxDetailUiState = Loading(WeightUnit.KILOGRAMS),
-    updateOneRepMaxDetail: (OneRMInfo) -> Unit = {},
+    resultDetailUiState: OneRepMaxDetailUiState = Loading(WeightUnit.KILOGRAMS),
+    updateOneRepMaxDetail: (Result) -> Unit = {},
     onDeleteClick: (Long) -> Unit = {},
     setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
@@ -93,12 +93,12 @@ fun OneRepMaxDetailScreen(
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = oneRepMaxDetailUiState.weightUnit.toString(),
+                            text = resultDetailUiState.weightUnit.toString(),
                             style = MaterialTheme.typography.titleLarge
                         )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
-                            checked = oneRepMaxDetailUiState.weightUnit.isPounds(),
+                            checked = resultDetailUiState.weightUnit.isPounds(),
                             onCheckedChange = {
                                 setWeightUnitToPounds(it)
                             },
@@ -121,7 +121,7 @@ fun OneRepMaxDetailScreen(
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
-        when (oneRepMaxDetailUiState) {
+        when (resultDetailUiState) {
             is Loading -> {
                 Column(
                     modifier = Modifier
@@ -146,8 +146,8 @@ fun OneRepMaxDetailScreen(
                 val context = LocalContext.current
                 var weightText by remember {
                     mutableStateOf(
-                        oneRepMaxDetailUiState.oneRMInfo.weight.weightWithUnit(
-                            oneRepMaxDetailUiState.weightUnit.isPounds(),
+                        resultDetailUiState.result.weight.weightWithUnit(
+                            resultDetailUiState.weightUnit.isPounds(),
                             context,
                         )
                     )
@@ -184,13 +184,13 @@ fun OneRepMaxDetailScreen(
                         ) {
                             Text(text = "Date")
                             OutlinedTextFieldDatePicker(
-                                currentDateTime = oneRepMaxDetailUiState.oneRMInfo.offsetDateTime,
+                                currentDateTime = resultDetailUiState.result.offsetDateTime,
                                 showDialog = showDatePickerDialog,
                                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
                                 setDialogVisibility = { showDatePickerDialog = it },
                                 onAccept = { offsetDateTime ->
                                     updateOneRepMaxDetail(
-                                        oneRepMaxDetailUiState.oneRMInfo.copy(offsetDateTime = offsetDateTime),
+                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
                                     )
                                 },
                             )
@@ -201,12 +201,12 @@ fun OneRepMaxDetailScreen(
                         ) {
                             Text(text = "Time")
                             OutlinedTextFieldTimePicker(
-                                currentDateTime = oneRepMaxDetailUiState.oneRMInfo.offsetDateTime,
+                                currentDateTime = resultDetailUiState.result.offsetDateTime,
                                 showDialog = showTimePickerDialog,
                                 setDialogVisibility = { showTimePickerDialog = it },
                                 updateOneRepMaxDetail = { offsetDateTime ->
                                     updateOneRepMaxDetail(
-                                        oneRepMaxDetailUiState.oneRMInfo.copy(offsetDateTime = offsetDateTime),
+                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
                                     )
                                 },
                             )
@@ -232,7 +232,7 @@ private fun OneRepMaxDetailScreenLoadingPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "Back Squat",
-            oneRepMaxDetailUiState = Loading(WeightUnit.POUNDS),
+            resultDetailUiState = Loading(WeightUnit.POUNDS),
         )
     }
 }
@@ -244,8 +244,8 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
         OneRepMaxDetailScreen(
             oneRepMaxId = 0,
             movementName = "The name",
-            oneRepMaxDetailUiState = Success(
-                oneRMInfo = OneRMInfo(
+            resultDetailUiState = Success(
+                result = Result(
                     id = 1,
                     movementId = 15,
                     weight = 100.5f,

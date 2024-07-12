@@ -1,5 +1,5 @@
 package net.martinlundberg.a1repmaxtracker.data.model
 
 data class MovementDetail(
-    val oneRMs: List<OneRMInfo> = emptyList(),
+    val results: List<Result> = emptyList(),
 )

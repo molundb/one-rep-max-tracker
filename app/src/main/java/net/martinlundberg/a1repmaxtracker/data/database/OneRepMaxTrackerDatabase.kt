@@ -4,13 +4,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
-import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
+import net.martinlundberg.a1repmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.a1repmaxtracker.data.database.model.MovementEntity
-import net.martinlundberg.a1repmaxtracker.data.database.model.OneRMEntity
+import net.martinlundberg.a1repmaxtracker.data.database.model.ResultEntity
 import net.martinlundberg.a1repmaxtracker.data.database.util.DateConverter
 
 @Database(
-    entities = [MovementEntity::class, OneRMEntity::class],
+    entities = [MovementEntity::class, ResultEntity::class],
     version = 1,
 )
 @TypeConverters(
@@ -18,5 +18,5 @@ import net.martinlundberg.a1repmaxtracker.data.database.util.DateConverter
 )
 abstract class OneRepMaxTrackerDatabase : RoomDatabase() {
     abstract fun movementDao(): MovementDao
-    abstract fun oneRMDao(): OneRMDao
+    abstract fun resultDao(): ResultDao
 }

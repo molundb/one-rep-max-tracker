@@ -11,12 +11,12 @@ data class MovementEntity(
     val name: String,
 )
 
-fun Map.Entry<MovementEntity, List<OneRMEntity>>.asExternalMovement() = Movement(
+fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovement() = Movement(
     id = key.id,
     name = key.name,
     weight = value.maxByOrNull { it.weightInKilos }?.weightInKilos
 )
 
-fun List<OneRMEntity>.asExternalMovementDetail() = MovementDetail(
-    oneRMs = this.map { it.asExternalModel() }
+fun List<ResultEntity>.asExternalMovementDetail() = MovementDetail(
+    results = this.map { it.asExternalModel() }
 )

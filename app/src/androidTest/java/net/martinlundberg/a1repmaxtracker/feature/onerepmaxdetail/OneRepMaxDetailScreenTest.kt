@@ -9,7 +9,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
@@ -42,7 +42,7 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Loading(weightUnit = WeightUnit.KILOGRAMS),
+                resultDetailUiState = Loading(weightUnit = WeightUnit.KILOGRAMS),
             )
         }
 
@@ -51,13 +51,13 @@ class OneRepMaxDetailScreenTest {
     }
 
     @Test
-    fun givenOneRMInfo_thenInfoIsDisplayed() {
+    fun givenResult_thenInfoIsDisplayed() {
         composeTestRule.setContent {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -80,8 +80,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -103,8 +103,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -133,8 +133,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -163,8 +163,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -186,8 +186,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -216,8 +216,8 @@ class OneRepMaxDetailScreenTest {
             OneRepMaxDetailScreen(
                 oneRepMaxId = 1,
                 movementName = "Name of movement",
-                oneRepMaxDetailUiState = Success(
-                    oneRMInfo = OneRMInfo(
+                resultDetailUiState = Success(
+                    result = Result(
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)

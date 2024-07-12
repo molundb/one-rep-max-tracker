@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.NavigationService
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
-import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MovementDetailViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
-    private val oneRepMaxRepository: OneRepMaxRepository,
+    private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
@@ -31,26 +31,26 @@ class MovementDetailViewModel @Inject constructor(
     fun getMovementInfo(id: Long) {
         viewModelScope.launch {
             combine(
-                oneRepMaxRepository.getMovementDetail(id),
-                oneRepMaxRepository.getWeightUnitFlow(),
-            ) { oneRMInfo, weightUnit ->
-                Success(oneRMInfo, weightUnit)
+                resultRepository.getMovementDetail(id),
+                resultRepository.getWeightUnitFlow(),
+            ) { result, weightUnit ->
+                Success(result, weightUnit)
             }.collect { newState ->
-                val sortedOneRMInfo = newState.movement.oneRMs.sortedByDescending { it.offsetDateTime }
+                val sortedByDate = newState.movement.results.sortedByDescending { it.offsetDateTime }
 
-                _uiState.update { newState.copy(movement = MovementDetail(sortedOneRMInfo)) }
+                _uiState.update { newState.copy(movement = MovementDetail(sortedByDate)) }
             }
         }
     }
 
-    fun addResult(oneRMInfo: OneRMInfo, weightUnit: WeightUnit) {
+    fun addResult(result: Result, weightUnit: WeightUnit) {
         viewModelScope.launch {
-            oneRepMaxRepository.addOneRM(
-                OneRMInfo(
-                    id = oneRMInfo.id,
-                    weight = oneRMInfo.weight,
-                    offsetDateTime = oneRMInfo.offsetDateTime,
-                    movementId = oneRMInfo.movementId,
+            resultRepository.addResult(
+                Result(
+                    id = result.id,
+                    weight = result.weight,
+                    offsetDateTime = result.offsetDateTime,
+                    movementId = result.movementId,
                 ),
                 weightUnit = weightUnit,
             )
@@ -66,7 +66,7 @@ class MovementDetailViewModel @Inject constructor(
 
     fun deleteResult(id: Long) {
         viewModelScope.launch {
-            oneRepMaxRepository.deleteOneRM(id)
+            resultRepository.deleteResult(id)
         }
     }
 }

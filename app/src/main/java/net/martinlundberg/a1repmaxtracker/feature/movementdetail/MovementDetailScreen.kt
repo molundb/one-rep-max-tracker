@@ -1,5 +1,6 @@
 package net.martinlundberg.a1repmaxtracker.feature.movementdetail
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +59,7 @@ import androidx.lifecycle.Lifecycle
 import net.martinlundberg.a1repmaxtracker.DefaultScaffold
 import net.martinlundberg.a1repmaxtracker.R
 import net.martinlundberg.a1repmaxtracker.data.model.MovementDetail
-import net.martinlundberg.a1repmaxtracker.data.model.OneRMInfo
+import net.martinlundberg.a1repmaxtracker.data.model.Result
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.a1repmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.a1repmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
@@ -101,6 +102,7 @@ fun MovementDetailRoute(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementDetailScreen(
     innerPadding: PaddingValues,
@@ -108,11 +110,11 @@ fun MovementDetailScreen(
     movementName: String,
     movementDetailUiState: MovementDetailUiState = Loading,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    addResult: (oneRMInfo: OneRMInfo, weightUnit: WeightUnit) -> Unit = { _, _ -> },
+    addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
 ) {
-    var oneRMInfoToEdit by remember { mutableStateOf<OneRMInfo?>(null) }
+    var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -175,12 +177,13 @@ fun MovementDetailScreen(
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
-                        movementDetailUiState.movement.oneRMs.map {
-                            item {
-                                OneRMCard(
-                                    oneRMInfo = it,
+                        movementDetailUiState.movement.results.map { result ->
+                            item(key = result.id) {
+                                ResultCard(
+                                    modifier = Modifier.animateItemPlacement(),
+                                    result = result,
                                     weightUnit = movementDetailUiState.weightUnit,
-                                    onOneRepMaxClick = { oneRMInfoToEdit = it },
+                                    onOneRepMaxClick = { resultToEdit = result },
                                 )
                             }
                         }
@@ -231,33 +234,33 @@ fun MovementDetailScreen(
                     if (showAddResultDialog) {
                         AddOrEditResultDialog(
                             isAdd = true,
-                            oneRMInfo = OneRMInfo(
+                            result = Result(
                                 movementId = movementId,
                                 weight = 0f,
                                 offsetDateTime = OffsetDateTime.now()
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = { showAddResultDialog = false },
-                            onConfirmation = { oneRMInfo ->
-                                addResult(oneRMInfo, movementDetailUiState.weightUnit)
+                            onConfirmation = { result ->
+                                addResult(result, movementDetailUiState.weightUnit)
                                 showAddResultDialog = false
                             },
                         )
                     }
 
-                    oneRMInfoToEdit?.let {
+                    resultToEdit?.let {
                         AddOrEditResultDialog(
                             isAdd = false,
-                            oneRMInfo = it,
+                            result = it,
                             weightUnit = movementDetailUiState.weightUnit,
-                            onDismissRequest = { oneRMInfoToEdit = null },
-                            onConfirmation = { oneRMInfo ->
-                                addResult(oneRMInfo, movementDetailUiState.weightUnit)
-                                oneRMInfoToEdit = null
+                            onDismissRequest = { resultToEdit = null },
+                            onConfirmation = { result ->
+                                addResult(result, movementDetailUiState.weightUnit)
+                                resultToEdit = null
                             },
                             onDeleteClicked = { resultId ->
                                 onDeleteResultClick(resultId)
-                                oneRMInfoToEdit = null
+                                resultToEdit = null
                             },
                         )
                     }
@@ -279,17 +282,18 @@ fun MovementDetailScreen(
 }
 
 @Composable
-fun OneRMCard(
-    oneRMInfo: OneRMInfo,
+fun ResultCard(
+    modifier: Modifier = Modifier,
+    result: Result,
     weightUnit: WeightUnit,
-    onOneRepMaxClick: (OneRMInfo) -> Unit = { },
+    onOneRepMaxClick: (Result) -> Unit = { },
 ) {
     val context = LocalContext.current
     Card(
-        modifier = Modifier.semantics {
+        modifier = modifier.semantics {
             contentDescription = context.getString(R.string.movement_detail_screen_result_card_content_description)
         },
-        onClick = { onOneRepMaxClick(oneRMInfo) },
+        onClick = { onOneRepMaxClick(result) },
         shape = RoundedCornerShape(8.dp),
     ) {
         Row(
@@ -300,12 +304,12 @@ fun OneRMCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                oneRMInfo.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
+                result.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = oneRMInfo.offsetDateTime.getRelativeDateString(),
+                text = result.offsetDateTime.getRelativeDateString(),
                 style = MaterialTheme.typography.titleMedium
             )
             Box(modifier = Modifier.width(8.dp))
@@ -320,19 +324,19 @@ fun OneRMCard(
 @Composable
 fun AddOrEditResultDialog(
     isAdd: Boolean,
-    oneRMInfo: OneRMInfo,
+    result: Result,
     weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
-    onConfirmation: (OneRMInfo) -> Unit = {},
+    onConfirmation: (Result) -> Unit = {},
     onDeleteClicked: (Long) -> Unit = {},
 ) {
-    val weightInitialValue = if (oneRMInfo.weight == 0f) {
+    val weightInitialValue = if (result.weight == 0f) {
         ""
     } else {
         if (weightUnit.isPounds()) {
-            oneRMInfo.weight.kilosToPounds()
+            result.weight.kilosToPounds()
         } else {
-            oneRMInfo.weight.toStringWithoutTrailingZero()
+            result.weight.toStringWithoutTrailingZero()
         }
     }
 
@@ -344,7 +348,7 @@ fun AddOrEditResultDialog(
             )
         )
     }
-    var date by remember { mutableStateOf(oneRMInfo.offsetDateTime) }
+    var date by remember { mutableStateOf(result.offsetDateTime) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -430,11 +434,11 @@ fun AddOrEditResultDialog(
                             .height(40.dp),
                         onClick = {
                             onConfirmation(
-                                OneRMInfo(
-                                    id = oneRMInfo.id,
-                                    movementId = oneRMInfo.movementId,
+                                Result(
+                                    id = result.id,
+                                    movementId = result.movementId,
                                     weight = weightText.text.toFloat(),
-                                    offsetDateTime = date
+                                    offsetDateTime = date,
                                 )
                             )
                         },
@@ -464,7 +468,7 @@ fun AddOrEditResultDialog(
                             .fillMaxWidth()
                             .height(40.dp),
                         onClick = {
-                            onDeleteClicked(oneRMInfo.id)
+                            onDeleteClicked(result.id)
                         },
                     ) {
                         Text(text = stringResource(R.string.movement_detail_screen_edit_result_dialog_delete_button))
@@ -505,19 +509,19 @@ private fun MovementDetailScreenSuccessPreview() {
                 movementDetailUiState = Success(
                     MovementDetail(
                         listOf(
-                            OneRMInfo(
+                            Result(
                                 id = 80,
                                 movementId = 18,
                                 weight = 15.5f,
                                 offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
-                            OneRMInfo(
+                            Result(
                                 id = 75,
                                 movementId = 18,
                                 weight = 15f,
                                 offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
-                            OneRMInfo(
+                            Result(
                                 id = 70,
                                 movementId = 18,
                                 weight = 15f,
@@ -538,7 +542,7 @@ private fun AddResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = true,
-            oneRMInfo = OneRMInfo(
+            result = Result(
                 movementId = 3,
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now()
@@ -554,7 +558,7 @@ private fun AddResultDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = true,
-            oneRMInfo = OneRMInfo(
+            result = Result(
                 movementId = 1,
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now()
@@ -570,7 +574,7 @@ private fun EditResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         AddOrEditResultDialog(
             isAdd = false,
-            oneRMInfo = OneRMInfo(
+            result = Result(
                 movementId = 2,
                 weight = 5f,
                 offsetDateTime = OffsetDateTime.now()

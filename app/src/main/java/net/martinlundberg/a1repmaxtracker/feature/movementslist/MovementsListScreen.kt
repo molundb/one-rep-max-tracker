@@ -92,6 +92,7 @@ fun MovementsListRoute(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementsListScreen(
     innerPadding: PaddingValues,
@@ -138,10 +139,11 @@ fun MovementsListScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    movementsListUiState.movements.map {
-                        item {
+                    movementsListUiState.movements.map { movement ->
+                        item(key = movement.id) {
                             MovementCard(
-                                movement = Movement(it.id, it.name, it.weight),
+                                modifier = Modifier.animateItemPlacement(),
+                                movement = movement,
                                 weightUnit = movementsListUiState.weightUnit,
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
@@ -215,6 +217,7 @@ fun MovementsListScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementCard(
+    modifier: Modifier = Modifier,
     movement: Movement,
     weightUnit: WeightUnit,
     onMovementClick: (Movement, Lifecycle.State) -> Unit,
@@ -227,7 +230,7 @@ fun MovementCard(
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .combinedClickable(
                 onClick = { onMovementClick(movement, lifecycleOwner.lifecycle.currentState) },
                 onLongClick = {

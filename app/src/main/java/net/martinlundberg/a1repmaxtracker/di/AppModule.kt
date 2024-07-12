@@ -10,11 +10,11 @@ import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.a1repmaxtracker.data.DataStorePreferences
 import net.martinlundberg.a1repmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.a1repmaxtracker.data.database.dao.MovementDao
-import net.martinlundberg.a1repmaxtracker.data.database.dao.OneRMDao
+import net.martinlundberg.a1repmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.a1repmaxtracker.data.repository.DefaultMovementsRepository
-import net.martinlundberg.a1repmaxtracker.data.repository.DefaultOneRepMaxRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.DefaultResultRepository
 import net.martinlundberg.a1repmaxtracker.data.repository.MovementsRepository
-import net.martinlundberg.a1repmaxtracker.data.repository.OneRepMaxRepository
+import net.martinlundberg.a1repmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import javax.inject.Singleton
 
@@ -27,9 +27,9 @@ object AppModule {
     ): MovementDao = database.movementDao()
 
     @Provides
-    fun providesOneRMDao(
+    fun providesResultDao(
         database: OneRepMaxTrackerDatabase,
-    ): OneRMDao = database.oneRMDao()
+    ): ResultDao = database.resultDao()
 
     @Provides
     @Singleton
@@ -55,7 +55,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMovementsRepository(db: OneRepMaxTrackerDatabase): MovementsRepository {
-        return DefaultMovementsRepository(db.movementDao(), db.oneRMDao())
+        return DefaultMovementsRepository(db.movementDao(), db.resultDao())
     }
 
     @Provides
@@ -63,7 +63,7 @@ object AppModule {
     fun provideOneRepMaxRepository(
         db: OneRepMaxTrackerDatabase,
         weightUnitService: WeightUnitService,
-    ): OneRepMaxRepository {
-        return DefaultOneRepMaxRepository(db.oneRMDao(), weightUnitService)
+    ): ResultRepository {
+        return DefaultResultRepository(db.resultDao(), weightUnitService)
     }
 }
