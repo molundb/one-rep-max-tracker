@@ -259,7 +259,7 @@ fun MovementCard(
             Spacer(modifier = Modifier.weight(1f))
             if (movement.weight == null) {
                 Text(
-                    text = "-",
+                    text = stringResource(R.string.movement_list_screen_movement_card_no_weight),
                     style = MaterialTheme.typography.titleMedium,
                 )
             } else {
@@ -271,7 +271,7 @@ fun MovementCard(
             Box(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_nav),
-                contentDescription = "Navigation icon",
+                contentDescription = stringResource(R.string.movement_list_screen_movement_card_nav_icon_content_description),
             )
         }
         movementDropDownMenuInfo?.let {
@@ -298,11 +298,15 @@ fun MovementDropDownMenu(
             onSurface = Black,
         )
     ) {
+        val context = LocalContext.current
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.TopEnd)
-                .semantics { contentDescription = "Movement Drop Down Menu" }
+                .semantics {
+                    contentDescription =
+                        context.getString(R.string.movement_list_screen_movement_drop_down_menu_content_description)
+                }
         ) {
             DropdownMenu(
                 expanded = true,
@@ -311,14 +315,14 @@ fun MovementDropDownMenu(
                 }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Edit") },
+                    text = { Text(stringResource(R.string.movement_list_screen_movement_drop_down_menu_edit_item)) },
                     onClick = {
                         onDismiss()
                         onEditMovementClick(movement)
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Delete") },
+                    text = { Text(stringResource(R.string.movement_list_screen_movement_drop_down_menu_delete_item)) },
                     onClick = {
                         onDismiss()
                         onDeleteMovementClick(movement)
@@ -338,11 +342,15 @@ fun DeleteMovementConfirmDialog(
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
+        val context = LocalContext.current
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(224.dp)
-                .semantics { contentDescription = "Delete Movement Confirmation Dialog" },
+                .semantics {
+                    contentDescription =
+                        context.getString(R.string.movement_list_screen_delete_movement_confirm_dialog_content_description)
+                },
             shape = RoundedCornerShape(4.dp),
         ) {
             Column(
@@ -351,12 +359,12 @@ fun DeleteMovementConfirmDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    text = "Delete movement",
+                    text = stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_title),
                     style = MaterialTheme.typography.headlineLarge,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Are you sure you want to delete:",
+                    text = stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_are_you_sure),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Box(modifier = Modifier.height(12.dp))
@@ -375,7 +383,7 @@ fun DeleteMovementConfirmDialog(
                             contentColor = Black,
                         ),
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_cancel_button))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
@@ -386,7 +394,7 @@ fun DeleteMovementConfirmDialog(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                         ),
                     ) {
-                        Text("Yes, delete")
+                        Text(stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_confirm_button))
                     }
                 }
             }
@@ -438,10 +446,15 @@ private fun AddOrEditMovementDialog(
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         val focusRequester = remember { FocusRequester() }
+        val context = LocalContext.current
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = if (isAdd) "Add Movement Dialog" else "Edit Movement Dialog" },
+                .semantics {
+                    contentDescription =
+                        if (isAdd) context.getString(R.string.movement_list_screen_add_movement_dialog_content_description)
+                        else context.getString(R.string.movement_list_screen_edit_movement_dialog_content_description)
+                },
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -449,12 +462,13 @@ private fun AddOrEditMovementDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    text = if (isAdd) "Add movement" else "Edit Movement",
+                    text = if (isAdd) stringResource(R.string.movement_list_screen_add_movement_dialog_title)
+                    else stringResource(R.string.movement_list_screen_edit_movement_dialog_title),
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Box(modifier = Modifier.height(24.dp))
                 Text(
-                    text = "Name",
+                    text = stringResource(R.string.movement_list_screen_add_or_edit_movement_dialog_name_label),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Box(modifier = Modifier.height(12.dp))
@@ -465,12 +479,18 @@ private fun AddOrEditMovementDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
-                        .semantics { contentDescription = "Movement Name Text Field" },
+                        .semantics {
+                            contentDescription =
+                                context.getString(R.string.movement_list_screen_add_or_edit_movement_dialog_name_field_content_description)
+                        },
                 )
                 if (isAdd) {
                     Spacer(modifier = Modifier.size(24.dp))
                     Text(
-                        text = "Weight (${weightUnit.toString(LocalContext.current)})",
+                        text = stringResource(
+                            R.string.movement_list_screen_add_or_edit_movement_dialog_weight_label,
+                            weightUnit.toString(LocalContext.current)
+                        ),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Box(modifier = Modifier.height(12.dp))
@@ -498,7 +518,7 @@ private fun AddOrEditMovementDialog(
                             contentColor = Black,
                         ),
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.movement_list_screen_add_or_edit_movement_dialog_cancel_button))
                     }
                     Box(modifier = Modifier.width(32.dp))
                     OutlinedButton(
@@ -523,7 +543,10 @@ private fun AddOrEditMovementDialog(
                         ),
                         enabled = movementNameText.text.isNotBlank()
                     ) {
-                        Text(if (isAdd) "Add" else "Edit")
+                        Text(
+                            if (isAdd) stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button)
+                            else stringResource(R.string.movement_list_screen_edit_movement_dialog_confirm_button)
+                        )
                     }
                 }
             }

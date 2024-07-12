@@ -4,6 +4,26 @@
     <string name="movement_list_screen_add_movement_button">+ Add movement</string>
     <string name="movement_list_screen_add_movement_button_content_description">Add Movement</string>
     <string name="movement_list_screen_movement_card_content_description">Movement Card</string>
+    <string name="movement_list_screen_movement_card_no_weight">-</string>
+    <string name="movement_list_screen_movement_card_nav_icon_content_description">Navigation icon</string>
+    <string name="movement_list_screen_movement_drop_down_menu_content_description">Movement Drop Down Menu</string>
+    <string name="movement_list_screen_movement_drop_down_menu_edit_item">Edit</string>
+    <string name="movement_list_screen_movement_drop_down_menu_delete_item">Delete</string>
+    <string name="movement_list_screen_delete_movement_confirm_dialog_content_description">Delete Movement Confirmation Dialog</string>
+    <string name="movement_list_screen_delete_movement_confirm_dialog_title">Delete movement</string>
+    <string name="movement_list_screen_delete_movement_confirm_dialog_are_you_sure">Are you sure you want to delete:</string>
+    <string name="movement_list_screen_delete_movement_confirm_dialog_cancel_button">Cancel</string>
+    <string name="movement_list_screen_delete_movement_confirm_dialog_confirm_button">Yes, delete</string>
+    <string name="movement_list_screen_add_movement_dialog_content_description">Add Movement Dialog</string>
+    <string name="movement_list_screen_add_movement_dialog_title">Add movement</string>
+    <string name="movement_list_screen_edit_movement_dialog_content_description">Edit Movement Dialog</string>
+    <string name="movement_list_screen_edit_movement_dialog_title">Edit movement</string>
+    <string name="movement_list_screen_add_or_edit_movement_dialog_name_label">Name</string>
+    <string name="movement_list_screen_add_or_edit_movement_dialog_name_field_content_description">Movement Name Text Field</string>
+    <string name="movement_list_screen_add_or_edit_movement_dialog_weight_label">Weight (%1$s)</string>
+    <string name="movement_list_screen_add_or_edit_movement_dialog_cancel_button">Cancel</string>
+    <string name="movement_list_screen_add_movement_dialog_confirm_button">Add</string>
+    <string name="movement_list_screen_edit_movement_dialog_confirm_button">Edit</string>
     <string name="weight_unit_kilograms">kg</string>
     <string name="weight_unit_pounds">lb</string>
 </resources>
