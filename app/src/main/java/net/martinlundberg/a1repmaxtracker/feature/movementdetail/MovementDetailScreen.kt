@@ -66,12 +66,10 @@ import net.martinlundberg.a1repmaxtracker.ui.components.OutlinedTextFieldDatePic
 import net.martinlundberg.a1repmaxtracker.ui.theme.Black
 import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.ui.theme.White
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.kilosToPounds
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
 import net.martinlundberg.a1repmaxtracker.util.formatTo
-import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.toStringWithoutTrailingZero
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -84,19 +82,16 @@ fun MovementDetailRoute(
 //    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
-    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)
     }
     val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
-    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
     MovementDetailScreen(
         innerPadding = innerPadding,
         movementId = movementId,
         movementName = movementName,
-        weightUnit = weightUnit,
         movementDetailUiState = movementDetailUiState,
 //        onOneRepMaxClick = onOneRepMaxClick,
         navigateBack = navigateBack,
@@ -111,7 +106,6 @@ fun MovementDetailScreen(
     innerPadding: PaddingValues,
     movementId: Long,
     movementName: String,
-    weightUnit: WeightUnit,
     movementDetailUiState: MovementDetailUiState = Loading,
     navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (oneRMInfo: OneRMInfo, weightUnit: WeightUnit) -> Unit = { _, _ -> },
@@ -185,7 +179,7 @@ fun MovementDetailScreen(
                             item {
                                 OneRMCard(
                                     oneRMInfo = it,
-                                    weightUnit = weightUnit,
+                                    weightUnit = movementDetailUiState.weightUnit,
                                     onOneRepMaxClick = { oneRMInfoToEdit = it },
                                 )
                             }
@@ -242,10 +236,10 @@ fun MovementDetailScreen(
                                 weight = 0f,
                                 offsetDateTime = OffsetDateTime.now()
                             ),
-                            weightUnit = weightUnit,
+                            weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = { showAddResultDialog = false },
                             onConfirmation = { oneRMInfo ->
-                                addResult(oneRMInfo, weightUnit)
+                                addResult(oneRMInfo, movementDetailUiState.weightUnit)
                                 showAddResultDialog = false
                             },
                         )
@@ -255,10 +249,10 @@ fun MovementDetailScreen(
                         AddOrEditResultDialog(
                             isAdd = false,
                             oneRMInfo = it,
-                            weightUnit = weightUnit,
+                            weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = { oneRMInfoToEdit = null },
                             onConfirmation = { oneRMInfo ->
-                                addResult(oneRMInfo, weightUnit)
+                                addResult(oneRMInfo, movementDetailUiState.weightUnit)
                                 oneRMInfoToEdit = null
                             },
                             onDeleteClicked = { resultId ->
@@ -490,7 +484,6 @@ private fun MovementDetailLoadingPreview() {
                 innerPadding = innerPadding,
                 movementId = 1,
                 movementName = "Bench Press",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = Loading,
             )
         }
@@ -506,7 +499,6 @@ private fun MovementDetailScreenSuccessPreview() {
                 innerPadding = innerPadding,
                 movementId = 111L,
                 movementName = "Back Squat",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = Success(
                     MovementDetail(
                         listOf(
@@ -529,7 +521,8 @@ private fun MovementDetailScreenSuccessPreview() {
                                 offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }

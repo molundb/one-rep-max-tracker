@@ -67,29 +67,24 @@ import net.martinlundberg.a1repmaxtracker.feature.movementslist.MovementsListUiS
 import net.martinlundberg.a1repmaxtracker.ui.theme.Black
 import net.martinlundberg.a1repmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.a1repmaxtracker.ui.theme.White
-import net.martinlundberg.a1repmaxtracker.util.WeightUnitService
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
-import net.martinlundberg.a1repmaxtracker.util.provideWeightUnitService
 
 @Composable
 fun MovementsListRoute(
     innerPadding: PaddingValues,
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementsListViewModel: MovementsListViewModel = hiltViewModel(),
-    weightUnitService: WeightUnitService = provideWeightUnitService(),
 ) {
     LaunchedEffect(Unit) {
         movementsListViewModel.getMovements()
     }
 
     val movementsListUiState by movementsListViewModel.uiState.collectAsState()
-    val weightUnit by weightUnitService.weightUnitFlow.collectAsState()
 
     MovementsListScreen(
         innerPadding = innerPadding,
         movementsListUiState = movementsListUiState,
-        weightUnit = weightUnit,
         onAddMovementClick = movementsListViewModel::addMovement,
         onMovementClick = onMovementClick,
         onEditMovementClick = movementsListViewModel::editMovement,
@@ -101,7 +96,6 @@ fun MovementsListRoute(
 fun MovementsListScreen(
     innerPadding: PaddingValues,
     movementsListUiState: MovementsListUiState = Loading,
-    weightUnit: WeightUnit,
     onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
@@ -148,7 +142,7 @@ fun MovementsListScreen(
                         item {
                             MovementCard(
                                 movement = Movement(it.id, it.name, it.weight),
-                                weightUnit = weightUnit,
+                                weightUnit = movementsListUiState.weightUnit,
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
                                     movementToEdit = movement
@@ -182,7 +176,7 @@ fun MovementsListScreen(
 
                 if (showAddMovementDialog) {
                     AddMovementDialog(
-                        weightUnit = weightUnit,
+                        weightUnit = movementsListUiState.weightUnit,
                         onDismissRequest = { showAddMovementDialog = false },
                         onConfirmation = { movement, weightUnit ->
                             onAddMovementClick(movement, weightUnit)
@@ -194,7 +188,7 @@ fun MovementsListScreen(
                 movementToEdit?.let { movement ->
                     EditMovementDialog(
                         movement = movement,
-                        weightUnit = weightUnit,
+                        weightUnit = movementsListUiState.weightUnit,
                         onDismissRequest = { movementToEdit = null },
                         onConfirmation = { editedMovement, _ ->
                             onEditMovementClick(editedMovement)
@@ -565,7 +559,6 @@ private fun MovementsListLoadingPreview() {
             MovementsListScreen(
                 innerPadding = innerPadding,
                 movementsListUiState = Loading,
-                weightUnit = WeightUnit.POUNDS,
             )
         }
     }
@@ -583,9 +576,9 @@ private fun MovementsListScreenSuccessPreview() {
                         Movement(1, "Movement 1", 100f),
                         Movement(2, "Movement 4", 4.4f),
                         Movement(3, "No weight", null),
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                weightUnit = WeightUnit.KILOGRAMS,
             )
         }
     }

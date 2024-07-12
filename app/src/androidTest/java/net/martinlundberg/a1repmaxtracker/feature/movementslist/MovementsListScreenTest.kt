@@ -32,11 +32,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 2f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
         }
@@ -52,11 +52,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.POUNDS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 2f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.POUNDS,
                 )
             )
         }
@@ -76,9 +76,9 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
-                    listOf()
+                    listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -102,9 +102,9 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.POUNDS,
                 movementsListUiState = MovementsListUiState.Success(
-                    listOf()
+                    listOf(),
+                    weightUnit = WeightUnit.POUNDS,
                 )
             )
         }
@@ -121,9 +121,9 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
-                    listOf()
+                    listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -149,11 +149,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 onMovementClick = { _, _ -> onMovementClickCalled = true }
             )
@@ -172,11 +172,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
@@ -195,11 +195,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
@@ -219,11 +219,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
@@ -245,7 +245,6 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(
@@ -253,7 +252,8 @@ class MovementsListScreenTest {
                             name = "Test movement",
                             weight = 3f
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
             )
@@ -275,11 +275,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(id = 2, name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
@@ -299,11 +299,11 @@ class MovementsListScreenTest {
         composeTestRule.setContent {
             MovementsListScreen(
                 innerPadding = PaddingValues(),
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }

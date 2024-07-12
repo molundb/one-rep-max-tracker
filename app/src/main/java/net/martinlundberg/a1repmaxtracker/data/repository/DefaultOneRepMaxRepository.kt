@@ -37,12 +37,7 @@ class DefaultOneRepMaxRepository @Inject constructor(
 
     override suspend fun deleteOneRM(id: Long) = oneRMDao.deleteByOneRMId(id)
 
-    override fun getWeightUnitFlow(): StateFlow<WeightUnit> {
-        return weightUnitService.weightUnitFlow
-    }
+    override fun getWeightUnitFlow(): StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
 
-    override suspend fun setWeightUnit(isPounds: Boolean) {
-        weightUnitService.setWeightUnit(isPounds)
-    }
-
+    override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
 }

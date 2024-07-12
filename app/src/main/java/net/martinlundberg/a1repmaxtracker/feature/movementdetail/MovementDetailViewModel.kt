@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.NavigationService
@@ -29,8 +30,13 @@ class MovementDetailViewModel @Inject constructor(
 
     fun getMovementInfo(id: Long) {
         viewModelScope.launch {
-            oneRepMaxRepository.getMovementDetail(id).collect { movementDetail ->
-                _uiState.update { Success(movementDetail) }
+            combine(
+                oneRepMaxRepository.getMovementDetail(id),
+                oneRepMaxRepository.getWeightUnitFlow(),
+            ) { oneRMInfo, weightUnit ->
+                Success(oneRMInfo, weightUnit)
+            }.collect { newState ->
+                _uiState.update { newState }
             }
         }
     }
@@ -68,5 +74,6 @@ sealed interface MovementDetailUiState {
 
     data class Success(
         val movement: MovementDetail,
+        val weightUnit: WeightUnit,
     ) : MovementDetailUiState
 }

@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.a1repmaxtracker.data.model.Movement
@@ -28,10 +29,14 @@ class MovementsListViewModel @Inject constructor(
 
     fun getMovements() {
         viewModelScope.launch {
-            movementsRepository.getMovements()
-                .collect { movements ->
-                    _uiState.update { Success(movements) }
-                }
+            combine(
+                movementsRepository.getMovements(),
+                oneRepMaxRepository.getWeightUnitFlow(),
+            ) { movements, weightUnit ->
+                Success(movements, weightUnit)
+            }.collect { newState ->
+                _uiState.update { newState }
+            }
         }
     }
 
@@ -69,5 +74,6 @@ sealed interface MovementsListUiState {
 
     data class Success(
         val movements: List<Movement> = emptyList(),
+        val weightUnit: WeightUnit,
     ) : MovementsListUiState
 }

@@ -47,9 +47,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 11,
                 movementName = "Name of movement",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
@@ -64,7 +64,6 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 15,
                 movementName = "The name",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Loading,
             )
         }
@@ -79,7 +78,6 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 2,
                 movementName = "Name",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -101,8 +99,9 @@ class MovementDetailScreenTest {
                                 weight = 75f,
                                 offsetDateTime = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)
                             ),
-                        )
-                    )
+                        ),
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
         }
@@ -122,9 +121,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.POUNDS,
                 )
             )
         }
@@ -142,9 +141,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.POUNDS,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
             )
@@ -166,9 +165,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.POUNDS,
                 )
             )
         }
@@ -185,9 +184,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.POUNDS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.POUNDS,
                 )
             )
         }
@@ -205,9 +204,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 addResult = { _, _ ->
                     addResultCalled = true
@@ -232,9 +231,9 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Name",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail()
+                    MovementDetail(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 addResult = { _, _ ->
                     addResultCalled = true
@@ -258,7 +257,6 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -269,7 +267,8 @@ class MovementDetailScreenTest {
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             )
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
         }
@@ -287,7 +286,6 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -298,7 +296,8 @@ class MovementDetailScreenTest {
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             )
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 onDeleteResultClick = {
                     deleteCalled = true
@@ -322,7 +321,7 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = WeightUnit.KILOGRAMS,
+
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -333,7 +332,8 @@ class MovementDetailScreenTest {
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             )
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
         }
@@ -354,7 +354,6 @@ class MovementDetailScreenTest {
                 innerPadding = PaddingValues(),
                 movementId = 17,
                 movementName = "Back Squat",
-                weightUnit = WeightUnit.KILOGRAMS,
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
                         listOf(
@@ -365,7 +364,8 @@ class MovementDetailScreenTest {
                                 offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
                             )
                         )
-                    )
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 addResult = { _, _ ->
                     addResultCalled = true
