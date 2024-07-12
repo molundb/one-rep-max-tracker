@@ -36,7 +36,9 @@ class MovementDetailViewModel @Inject constructor(
             ) { oneRMInfo, weightUnit ->
                 Success(oneRMInfo, weightUnit)
             }.collect { newState ->
-                _uiState.update { newState }
+                val sortedOneRMInfo = newState.movement.oneRMs.sortedByDescending { it.offsetDateTime }
+
+                _uiState.update { newState.copy(movement = MovementDetail(sortedOneRMInfo)) }
             }
         }
     }
