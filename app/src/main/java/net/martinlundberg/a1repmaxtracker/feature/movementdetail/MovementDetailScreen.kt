@@ -69,7 +69,7 @@ import net.martinlundberg.a1repmaxtracker.ui.theme.White
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.kilosToPounds
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.a1repmaxtracker.util.WeightUnitService.WeightUnit
-import net.martinlundberg.a1repmaxtracker.util.formatTo
+import net.martinlundberg.a1repmaxtracker.util.getRelativeDateString
 import net.martinlundberg.a1repmaxtracker.util.toStringWithoutTrailingZero
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -304,7 +304,10 @@ fun OneRMCard(
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.weight(1f))
-            Text(oneRMInfo.offsetDateTime.formatTo("dd MMM yyyy"), style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = oneRMInfo.offsetDateTime.getRelativeDateString(),
+                style = MaterialTheme.typography.titleMedium
+            )
             Box(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_edit),
