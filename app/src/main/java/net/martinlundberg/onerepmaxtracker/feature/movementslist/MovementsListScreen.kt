@@ -163,7 +163,10 @@ fun MovementsListScreen(
                             contentDescription =
                                 context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                         },
-                    onClick = { showAddMovementDialog = true },
+//                    onClick = { showAddMovementDialog = true },
+                    onClick = {
+                        throw RuntimeException("Test Crash")
+                    },
                     shape = RoundedCornerShape(80.dp),
                 ) {
                     Text(
