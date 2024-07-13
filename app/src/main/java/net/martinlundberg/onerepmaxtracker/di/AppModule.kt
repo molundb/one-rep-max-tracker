@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import net.martinlundberg.onerepmaxtracker.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
 import net.martinlundberg.onerepmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.onerepmaxtracker.data.database.dao.MovementDao
@@ -54,6 +55,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAnalyticsService(dataStorePreferences: DataStorePreferences): AnalyticsService {
+        return AnalyticsService(dataStorePreferences)
+    }
+
+    @Provides
+    @Singleton
     fun provideMovementsRepository(db: OneRepMaxTrackerDatabase): MovementsRepository {
         return DefaultMovementsRepository(db.movementDao(), db.resultDao())
     }
@@ -63,7 +70,8 @@ object AppModule {
     fun provideOneRepMaxRepository(
         db: OneRepMaxTrackerDatabase,
         weightUnitService: WeightUnitService,
+        analyticsService: AnalyticsService,
     ): ResultRepository {
-        return DefaultResultRepository(db.resultDao(), weightUnitService)
+        return DefaultResultRepository(db.resultDao(), weightUnitService, analyticsService)
     }
 }

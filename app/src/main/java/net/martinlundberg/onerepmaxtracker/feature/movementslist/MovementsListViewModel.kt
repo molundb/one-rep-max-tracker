@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.martinlundberg.onerepmaxtracker.Analytics
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
@@ -24,7 +23,6 @@ import javax.inject.Inject
 class MovementsListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
-    private val analytics: Analytics,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
@@ -34,7 +32,7 @@ class MovementsListViewModel @Inject constructor(
             combine(
                 movementsRepository.getMovements(),
                 resultRepository.getWeightUnitFlow(),
-                analytics.analyticsEnabled,
+                resultRepository.getAnalyticsCollectionEnabledFlow(),
             ) { movements, weightUnit, isAnalyticsEnabled ->
                 Success(movements, weightUnit, isAnalyticsEnabled)
             }.collect { newState ->
@@ -71,7 +69,11 @@ class MovementsListViewModel @Inject constructor(
         }
     }
 
-    fun setAnalyticsCollectionEnabled(isEnabled: Boolean) = analytics.setAnalyticsCollectionEnabled(isEnabled)
+    fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            resultRepository.setAnalyticsCollectionEnabled(isEnabled)
+        }
+    }
 }
 
 sealed interface MovementsListUiState {

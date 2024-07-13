@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import net.martinlundberg.onerepmaxtracker.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalModel
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovementDetail
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class DefaultResultRepository @Inject constructor(
     private val resultDao: ResultDao,
     private val weightUnitService: WeightUnitService,
+    private val analyticsService: AnalyticsService,
 ) : ResultRepository {
 
     override suspend fun getMovementDetail(id: Long): Flow<MovementDetail> =
@@ -40,4 +42,9 @@ class DefaultResultRepository @Inject constructor(
     override fun getWeightUnitFlow(): StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
 
     override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
+
+    override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> = analyticsService.analyticsEnabledFlow
+
+    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) =
+        analyticsService.setAnalyticsCollectionEnabled(isEnabled)
 }

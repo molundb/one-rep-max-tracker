@@ -19,13 +19,25 @@ class DataStorePreferences @Inject constructor(
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     private val weightUnitIsPoundsKey = booleanPreferencesKey("weight_unit_is_pounds")
+    private val analyticsCollectionEnabledKey = booleanPreferencesKey("analytics_collection_enabled")
+
     val weightUnitFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[weightUnitIsPoundsKey] ?: false
+    }
+
+    val analyticsCollectionEnabledFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[analyticsCollectionEnabledKey] ?: false
     }
 
     suspend fun storeWeightUnit(isPounds: Boolean) {
         context.dataStore.edit { settings ->
             settings[weightUnitIsPoundsKey] = isPounds
+        }
+    }
+
+    suspend fun storeAnalyticsCollectionEnabled(isEnabled: Boolean) {
+        context.dataStore.edit { settings ->
+            settings[analyticsCollectionEnabledKey] = isEnabled
         }
     }
 }
