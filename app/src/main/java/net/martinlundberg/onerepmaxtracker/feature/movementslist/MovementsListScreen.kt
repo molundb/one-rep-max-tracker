@@ -29,6 +29,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -89,6 +90,7 @@ fun MovementsListRoute(
         onMovementClick = onMovementClick,
         onEditMovementClick = movementsListViewModel::editMovement,
         onDeleteMovementClick = movementsListViewModel::deleteMovement,
+        setAnalyticsCollectionEnabled = movementsListViewModel::setAnalyticsCollectionEnabled,
     )
 }
 
@@ -101,6 +103,7 @@ fun MovementsListScreen(
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
+    setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
 ) {
     var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
@@ -157,26 +160,42 @@ fun MovementsListScreen(
                     }
                 }
                 val context = LocalContext.current
-                FloatingActionButton(
-                    modifier = Modifier
-                        .semantics {
-                            contentDescription =
-                                context.getString(R.string.movement_list_screen_add_movement_button_content_description)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    FloatingActionButton(
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription =
+                                    context.getString(R.string.movement_list_screen_add_movement_button_content_description)
+                            },
+                        //                    onClick = { showAddMovementDialog = true },
+                        onClick = {
+                            throw RuntimeException("Test Crash")
                         },
-//                    onClick = { showAddMovementDialog = true },
-                    onClick = {
-                        throw RuntimeException("Test Crash")
-                    },
-                    shape = RoundedCornerShape(80.dp),
-                ) {
-                    Text(
-                        modifier = Modifier.padding(
-                            horizontal = 24.dp,
-                            vertical = 12.dp
-                        ),
-                        text = stringResource(R.string.movement_list_screen_add_movement_button),
-                        style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
-                    )
+                        shape = RoundedCornerShape(80.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(
+                                horizontal = 24.dp,
+                                vertical = 12.dp
+                            ),
+                            text = stringResource(R.string.movement_list_screen_add_movement_button),
+                            style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Analytics",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Box(modifier = Modifier.size(4.dp))
+                        Switch(
+                            checked = movementsListUiState.isAnalyticsEnabled,
+                            onCheckedChange = {
+                                setAnalyticsCollectionEnabled(it)
+                            },
+                        )
+                    }
                 }
 
                 if (showAddMovementDialog) {
@@ -584,6 +603,7 @@ private fun MovementsListScreenSuccessPreview() {
                         Movement(3, "No weight", null),
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
