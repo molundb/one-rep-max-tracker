@@ -47,6 +47,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleHilt" }
 google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleHilt" }
+google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "googleHilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
