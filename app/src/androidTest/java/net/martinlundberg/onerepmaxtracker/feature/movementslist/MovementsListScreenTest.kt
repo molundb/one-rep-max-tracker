@@ -62,7 +62,7 @@ class MovementsListScreenTest {
         }
 
         // When
-        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
 
         // Then
         composeTestRule.onNodeWithContentDescription("Add movement dialog").assertIsDisplayed()
@@ -85,7 +85,7 @@ class MovementsListScreenTest {
                 }
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
         composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When
@@ -108,7 +108,7 @@ class MovementsListScreenTest {
                 )
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
 
         // Then
         composeTestRule.onNodeWithText("Add").assertIsNotEnabled()
@@ -130,7 +130,7 @@ class MovementsListScreenTest {
                 }
             )
         }
-        composeTestRule.onNodeWithContentDescription("Add movement").performClick()
+        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
         composeTestRule.onNodeWithContentDescription("Movement name text field").performTextInput("movement test name")
 
         // When

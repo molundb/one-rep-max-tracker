@@ -20,12 +20,12 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -161,25 +161,17 @@ fun MovementsListScreen(
                 }
                 val context = LocalContext.current
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    FloatingActionButton(
+                    Button(
                         modifier = Modifier
                             .semantics {
                                 contentDescription =
                                     context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                             },
-                        //                    onClick = { showAddMovementDialog = true },
-                        onClick = {
-                            throw RuntimeException("Test Crash")
-                        },
-                        shape = RoundedCornerShape(80.dp),
+                        onClick = { showAddMovementDialog = true },
                     ) {
                         Text(
-                            modifier = Modifier.padding(
-                                horizontal = 24.dp,
-                                vertical = 12.dp
-                            ),
+                            modifier = Modifier.padding(vertical = 8.dp),
                             text = stringResource(R.string.movement_list_screen_add_movement_button),
-                            style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                         )
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
