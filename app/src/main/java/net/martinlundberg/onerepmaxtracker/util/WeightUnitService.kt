@@ -1,12 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.util
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -83,18 +77,4 @@ class WeightUnitServiceImpl @Inject constructor(
             POUNDS -> context.getString(R.string.weight_unit_pounds)
         }
     }
-}
-
-// TODO: Remove
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface WeightUnitServiceEntryPoint {
-    fun weightUnitService(): WeightUnitServiceImpl
-}
-
-@Composable
-fun provideWeightUnitService(): WeightUnitServiceImpl {
-    val hiltEntryPoint =
-        EntryPointAccessors.fromApplication(LocalContext.current, WeightUnitServiceEntryPoint::class.java)
-    return hiltEntryPoint.weightUnitService()
 }
