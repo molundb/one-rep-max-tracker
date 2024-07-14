@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class NavViewModel @Inject constructor(
     navigationService: NavigationService,
-    private val weightUnitService: WeightUnitService,
+    private val weightUnitService: WeightUnitServiceImpl,
 ) : ViewModel() {
     val controller = navigationService.navController
 

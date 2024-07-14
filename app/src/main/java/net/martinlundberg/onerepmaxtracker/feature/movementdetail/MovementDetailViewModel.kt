@@ -18,7 +18,7 @@ import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import java.time.OffsetDateTime
 import javax.inject.Inject
 

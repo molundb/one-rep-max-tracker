@@ -15,7 +15,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

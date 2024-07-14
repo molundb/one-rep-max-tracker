@@ -67,9 +67,9 @@ import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePi
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.kilosToPounds
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.weightWithUnit
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.kilosToPounds
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.toStringWithoutTrailingZero
 import java.time.OffsetDateTime
 import java.time.ZoneOffset

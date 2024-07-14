@@ -23,17 +23,23 @@ import java.util.EnumMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface AnalyticsService {
+    val analyticsEnabledFlow: StateFlow<Boolean>
+
+    suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean)
+}
+
 @Singleton
-class AnalyticsService @Inject constructor(
+class AnalyticsServiceImpl @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-) {
+) : AnalyticsService {
     private val scope = MainScope()
 
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
     private val firebaseCrashlytics: FirebaseCrashlytics = Firebase.crashlytics
 
     private val _analyticsEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val analyticsEnabledFlow: StateFlow<Boolean> = _analyticsEnabled.asStateFlow()
+    override val analyticsEnabledFlow: StateFlow<Boolean> = _analyticsEnabled.asStateFlow()
 
     init {
         scope.launch {
@@ -73,6 +79,6 @@ class AnalyticsService @Inject constructor(
         }
     }
 
-    suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) =
+    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) =
         dataStorePreferences.storeAnalyticsCollectionEnabled(isEnabled)
 }

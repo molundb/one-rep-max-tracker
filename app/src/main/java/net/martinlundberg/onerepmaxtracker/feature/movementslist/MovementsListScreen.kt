@@ -68,8 +68,8 @@ import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUi
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.weightWithUnit
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 @Composable
 fun MovementsListRoute(

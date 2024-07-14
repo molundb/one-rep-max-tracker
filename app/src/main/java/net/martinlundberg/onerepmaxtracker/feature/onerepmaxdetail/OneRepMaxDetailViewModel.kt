@@ -14,7 +14,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel

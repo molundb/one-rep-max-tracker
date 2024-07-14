@@ -35,7 +35,7 @@ import androidx.navigation.navArgument
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
 

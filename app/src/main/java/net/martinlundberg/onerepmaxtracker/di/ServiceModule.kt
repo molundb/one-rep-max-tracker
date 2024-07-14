@@ -1,36 +1,30 @@
 package net.martinlundberg.onerepmaxtracker.di
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.AnalyticsService
+import net.martinlundberg.onerepmaxtracker.AnalyticsServiceImpl
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.ClockServiceImpl
-import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ServiceModule {
+abstract class ServiceModule {
 
-    // TODO: Change to @Binds?
-    @Provides
+    @Binds
     @Singleton
-    fun provideWeightUnitService(dataStorePreferences: DataStorePreferences): WeightUnitService {
-        return WeightUnitService(dataStorePreferences)
-    }
+    abstract fun provideWeightUnitService(weightUnitService: WeightUnitServiceImpl): WeightUnitService
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideAnalyticsService(dataStorePreferences: DataStorePreferences): AnalyticsService {
-        return AnalyticsService(dataStorePreferences)
-    }
+    abstract fun provideAnalyticsService(analyticsService: AnalyticsServiceImpl): AnalyticsService
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideClockService(): ClockService {
-        return ClockServiceImpl()
-    }
+    abstract fun provideClockService(clockServiceImpl: ClockServiceImpl): ClockService
 }

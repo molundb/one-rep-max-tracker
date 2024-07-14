@@ -14,17 +14,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface WeightUnitService {
+    val weightUnitFlow: StateFlow<WeightUnit>
+
+    suspend fun setWeightUnit(isPounds: Boolean)
+}
+
 @Singleton
-class WeightUnitService @Inject constructor(
+class WeightUnitServiceImpl @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-) {
+) : WeightUnitService {
     private val scope = MainScope()
 
     private val _weightUnitFlow: MutableStateFlow<WeightUnit> = MutableStateFlow(WeightUnit.KILOGRAMS)
-    val weightUnitFlow: StateFlow<WeightUnit> = _weightUnitFlow.asStateFlow()
+    override val weightUnitFlow: StateFlow<WeightUnit> = _weightUnitFlow.asStateFlow()
 
     init {
         scope.launch {
@@ -38,7 +45,7 @@ class WeightUnitService @Inject constructor(
         }
     }
 
-    suspend fun setWeightUnit(isPounds: Boolean) = dataStorePreferences.storeWeightUnit(isPounds)
+    override suspend fun setWeightUnit(isPounds: Boolean) = dataStorePreferences.storeWeightUnit(isPounds)
 
     companion object {
         private const val KILOS_TO_POUNDS_RATIO = 2.205f
@@ -78,14 +85,15 @@ class WeightUnitService @Inject constructor(
     }
 }
 
+// TODO: Remove
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface WeightUnitServiceEntryPoint {
-    fun weightUnitService(): WeightUnitService
+    fun weightUnitService(): WeightUnitServiceImpl
 }
 
 @Composable
-fun provideWeightUnitService(): WeightUnitService {
+fun provideWeightUnitService(): WeightUnitServiceImpl {
     val hiltEntryPoint =
         EntryPointAccessors.fromApplication(LocalContext.current, WeightUnitServiceEntryPoint::class.java)
     return hiltEntryPoint.weightUnitService()

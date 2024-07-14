@@ -45,8 +45,8 @@ import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDeta
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.weightWithUnit
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
