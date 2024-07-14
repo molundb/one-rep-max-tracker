@@ -37,6 +37,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 2f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = true,
                 )
             )
         }
@@ -57,6 +58,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 2f)
                     ),
                     weightUnit = WeightUnit.POUNDS,
+                    isAnalyticsEnabled = true,
                 )
             )
         }
@@ -79,6 +81,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -105,6 +108,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(),
                     weightUnit = WeightUnit.POUNDS,
+                    isAnalyticsEnabled = false,
                 )
             )
         }
@@ -124,6 +128,7 @@ class MovementsListScreenTest {
                 movementsListUiState = MovementsListUiState.Success(
                     listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -154,6 +159,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = true,
                 ),
                 onMovementClick = { _, _ -> onMovementClickCalled = true }
             )
@@ -177,6 +183,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
@@ -200,6 +207,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
@@ -224,6 +232,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
@@ -254,6 +263,7 @@ class MovementsListScreenTest {
                         )
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = true,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
             )
@@ -280,6 +290,7 @@ class MovementsListScreenTest {
                         Movement(id = 2, name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
@@ -304,6 +315,7 @@ class MovementsListScreenTest {
                         Movement(name = "Test movement", weight = 3f)
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
                 ),
             )
         }
