@@ -12,7 +12,6 @@ plugins {
 android {
     namespace = "net.martinlundberg.onerepmaxtracker"
     compileSdk = 34
-    //ndkVersion = "26.1.10909125" // specify ndkVersion to make AS generate native-debug-symbol.zip https://stackoverflow.com/a/76582634/2225594
 
     defaultConfig {
         applicationId = "net.martinlundberg.onerepmaxtracker"
@@ -25,10 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        ndk {
-            debugSymbolLevel = "FULL"
-        }
     }
 
     buildTypes {
@@ -36,10 +31,6 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-//            firebaseCrashlytics {
-//                nativeSymbolUploadEnabled = true
-//                unstrippedNativeLibsDir = file("build/app/intermediates/merged_native_libs/release/out/lib")
-//            }
         }
     }
     compileOptions {
@@ -59,20 +50,7 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-//        jniLibs.keepDebugSymbols += "**.so"
     }
-
-//    externalNativeBuild {
-//        cmake {
-//            cppFlags = "-std=c++17"
-//        }
-//    }
-
-//    externalNativeBuild {
-//        cmake {
-//            version = "3.10.2.4988404"
-//        }
-//    }
 }
 
 dependencies {
