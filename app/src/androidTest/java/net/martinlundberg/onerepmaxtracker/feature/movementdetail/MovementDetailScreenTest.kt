@@ -1,5 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.feature.movementdetail
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -22,15 +23,18 @@ import org.junit.runner.RunWith
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.Locale
+import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
 class MovementDetailScreenTest {
 
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
     @Before
     fun setUp() {
         setLocalTo(Locale("en", "US"))
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     }
 
     private fun setLocalTo(testLocale: Locale) {
@@ -102,16 +106,23 @@ class MovementDetailScreenTest {
                         ),
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
-                )
+                ),
+                getRelativeDateString = {
+                    DateUtils.getRelativeTimeSpanString(
+                        it.toInstant().toEpochMilli(),
+                        OffsetDateTime.of(2023, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant().toEpochMilli(),
+                        DateUtils.MINUTE_IN_MILLIS,
+                    ).toString()
+                }
             )
         }
 
         composeTestRule.onNodeWithText("70 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("10 Jun 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Jun 10, 2024").assertIsDisplayed()
         composeTestRule.onNodeWithText("72 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("17 Jul 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Jul 17, 2024").assertIsDisplayed()
         composeTestRule.onNodeWithText("75 kg").assertIsDisplayed()
-        composeTestRule.onNodeWithText("28 Aug 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Aug 28, 2024").assertIsDisplayed()
     }
 
     @Test

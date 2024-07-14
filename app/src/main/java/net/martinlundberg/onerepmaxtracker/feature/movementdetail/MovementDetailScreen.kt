@@ -70,7 +70,6 @@ import net.martinlundberg.onerepmaxtracker.ui.theme.White
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.kilosToPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import net.martinlundberg.onerepmaxtracker.util.toStringWithoutTrailingZero
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -99,6 +98,7 @@ fun MovementDetailRoute(
         addResult = movementDetailViewModel::addResult,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
+        getRelativeDateString = movementDetailViewModel::getRelativeDateString,
     )
 }
 
@@ -113,6 +113,7 @@ fun MovementDetailScreen(
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
+    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
@@ -184,6 +185,7 @@ fun MovementDetailScreen(
                                     result = result,
                                     weightUnit = movementDetailUiState.weightUnit,
                                     onOneRepMaxClick = { resultToEdit = result },
+                                    getRelativeDateString = getRelativeDateString,
                                 )
                             }
                         }
@@ -281,6 +283,7 @@ fun ResultCard(
     result: Result,
     weightUnit: WeightUnit,
     onOneRepMaxClick: (Result) -> Unit = { },
+    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     val context = LocalContext.current
     Card(
@@ -303,7 +306,7 @@ fun ResultCard(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = result.offsetDateTime.getRelativeDateString(),
+                text = getRelativeDateString(result.offsetDateTime),
                 style = MaterialTheme.typography.titleMedium
             )
             Box(modifier = Modifier.width(8.dp))
