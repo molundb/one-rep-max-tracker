@@ -58,6 +58,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
@@ -99,6 +101,7 @@ fun MovementDetailRoute(
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
         getRelativeDateString = movementDetailViewModel::getRelativeDateString,
+        analyticsHelper = movementDetailViewModel.analyticsHelper
     )
 }
 
@@ -114,7 +117,10 @@ fun MovementDetailScreen(
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
     getRelativeDateString: (OffsetDateTime) -> String = { "" },
+    analyticsHelper: AnalyticsHelper? = null,
 ) {
+    analyticsHelper?.let { TrackScreenViewEvent(screenName = "MovementDetail", it) }
+
     var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.NavigationService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
@@ -28,6 +29,7 @@ class MovementDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
     private val clockService: ClockService,
+    val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
