@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker
+package net.martinlundberg.onerepmaxtracker.analytics
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics.ConsentStatus

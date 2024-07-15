@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import net.martinlundberg.onerepmaxtracker.AnalyticsServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
 import net.martinlundberg.onerepmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultMovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultResultRepository

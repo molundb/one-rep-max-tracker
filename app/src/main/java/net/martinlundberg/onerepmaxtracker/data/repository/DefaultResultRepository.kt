@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import net.martinlundberg.onerepmaxtracker.AnalyticsServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalModel
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovementDetail
