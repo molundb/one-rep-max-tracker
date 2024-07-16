@@ -5,9 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.Red
 import javax.inject.Inject
@@ -18,6 +21,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var analyticsService: AnalyticsServiceImpl
 
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -26,8 +32,12 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            OneRepMaxTrackerTheme {
-                Navigation()
+            CompositionLocalProvider(
+                LocalAnalyticsHelper provides analyticsHelper
+            ) {
+                OneRepMaxTrackerTheme {
+                    Navigation()
+                }
             }
         }
     }

@@ -62,7 +62,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Loading
@@ -93,7 +92,6 @@ fun MovementsListRoute(
         onEditMovementClick = movementsListViewModel::editMovement,
         onDeleteMovementClick = movementsListViewModel::deleteMovement,
         setAnalyticsCollectionEnabled = movementsListViewModel::setAnalyticsCollectionEnabled,
-        analyticsHelper = movementsListViewModel.analyticsHelper,
     )
 }
 
@@ -107,9 +105,8 @@ fun MovementsListScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
-    analyticsHelper: AnalyticsHelper? = null,
 ) {
-    analyticsHelper?.let { TrackScreenViewEvent(screenName = "MovementList", it) }
+    TrackScreenViewEvent(screenName = "MovementList")
 
     var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }

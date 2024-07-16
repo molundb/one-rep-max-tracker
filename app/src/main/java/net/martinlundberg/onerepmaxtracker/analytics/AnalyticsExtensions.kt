@@ -37,8 +37,7 @@ fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
 @Composable
 fun TrackScreenViewEvent(
     screenName: String,
-//    analyticsHelper: AnalyticsHelper = LocalAnalyticsHelper.current,
-    analyticsHelper: AnalyticsHelper,
+    analyticsHelper: AnalyticsHelper = LocalAnalyticsHelper.current,
 ) = DisposableEffect(Unit) {
     analyticsHelper.logScreenView(screenName)
     onDispose {}
