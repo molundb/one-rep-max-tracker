@@ -62,7 +62,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
+import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditMovementDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditMovementDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Success
@@ -103,7 +112,7 @@ fun MovementsListScreen(
     onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (Long) -> Unit = {},
+    onDeleteMovementClick: (Movement) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
@@ -142,6 +151,7 @@ fun MovementsListScreen(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                val analyticsHelper = LocalAnalyticsHelper.current
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
@@ -153,9 +163,11 @@ fun MovementsListScreen(
                                 weightUnit = movementsListUiState.weightUnit,
                                 onMovementClick = onMovementClick,
                                 onEditMovementClick = { movement ->
+                                    analyticsHelper.logMovementList_EditMovementClick(movement)
                                     movementToEdit = movement
                                 },
                                 onDeleteMovementClick = { movement ->
+                                    analyticsHelper.logMovementList_DeleteMovementClick(movement)
                                     movementToDelete = movement
                                 }
                             )
@@ -170,7 +182,10 @@ fun MovementsListScreen(
                                 contentDescription =
                                     context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                             },
-                        onClick = { showAddMovementDialog = true },
+                        onClick = {
+                            analyticsHelper.logAddMovementClick()
+                            showAddMovementDialog = true
+                        },
                     ) {
                         Text(
                             modifier = Modifier.padding(vertical = 8.dp),
@@ -196,7 +211,10 @@ fun MovementsListScreen(
                 if (showAddMovementDialog) {
                     AddMovementDialog(
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = { showAddMovementDialog = false },
+                        onDismissRequest = {
+                            analyticsHelper.logAddOrEditMovementDialog_Dismissed()
+                            showAddMovementDialog = false
+                        },
                         onConfirmation = { movement, weightUnit ->
                             onAddMovementClick(movement, weightUnit)
                             showAddMovementDialog = false
@@ -208,7 +226,10 @@ fun MovementsListScreen(
                     EditMovementDialog(
                         movement = movement,
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = { movementToEdit = null },
+                        onDismissRequest = {
+                            analyticsHelper.logAddOrEditMovementDialog_Dismissed(movement)
+                            movementToEdit = null
+                        },
                         onConfirmation = { editedMovement, _ ->
                             onEditMovementClick(editedMovement)
                             movementToEdit = null
@@ -218,10 +239,14 @@ fun MovementsListScreen(
 
                 movementToDelete?.let { movement ->
                     DeleteMovementConfirmDialog(
+                        movementId = movement.id,
                         movementName = movement.name,
-                        onDismissRequest = { movementToDelete = null },
+                        onDismissRequest = {
+                            analyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movement)
+                            movementToDelete = null
+                        },
                         onConfirmation = {
-                            onDeleteMovementClick(movement.id)
+                            onDeleteMovementClick(movement)
                             movementToDelete = null
                         }
                     )
@@ -245,12 +270,14 @@ fun MovementCard(
     val view = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+    val analyticsHelper = LocalAnalyticsHelper.current
 
     Card(
         modifier = modifier
             .combinedClickable(
                 onClick = { onMovementClick(movement, lifecycleOwner.lifecycle.currentState) },
                 onLongClick = {
+                    analyticsHelper.logMovementList_MovementLongClick(movement)
                     view.performHapticFeedback(
                         HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                     )
@@ -349,10 +376,13 @@ fun MovementDropDownMenu(
 
 @Composable
 fun DeleteMovementConfirmDialog(
+    movementId: Long,
     movementName: String,
     onDismissRequest: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
@@ -392,7 +422,10 @@ fun DeleteMovementConfirmDialog(
                 ) {
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
-                        onClick = { onDismissRequest() },
+                        onClick = {
+                            analyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId)
+                            onDismissRequest()
+                        },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Black,
                         ),
@@ -454,6 +487,8 @@ private fun AddOrEditMovementDialog(
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
     var movementWeightText by remember { mutableStateOf(weightInitialValue) }
@@ -527,7 +562,10 @@ private fun AddOrEditMovementDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp),
-                        onClick = { onDismissRequest() },
+                        onClick = {
+                            analyticsHelper.logAddOrEditMovementDialog_CancelClick(movement)
+                            onDismissRequest()
+                        },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Black,
                         ),
@@ -645,6 +683,6 @@ private fun EditMovementDialogPreview() {
 @Composable
 private fun DeleteMovementConfirmDialogPreview() {
     OneRepMaxTrackerTheme {
-        DeleteMovementConfirmDialog(movementName = "Movement 1")
+        DeleteMovementConfirmDialog(movementId = 2, movementName = "Movement 1")
     }
 }

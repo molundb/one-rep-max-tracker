@@ -266,6 +266,7 @@ fun MovementDetailScreen(
 
                     if (showDeleteMovementConfirmDialog) {
                         DeleteMovementConfirmDialog(
+                            movementId = movementId,
                             movementName = movementName,
                             onDismissRequest = { showDeleteMovementConfirmDialog = false },
                             onConfirmation = {

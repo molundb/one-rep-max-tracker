@@ -9,6 +9,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
+import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_DeleteClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
@@ -23,6 +28,7 @@ import javax.inject.Inject
 class MovementsListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
+    private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
@@ -42,6 +48,7 @@ class MovementsListViewModel @Inject constructor(
     }
 
     fun addMovement(movement: Movement, weightUnit: WeightUnit) {
+        analyticsHelper.logAddMovement(movement)
         viewModelScope.launch {
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
@@ -58,18 +65,21 @@ class MovementsListViewModel @Inject constructor(
     }
 
     fun editMovement(movement: Movement) {
+        analyticsHelper.logEditMovement(movement)
         viewModelScope.launch {
             movementsRepository.setMovement(movement)
         }
     }
 
-    fun deleteMovement(id: Long) {
+    fun deleteMovement(movement: Movement) {
+        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movement)
         viewModelScope.launch {
-            movementsRepository.deleteMovement(id)
+            movementsRepository.deleteMovement(movement.id)
         }
     }
 
     fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
+        analyticsHelper.logAnalyticsEnabledToggled(isEnabled)
         viewModelScope.launch {
             resultRepository.setAnalyticsCollectionEnabled(isEnabled)
         }

@@ -5,6 +5,8 @@ import androidx.compose.runtime.DisposableEffect
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.Param
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.ParamKeys
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.Types
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
+import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 fun AnalyticsHelper.logScreenView(screenName: String) {
@@ -18,6 +20,141 @@ fun AnalyticsHelper.logScreenView(screenName: String) {
     )
 }
 
+fun AnalyticsHelper.logMovementList_MovementClick(movement: Movement) {
+    val type = "movement_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementList_MovementLongClick(movement: Movement) {
+    val type = "movement_long_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementList_EditMovementClick(movement: Movement) {
+    val type = "movement_edit_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementList_DeleteMovementClick(movement: Movement) {
+    val type = "movement_delete_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movement: Movement) {
+    val type = "delete_movement_confirm_dialog_delete_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long) {
+    val type = "delete_movement_confirm_dialog_cancel_click"
+    val paramKeyId = "movement_id"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = movementId.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movement: Movement) {
+    val type = "delete_movement_confirm_dialog_dismissed"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+// TODO: Track Text Field focused?
+
+fun AnalyticsHelper.logAddMovement(movement: Movement) {
+    val type = "add_movement"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logEditMovement(movement: Movement) {
+    val type = "edit_movement"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddOrEditMovementDialog_CancelClick(movement: Movement) {
+    val type = "add_or_edit_movement_dialog_cancel_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddOrEditMovementDialog_Dismissed(movement: Movement? = null) {
+    val type = "add_or_edit_movement_dialog_dismissed"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = movement?.let {
+                createMovementParams(it)
+            } ?: emptyList()
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddMovementClick() {
+    val type = "add_movement_click"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+        )
+    )
+}
+
 fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
     val type = "weight_unit_toggled"
     val paramKey = "weight_unit"
@@ -25,10 +162,175 @@ fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
         AnalyticsEvent(
             type = type,
             extras = listOf(
-                Param(key = paramKey, value = weightUnit.toString())
+                Param(key = paramKey, value = weightUnit.toString()),
             )
         )
     )
+}
+
+fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
+    val type = "analytics_enabled_toggled"
+    val paramKey = "analytics_enabled"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKey, value = isEnabled.toString()),
+            )
+        )
+    )
+}
+
+// MovementDetailScreen
+
+fun AnalyticsHelper.logMovementDetail_NavBackClick() {
+    val type = "nav_back_click"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
+    val type = "result_click"
+    val paramKeyId = "result_id"
+    val paramKeyName = "movement_id"
+    val paramKeyWeight = "result_weight"
+    val paramKeyDateTime = "result_date_time"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = result.id.toString()),
+                Param(key = paramKeyName, value = result.movementId.toString()),
+                Param(key = paramKeyWeight, value = result.weight.toString()),
+                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddResultDialog_CancelClick(result: Result) {
+    val type = "add_result_dialog_cancel_click"
+    val paramKeyId = "result_id"
+    val paramKeyName = "movement_id"
+    val paramKeyWeight = "result_weight"
+    val paramKeyDateTime = "result_date_time"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = result.id.toString()),
+                Param(key = paramKeyName, value = result.movementId.toString()),
+                Param(key = paramKeyWeight, value = result.weight.toString()),
+                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddResultDialog_AddClick(result: Result) {
+    val type = "add_result_dialog_add_click"
+    val paramKeyId = "result_id"
+    val paramKeyName = "movement_id"
+    val paramKeyWeight = "result_weight"
+    val paramKeyDateTime = "result_date_time"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = result.id.toString()),
+                Param(key = paramKeyName, value = result.movementId.toString()),
+                Param(key = paramKeyWeight, value = result.weight.toString()),
+                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddResultDialog_Dismissed(result: Result) {
+    val type = "add_result_dialog_dismissed"
+    val paramKeyId = "result_id"
+    val paramKeyName = "movement_id"
+    val paramKeyWeight = "result_weight"
+    val paramKeyDateTime = "result_date_time"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = result.id.toString()),
+                Param(key = paramKeyName, value = result.movementId.toString()),
+                Param(key = paramKeyWeight, value = result.weight.toString()),
+                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logAddResultDialog_DeleteResultClick(result: Result) {
+    val type = "add_result_dialog_delete_result_click"
+    val paramKeyId = "result_id"
+    val paramKeyName = "movement_id"
+    val paramKeyWeight = "result_weight"
+    val paramKeyDateTime = "result_date_time"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = result.id.toString()),
+                Param(key = paramKeyName, value = result.movementId.toString()),
+                Param(key = paramKeyWeight, value = result.weight.toString()),
+                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementDetail_DeleteMovementClick(movement: Movement) {
+    val type = "delete_movement_click"
+    val paramKeyId = "movement_id"
+    val paramKeyName = "movement_name"
+    val paramKeyWeight = "movement_weight"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = movement.id.toString()),
+                Param(key = paramKeyName, value = movement.name),
+                Param(key = paramKeyWeight, value = movement.weight?.toString() ?: "-"),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementDetail_AddResultClick(movement: Movement) {
+    val type = "add_result_click"
+    val paramKeyId = "movement_id"
+    val paramKeyName = "movement_name"
+    val paramKeyWeight = "movement_weight"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = movement.id.toString()),
+                Param(key = paramKeyName, value = movement.name),
+                Param(key = paramKeyWeight, value = movement.weight?.toString() ?: "-"),
+            )
+        )
+    )
+}
+
+private fun createMovementParams(movement: Movement): List<Param> {
+    val paramKeyId = "movement_id"
+    val paramKeyName = "movement_name"
+    val paramKeyWeight = "movement_weight"
+    val extras = listOf(
+        Param(key = paramKeyId, value = movement.id.toString()),
+        Param(key = paramKeyName, value = movement.name),
+        Param(key = paramKeyWeight, value = movement.weight?.toString() ?: "-"),
+    )
+    return extras
 }
 
 /**

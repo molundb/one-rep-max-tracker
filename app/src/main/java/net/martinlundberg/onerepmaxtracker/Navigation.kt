@@ -32,6 +32,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListRoute
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
@@ -58,7 +59,11 @@ fun Navigation(
         weightUnit = weightUnit,
         setWeightUnit = navViewModel::setWeightUnit,
     ) { innerPadding ->
-        NavigationHost(navViewModel.controller, innerPadding)
+        NavigationHost(
+            navController = navViewModel.controller,
+            innerPadding = innerPadding,
+            navigateToDetail = navViewModel::navigateToDetail,
+        )
     }
 }
 
@@ -107,6 +112,7 @@ fun DefaultScaffold(
 private fun NavigationHost(
     navController: NavHostController,
     innerPadding: PaddingValues,
+    navigateToDetail: (Movement, Lifecycle.State, String) -> Unit = { _, _, _ -> },
 ) {
     NavHost(
         navController = navController,
@@ -120,9 +126,7 @@ private fun NavigationHost(
             MovementsListRoute(
                 innerPadding = innerPadding,
                 onMovementClick = { movement, lifeCycleState ->
-                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
-                        navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
-                    }
+                    navigateToDetail(movement, lifeCycleState, "$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
                 },
             )
         }
