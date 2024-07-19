@@ -77,6 +77,7 @@ dependencies {
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.crashlytics)
     implementation(libs.google.firebase.analytics)
+    implementation("androidx.core:core-splashscreen:1.0.0")
     ksp(libs.androidx.room.compiler)
     ksp(libs.google.dagger.hilt.android.compiler)
     testImplementation(libs.junit)
