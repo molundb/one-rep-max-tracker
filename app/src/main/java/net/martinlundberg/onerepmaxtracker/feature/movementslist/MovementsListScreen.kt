@@ -499,7 +499,7 @@ private fun AddOrEditMovementDialog(
     onDismissRequest: (Movement) -> Unit = {},
     onCancel: (Movement) -> Unit = {},
     onConfirm: (Movement) -> Unit = { },
-    onDelete: (Movement) -> Unit = {},
+    onDelete: ((Movement) -> Unit)? = null,
 ) {
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
@@ -620,7 +620,7 @@ private fun AddOrEditMovementDialog(
                     }
                 }
                 Box(modifier = Modifier.height(24.dp))
-                if (onDelete != {}) {
+                if (onDelete != null) {
                     TextButton(
                         modifier = Modifier
                             .fillMaxWidth()

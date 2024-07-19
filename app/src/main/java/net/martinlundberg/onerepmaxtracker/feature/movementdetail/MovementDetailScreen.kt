@@ -482,7 +482,7 @@ fun AddOrEditResultDialog(
     onDismissRequest: (Result) -> Unit = {},
     onConfirm: (Result) -> Unit = {},
     onCancel: (Result) -> Unit = {},
-    onDelete: (Result) -> Unit = {},
+    onDelete: ((Result) -> Unit)? = null,
 ) {
     val weightInitialValue = if (result.weight == 0f) {
         ""
@@ -611,7 +611,7 @@ fun AddOrEditResultDialog(
                     }
                 }
                 Box(modifier = Modifier.height(24.dp))
-                if (onDelete != {}) {
+                if (onDelete != null) {
                     TextButton(
                         modifier = Modifier
                             .fillMaxWidth()
