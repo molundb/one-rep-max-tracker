@@ -250,6 +250,7 @@ private fun OneRepMaxDetailScreenSuccessPreview() {
                     movementId = 15,
                     weight = 100.5f,
                     offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+                    comment = "Bring it on!",
                 ),
                 weightUnit = WeightUnit.KILOGRAMS,
             ),

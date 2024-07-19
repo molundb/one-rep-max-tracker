@@ -56,6 +56,7 @@
     <string name="movement_detail_screen_add_or_edit_result_dialog_weight_label">Weight (%1$s)</string>
     <string name="movement_detail_screen_add_or_edit_result_dialog_weight_field_content_description">Weight text field</string>
     <string name="movement_detail_screen_add_or_edit_result_dialog_date_label">Date</string>
+    <string name="movement_detail_screen_add_or_edit_result_dialog_comment_label">Comment</string>
 
     <!-- Delete Confirm Dialog -->
     <string name="confirm_dialog_are_you_sure">Are you sure you want to delete:</string>

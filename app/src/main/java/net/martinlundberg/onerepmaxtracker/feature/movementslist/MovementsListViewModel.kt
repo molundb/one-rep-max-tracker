@@ -57,6 +57,7 @@ class MovementsListViewModel @Inject constructor(
                         weight = it,
                         offsetDateTime = OffsetDateTime.now(),
                         movementId = movementId,
+                        comment = "",
                     ),
                     weightUnit = weightUnit,
                 )

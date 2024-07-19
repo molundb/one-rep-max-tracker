@@ -63,12 +63,7 @@ class MovementDetailViewModel @Inject constructor(
     fun addResult(result: Result, weightUnit: WeightUnit) {
         viewModelScope.launch {
             resultRepository.addResult(
-                Result(
-                    id = result.id,
-                    weight = result.weight,
-                    offsetDateTime = result.offsetDateTime,
-                    movementId = result.movementId,
-                ),
+                result = result,
                 weightUnit = weightUnit,
             )
         }

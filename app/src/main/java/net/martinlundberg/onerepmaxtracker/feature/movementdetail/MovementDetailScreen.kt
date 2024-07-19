@@ -276,7 +276,8 @@ fun MovementDetailScreen(
                             result = Result(
                                 movementId = movementId,
                                 weight = 0f,
-                                offsetDateTime = OffsetDateTime.now()
+                                offsetDateTime = OffsetDateTime.now(),
+                                comment = "",
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = {
@@ -535,12 +536,12 @@ fun AddOrEditResultDialog(
         )
     }
     var date by remember { mutableStateOf(result.offsetDateTime) }
+    var commentText by remember { mutableStateOf(result.comment) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val analyticsHelper = LocalAnalyticsHelper.current
 
     Dialog(onDismissRequest = {
-        onDismissRequest(createResultOfInput(result, weightText, date))
+        onDismissRequest(createResultOfInput(result, weightText, date, commentText))
     }) {
         val focusRequester = remember { FocusRequester() }
         Card(
@@ -598,6 +599,20 @@ fun AddOrEditResultDialog(
                     },
                 )
                 Box(modifier = Modifier.height(24.dp))
+                Text(
+                    stringResource(R.string.movement_detail_screen_add_or_edit_result_dialog_comment_label),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Box(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = commentText,
+                    onValueChange = { commentText = it },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                    maxLines = 10,
+                )
+                Box(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -606,7 +621,7 @@ fun AddOrEditResultDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            val editedResult = createResultOfInput(result, weightText, date)
+                            val editedResult = createResultOfInput(result, weightText, date, commentText)
 
                             onCancel(editedResult)
                         },
@@ -623,7 +638,7 @@ fun AddOrEditResultDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            val editedResult = createResultOfInput(result, weightText, date)
+                            val editedResult = createResultOfInput(result, weightText, date, commentText)
                             onConfirm(editedResult)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
@@ -649,7 +664,7 @@ fun AddOrEditResultDialog(
                             .fillMaxWidth()
                             .height(40.dp),
                         onClick = {
-                            val editedResult = createResultOfInput(result, weightText, date)
+                            val editedResult = createResultOfInput(result, weightText, date, commentText)
                             onDelete(editedResult)
                         },
                     ) {
@@ -668,11 +683,13 @@ private fun createResultOfInput(
     result: Result,
     weightText: TextFieldValue,
     date: OffsetDateTime,
+    commentText: String,
 ) = Result(
     id = result.id,
     movementId = result.movementId,
     weight = weightText.text.toFloat(),
     offsetDateTime = date,
+    comment = commentText
 )
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -705,19 +722,22 @@ private fun MovementDetailScreenSuccessPreview() {
                                 id = 80,
                                 movementId = 18,
                                 weight = 15.5f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "This is a nice comment",
                             ),
                             Result(
                                 id = 75,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "Happiness comes from within",
                             ),
                             Result(
                                 id = 70,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "You are the universe experiencing itself",
                             ),
                         )
                     ),
@@ -736,7 +756,10 @@ private fun AddResultDialogEnabledPreview() {
             result = Result(
                 movementId = 3,
                 weight = 55f,
-                offsetDateTime = OffsetDateTime.now()
+                offsetDateTime = OffsetDateTime.now(),
+                comment = "Hey there. This is a longer comment testing what happens if there is a lot of text.\n\n" +
+                          "Hey there. This is a longer comment testing what happens if there is a lot of text.\n\n" +
+                          "Hey there. This is a longer comment testing what happens if there is a lot of text.",
             ),
             weightUnit = WeightUnit.KILOGRAMS,
         )
@@ -751,7 +774,8 @@ private fun AddResultDialogDisabledPreview() {
             result = Result(
                 movementId = 1,
                 weight = 0f,
-                offsetDateTime = OffsetDateTime.now()
+                offsetDateTime = OffsetDateTime.now(),
+                comment = "",
             ),
             weightUnit = WeightUnit.POUNDS,
         )
@@ -766,7 +790,8 @@ private fun EditResultDialogEnabledPreview() {
             result = Result(
                 movementId = 2,
                 weight = 5f,
-                offsetDateTime = OffsetDateTime.now()
+                offsetDateTime = OffsetDateTime.now(),
+                comment = "Not much",
             ),
             weightUnit = WeightUnit.POUNDS,
         )

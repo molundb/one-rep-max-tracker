@@ -8,6 +8,7 @@ data class Result(
     val movementId: Long,
     val weight: Float,
     val offsetDateTime: OffsetDateTime,
+    val comment: String,
 )
 
 fun Result.asEntity() =
@@ -16,4 +17,5 @@ fun Result.asEntity() =
         movementId = movementId,
         weightInKilos = weight,
         date = offsetDateTime,
+        comment = comment,
     )

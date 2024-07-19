@@ -11,6 +11,7 @@ data class ResultEntity(
     val movementId: Long,
     val weightInKilos: Float,
     val date: OffsetDateTime,
+    val comment: String,
 )
 
 fun ResultEntity.asExternalModel() = Result(
@@ -18,4 +19,5 @@ fun ResultEntity.asExternalModel() = Result(
     movementId = movementId,
     weight = weightInKilos,
     offsetDateTime = date,
+    comment = comment,
 )
