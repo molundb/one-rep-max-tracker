@@ -6,4 +6,5 @@ package net.martinlundberg.onerepmaxtracker.analytics
  */
 interface AnalyticsHelper {
     fun logEvent(event: AnalyticsEvent)
+    fun setWeightUnitAsUserProperty(weightUnit: String)
 }

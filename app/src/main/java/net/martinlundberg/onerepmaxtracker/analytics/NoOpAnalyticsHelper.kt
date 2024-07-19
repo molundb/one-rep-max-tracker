@@ -5,4 +5,5 @@ package net.martinlundberg.onerepmaxtracker.analytics
  */
 class NoOpAnalyticsHelper : AnalyticsHelper {
     override fun logEvent(event: AnalyticsEvent) = Unit
+    override fun setWeightUnitAsUserProperty(weightUnit: String) = Unit
 }

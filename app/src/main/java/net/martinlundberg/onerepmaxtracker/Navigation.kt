@@ -55,6 +55,8 @@ fun Navigation(
 ) {
     val weightUnit by navViewModel.weightUnitFlow.collectAsState()
 
+    navViewModel.setWeightUnitAsUserProperty(weightUnit)
+
     DefaultScaffold(
         weightUnit = weightUnit,
         setWeightUnit = navViewModel::setWeightUnit,

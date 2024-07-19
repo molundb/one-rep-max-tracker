@@ -29,9 +29,12 @@ class NavViewModel @Inject constructor(
             weightUnitService.setWeightUnit(isPounds)
         }
 
-        // TODO: Should this be done in repository?
-        analyticsHelper.logWeightUnitToggled(if (isPounds) WeightUnit.POUNDS else WeightUnit.KILOGRAMS)
+        val weightUnit = if (isPounds) WeightUnit.POUNDS else WeightUnit.KILOGRAMS
+        analyticsHelper.logWeightUnitToggled(weightUnit)
     }
+
+    fun setWeightUnitAsUserProperty(weightUnit: WeightUnit) =
+        analyticsHelper.setWeightUnitAsUserProperty(weightUnit.toString())
 
     fun navigateToDetail(movement: Movement, lifeCycleState: Lifecycle.State, route: String) {
         analyticsHelper.logMovementList_MovementClick(movement)

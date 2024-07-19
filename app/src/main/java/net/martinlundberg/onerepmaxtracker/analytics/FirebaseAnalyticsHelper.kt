@@ -19,4 +19,8 @@ class FirebaseAnalyticsHelper @Inject constructor(
             }
         }
     }
+
+    override fun setWeightUnitAsUserProperty(weightUnit: String) {
+        firebaseAnalytics.setUserProperty("weight_unit", weightUnit)
+    }
 }
