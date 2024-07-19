@@ -71,10 +71,10 @@ class MovementsListViewModel @Inject constructor(
         }
     }
 
-    fun deleteMovement(movement: Movement) {
-        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movement)
+    fun deleteMovement(movementId: Long) {
+        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movementId)
         viewModelScope.launch {
-            movementsRepository.deleteMovement(movement.id)
+            movementsRepository.deleteMovement(movementId)
         }
     }
 

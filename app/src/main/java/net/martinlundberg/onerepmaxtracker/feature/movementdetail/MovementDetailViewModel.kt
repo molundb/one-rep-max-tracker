@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.NavigationService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_DeleteClick
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
@@ -28,6 +31,7 @@ class MovementDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
     private val clockService: ClockService,
+    private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
@@ -62,6 +66,8 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun deleteMovement(id: Long) {
+        // TODO: Move to repo and rename?
+        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(id)
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
             navigationService.navController.popBackStack()
@@ -69,6 +75,8 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun deleteResult(id: Long) {
+        // TODO: Move to repo and rename?
+        analyticsHelper.logDeleteResult(id)
         viewModelScope.launch {
             resultRepository.deleteResult(id)
         }

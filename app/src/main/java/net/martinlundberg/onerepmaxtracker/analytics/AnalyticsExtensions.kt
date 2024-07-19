@@ -64,13 +64,15 @@ fun AnalyticsHelper.logMovementList_DeleteMovementClick(movement: Movement) {
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movement: Movement) {
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movementId: Long) {
     val type = "delete_movement_confirm_dialog_delete_click"
-    val extras = createMovementParams(movement)
+    val paramKeyId = "movement_id"
     logEvent(
         AnalyticsEvent(
             type = type,
-            extras = extras,
+            extras = listOf(
+                Param(key = paramKeyId, value = movementId.toString()),
+            ),
         )
     )
 }
@@ -88,13 +90,15 @@ fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long)
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movement: Movement) {
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
     val type = "delete_movement_confirm_dialog_dismissed"
-    val extras = createMovementParams(movement)
+    val paramKeyId = "movement_id"
     logEvent(
         AnalyticsEvent(
             type = type,
-            extras = extras,
+            extras = listOf(
+                Param(key = paramKeyId, value = movementId.toString()),
+            )
         )
     )
 }
@@ -289,20 +293,53 @@ fun AnalyticsHelper.logAddOrEditResultDialog_Dismissed(result: Result) {
     )
 }
 
-fun AnalyticsHelper.logAddOrEditResultDialog_DeleteResultClick(result: Result) {
+fun AnalyticsHelper.logAddOrEditResultDialog_DeleteResultClick(resultId: Long) {
     val type = "add_or_edit_result_dialog_delete_result_click"
     val paramKeyId = "result_id"
-    val paramKeyName = "movement_id"
-    val paramKeyWeight = "result_weight"
-    val paramKeyDateTime = "result_date_time"
     logEvent(
         AnalyticsEvent(
             type = type,
             extras = listOf(
-                Param(key = paramKeyId, value = result.id.toString()),
-                Param(key = paramKeyName, value = result.movementId.toString()),
-                Param(key = paramKeyWeight, value = result.weight.toString()),
-                Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+                Param(key = paramKeyId, value = resultId.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
+    val type = "delete_result_confirm_dialog_cancel_click"
+    val paramKeyId = "result_id"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = resultId.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId: Long) {
+    val type = "delete_result_confirm_dialog_dismissed"
+    val paramKeyId = "result_id"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = resultId.toString()),
+            )
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteResult(resultId: Long) {
+    val type = "delete_result"
+    val paramKeyId = "result_id"
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = listOf(
+                Param(key = paramKeyId, value = resultId.toString()),
             )
         )
     )

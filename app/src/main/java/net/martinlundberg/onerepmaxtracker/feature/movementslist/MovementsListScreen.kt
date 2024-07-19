@@ -78,6 +78,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLon
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
@@ -115,7 +116,7 @@ fun MovementsListScreen(
     onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (Movement) -> Unit = {},
+    onDeleteMovementClick: (Long) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
@@ -266,11 +267,13 @@ fun MovementsListScreen(
                         movementId = movement.id,
                         movementName = movement.name,
                         onDismissRequest = {
-                            analyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movement)
+                            movementToDelete = null
+                        },
+                        onCancel = {
                             movementToDelete = null
                         },
                         onConfirmation = {
-                            onDeleteMovementClick(movement)
+                            onDeleteMovementClick(movement.id)
                             movementToDelete = null
                         }
                     )
@@ -403,74 +406,24 @@ fun DeleteMovementConfirmDialog(
     movementId: Long,
     movementName: String,
     onDismissRequest: () -> Unit = {},
+    onCancel: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
     val analyticsHelper = LocalAnalyticsHelper.current
-
-    Dialog(
-        onDismissRequest = { onDismissRequest() }
-    ) {
-        val context = LocalContext.current
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(224.dp)
-                .semantics {
-                    contentDescription =
-                        context.getString(R.string.movement_list_screen_delete_movement_confirm_dialog_content_description)
-                },
-            shape = RoundedCornerShape(4.dp),
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(all = 16.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_title),
-                    style = MaterialTheme.typography.headlineLarge,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_are_you_sure),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Box(modifier = Modifier.height(12.dp))
-                Text(
-                    text = movementName,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    OutlinedButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            analyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId)
-                            onDismissRequest()
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Black,
-                        ),
-                    ) {
-                        Text(stringResource(R.string.cancel))
-                    }
-                    Box(modifier = Modifier.width(32.dp))
-                    OutlinedButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { onConfirmation() },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.White,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        ),
-                    ) {
-                        Text(stringResource(R.string.movement_list_screen_delete_movement_confirm_dialog_confirm_button))
-                    }
-                }
-            }
-        }
-    }
+    ConfirmDeletionDialog(
+        title = stringResource(R.string.delete_movement_confirm_dialog_title),
+        movementName = movementName,
+        cardContentDescription = stringResource(R.string.delete_movement_confirm_dialog_content_description),
+        onDismissRequest = {
+            analyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId)
+            onDismissRequest()
+        },
+        onCancel = {
+            analyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId)
+            onCancel()
+        },
+        onConfirmation = onConfirmation,
+    )
 }
 
 @Composable
@@ -750,6 +703,9 @@ private fun EditMovementDialogDisabledPreview() {
 @Composable
 private fun DeleteMovementConfirmDialogPreview() {
     OneRepMaxTrackerTheme {
-        DeleteMovementConfirmDialog(movementId = 2, movementName = "Movement 1")
+        DeleteMovementConfirmDialog(
+            movementId = 5,
+            movementName = "Movement 1",
+        )
     }
 }

@@ -64,6 +64,8 @@ import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_Ad
 import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_DeleteResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_DeleteMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
@@ -73,6 +75,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
+import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
@@ -128,6 +131,7 @@ fun MovementDetailScreen(
     TrackScreenViewEvent(screenName = "MovementDetail")
 
     var resultToEdit by remember { mutableStateOf<Result?>(null) }
+    var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -218,7 +222,7 @@ fun MovementDetailScreen(
                                 .width(120.dp)
                                 .semantics {
                                     contentDescription =
-                                        context.getString(R.string.movement_detail_screen_delete_result_button_content_description)
+                                        context.getString(R.string.movement_detail_screen_delete_movement_button_content_description)
                                 },
                             onClick = {
                                 analyticsHelper.logMovementDetail_DeleteMovementClick(movementId, movementName)
@@ -281,10 +285,27 @@ fun MovementDetailScreen(
                                 addResult(result, movementDetailUiState.weightUnit)
                                 resultToEdit = null
                             },
-                            onDeleteClicked = { resultId ->
-                                onDeleteResultClick(resultId)
+                            onDeleteClicked = { result ->
+                                resultToDelete = result
                                 resultToEdit = null
                             },
+                        )
+                    }
+
+                    resultToDelete?.let { result ->
+                        DeleteResultConfirmDialog(
+                            resultId = result.id,
+                            movementName = movementName,
+                            onDismissRequest = {
+                                resultToDelete = null
+                            },
+                            onCancel = {
+                                resultToDelete = null
+                            },
+                            onConfirmation = {
+                                onDeleteResultClick(result.id)
+                                resultToDelete = null
+                            }
                         )
                     }
 
@@ -292,7 +313,12 @@ fun MovementDetailScreen(
                         DeleteMovementConfirmDialog(
                             movementId = movementId,
                             movementName = movementName,
-                            onDismissRequest = { showDeleteMovementConfirmDialog = false },
+                            onDismissRequest = {
+                                showDeleteMovementConfirmDialog = false
+                            },
+                            onCancel = {
+                                showDeleteMovementConfirmDialog = false
+                            },
                             onConfirmation = {
                                 onDeleteMovementClick(movementId)
                                 showDeleteMovementConfirmDialog = false
@@ -347,13 +373,38 @@ fun ResultCard(
 }
 
 @Composable
+fun DeleteResultConfirmDialog(
+    resultId: Long,
+    movementName: String,
+    onDismissRequest: () -> Unit = {},
+    onCancel: () -> Unit = {},
+    onConfirmation: () -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+    ConfirmDeletionDialog(
+        title = stringResource(R.string.delete_result_confirm_dialog_title),
+        movementName = movementName,
+        cardContentDescription = stringResource(R.string.delete_result_confirm_dialog_content_description),
+        onDismissRequest = {
+            analyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId)
+            onDismissRequest()
+        },
+        onCancel = {
+            analyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId)
+            onCancel()
+        },
+        onConfirmation = onConfirmation,
+    )
+}
+
+@Composable
 fun AddOrEditResultDialog(
     isAdd: Boolean,
     result: Result,
     weightUnit: WeightUnit,
     onDismissRequest: () -> Unit = {},
     onConfirmation: (Result) -> Unit = {},
-    onDeleteClicked: (Long) -> Unit = {},
+    onDeleteClicked: (Result) -> Unit = {},
 ) {
     val weightInitialValue = if (result.weight == 0f) {
         ""
@@ -500,8 +551,8 @@ fun AddOrEditResultDialog(
                             .fillMaxWidth()
                             .height(40.dp),
                         onClick = {
-                            analyticsHelper.logAddOrEditResultDialog_DeleteResultClick(result)
-                            onDeleteClicked(result.id)
+                            analyticsHelper.logAddOrEditResultDialog_DeleteResultClick(result.id)
+                            onDeleteClicked(result)
                         },
                     ) {
                         Text(text = stringResource(R.string.movement_detail_screen_edit_result_dialog_delete_button))
