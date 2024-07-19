@@ -17,6 +17,7 @@ fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovement() = Movemen
     weight = value.maxByOrNull { it.weightInKilos }?.weightInKilos
 )
 
-fun List<ResultEntity>.asExternalMovementDetail() = MovementDetail(
-    results = this.map { it.asExternalModel() }
+fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovementDetail() = MovementDetail(
+    movementName = key.name,
+    results = value.map { it.asExternalModel() }
 )

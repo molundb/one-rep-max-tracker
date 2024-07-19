@@ -71,14 +71,16 @@ import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Confirm
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_DeleteMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_ResultClick
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
+import net.martinlundberg.onerepmaxtracker.feature.movementslist.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
@@ -103,16 +105,16 @@ fun MovementDetailRoute(
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)
     }
-    val movementDetailUiState by movementDetailViewModel.uiState.collectAsState()
+    val movementDetailUiState by movementDetailViewModel.uiState.collectAsState(Loading(MovementDetail(movementName)))
 
     MovementDetailScreen(
         innerPadding = innerPadding,
         movementId = movementId,
-        movementName = movementName,
         movementDetailUiState = movementDetailUiState,
 //        onOneRepMaxClick = onOneRepMaxClick,
         navigateBack = navigateBack,
         addResult = movementDetailViewModel::addResult,
+        onEditMovementClick = movementDetailViewModel::editMovement,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
         getRelativeDateString = movementDetailViewModel::getRelativeDateString,
@@ -124,10 +126,10 @@ fun MovementDetailRoute(
 fun MovementDetailScreen(
     innerPadding: PaddingValues,
     movementId: Long,
-    movementName: String,
-    movementDetailUiState: MovementDetailUiState = Loading,
+    movementDetailUiState: MovementDetailUiState,
     navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
+    onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
     getRelativeDateString: (OffsetDateTime) -> String = { "" },
@@ -137,6 +139,7 @@ fun MovementDetailScreen(
     var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
+    var showEditMovementDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
     val analyticsHelper = LocalAnalyticsHelper.current
@@ -157,16 +160,18 @@ fun MovementDetailScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = movementName,
+                    text = movementDetailUiState.movement.movementName,
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
                 )
             }
             Box(
                 modifier = Modifier
-                    .clickable(onClick = {
-                        analyticsHelper.logMovementDetail_NavBackClick()
-                        navigateBack(lifecycleOwner.lifecycle.currentState)
-                    })
+                    .clickable(
+                        onClick = {
+                            analyticsHelper.logMovementDetail_NavBackClick()
+                            navigateBack(lifecycleOwner.lifecycle.currentState)
+                        }
+                    )
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -177,7 +182,7 @@ fun MovementDetailScreen(
 
         val context = LocalContext.current
         when (movementDetailUiState) {
-            Loading -> {
+            is Loading -> {
                 Box(modifier = Modifier.height(24.dp))
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -226,11 +231,14 @@ fun MovementDetailScreen(
                                 .width(120.dp)
                                 .semantics {
                                     contentDescription =
-                                        context.getString(R.string.movement_detail_screen_delete_movement_button_content_description)
+                                        context.getString(R.string.movement_detail_screen_edit_movement_button_content_description)
                                 },
                             onClick = {
-                                analyticsHelper.logMovementDetail_DeleteMovementClick(movementId, movementName)
-                                showDeleteMovementConfirmDialog = true
+                                analyticsHelper.logMovementDetail_EditMovementClick(
+                                    movementId,
+                                    movementDetailUiState.movement.movementName
+                                )
+                                showEditMovementDialog = true
                             },
                         ) {
                             Text(
@@ -238,7 +246,7 @@ fun MovementDetailScreen(
                                     horizontal = 24.dp,
                                     vertical = 12.dp
                                 ),
-                                text = stringResource(R.string.delete),
+                                text = stringResource(R.string.edit),
                                 style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
                             )
                         }
@@ -249,7 +257,10 @@ fun MovementDetailScreen(
                                         context.getString(R.string.movement_detail_screen_add_result_button_content_description)
                                 },
                             onClick = {
-                                analyticsHelper.logMovementDetail_AddResultClick(movementId, movementName)
+                                analyticsHelper.logMovementDetail_AddResultClick(
+                                    movementId,
+                                    movementDetailUiState.movement.movementName
+                                )
                                 showAddResultDialog = true
                             },
                         ) {
@@ -299,7 +310,7 @@ fun MovementDetailScreen(
                     resultToDelete?.let { result ->
                         DeleteResultConfirmDialog(
                             resultId = result.id,
-                            movementName = movementName,
+                            movementName = movementDetailUiState.movement.movementName,
                             onDismissRequest = {
                                 resultToDelete = null
                             },
@@ -313,10 +324,31 @@ fun MovementDetailScreen(
                         )
                     }
 
+                    if (showEditMovementDialog) {
+                        EditMovementDialog(
+                            movement = Movement(movementId, movementDetailUiState.movement.movementName),
+                            weightUnit = movementDetailUiState.weightUnit,
+                            onDismissRequest = {
+                                showEditMovementDialog = false
+                            },
+                            onCancel = {
+                                showEditMovementDialog = false
+                            },
+                            onConfirm = { editedMovement ->
+                                onEditMovementClick(editedMovement)
+                                showEditMovementDialog = false
+                            },
+                            onDelete = {
+                                showDeleteMovementConfirmDialog = true
+                                showEditMovementDialog = false
+                            }
+                        )
+                    }
+
                     if (showDeleteMovementConfirmDialog) {
                         DeleteMovementConfirmDialog(
                             movementId = movementId,
-                            movementName = movementName,
+                            movementName = movementDetailUiState.movement.movementName,
                             onDismissRequest = {
                                 showDeleteMovementConfirmDialog = false
                             },
@@ -651,8 +683,7 @@ private fun MovementDetailLoadingPreview() {
             MovementDetailScreen(
                 innerPadding = innerPadding,
                 movementId = 1,
-                movementName = "Bench Press",
-                movementDetailUiState = Loading,
+                movementDetailUiState = Loading(movement = MovementDetail("Bench Press")),
             )
         }
     }
@@ -666,9 +697,9 @@ private fun MovementDetailScreenSuccessPreview() {
             MovementDetailScreen(
                 innerPadding = innerPadding,
                 movementId = 111L,
-                movementName = "Back Squat",
                 movementDetailUiState = Success(
                     MovementDetail(
+                        movementName = "Back Squat",
                         listOf(
                             Result(
                                 id = 80,

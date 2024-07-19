@@ -15,6 +15,8 @@ import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_DeleteClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
+import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
@@ -33,7 +35,7 @@ class MovementDetailViewModel @Inject constructor(
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading)
+    private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading(MovementDetail("")))
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
     fun getMovementInfo(id: Long) {
@@ -46,7 +48,14 @@ class MovementDetailViewModel @Inject constructor(
             }.collect { newState ->
                 val sortedByDate = newState.movement.results.sortedByDescending { it.offsetDateTime }
 
-                _uiState.update { newState.copy(movement = MovementDetail(sortedByDate)) }
+                _uiState.update {
+                    newState.copy(
+                        movement = MovementDetail(
+                            newState.movement.movementName,
+                            sortedByDate
+                        )
+                    )
+                }
             }
         }
     }
@@ -62,6 +71,13 @@ class MovementDetailViewModel @Inject constructor(
                 ),
                 weightUnit = weightUnit,
             )
+        }
+    }
+
+    fun editMovement(movement: Movement) {
+        analyticsHelper.logEditMovement(movement)
+        viewModelScope.launch {
+            movementsRepository.setMovement(movement)
         }
     }
 
@@ -91,10 +107,14 @@ class MovementDetailViewModel @Inject constructor(
 }
 
 sealed interface MovementDetailUiState {
-    data object Loading : MovementDetailUiState
+    val movement: MovementDetail
+
+    data class Loading(
+        override val movement: MovementDetail,
+    ) : MovementDetailUiState
 
     data class Success(
-        val movement: MovementDetail,
+        override val movement: MovementDetail,
         val weightUnit: WeightUnit,
     ) : MovementDetailUiState
 }

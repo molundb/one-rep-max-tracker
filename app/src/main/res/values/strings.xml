@@ -37,7 +37,7 @@
     <!-- Movement Detail Screen -->
     <string name="movement_detail_screen_back_button_content_description">Back button</string>
     <string name="movement_detail_screen_loading_indicator_content_description">Circular progress indicator</string>
-    <string name="movement_detail_screen_delete_movement_button_content_description">Delete movement button</string>
+    <string name="movement_detail_screen_edit_movement_button_content_description">Edit movement button</string>
     <string name="movement_detail_screen_add_result_button_content_description">Add result button</string>
     <string name="movement_detail_screen_add_result_button">+ Add new</string>
     <string name="movement_detail_screen_result_card_content_description">Result card</string>

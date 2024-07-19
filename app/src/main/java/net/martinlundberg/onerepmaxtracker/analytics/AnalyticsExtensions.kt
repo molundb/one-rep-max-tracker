@@ -200,9 +200,9 @@ fun AnalyticsHelper.logDeleteResult(resultId: Long) {
     )
 }
 
-fun AnalyticsHelper.logMovementDetail_DeleteMovementClick(movementId: Long, movementName: String) {
+fun AnalyticsHelper.logMovementDetail_EditMovementClick(movementId: Long, movementName: String) {
     logEvent(
-        "delete_movement_click", listOf(
+        "edit_movement_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
             Param(key = "movement_name", value = movementName),
         )

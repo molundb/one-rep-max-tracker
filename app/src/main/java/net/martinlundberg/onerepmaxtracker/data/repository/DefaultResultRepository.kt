@@ -23,7 +23,9 @@ class DefaultResultRepository @Inject constructor(
 ) : ResultRepository {
 
     override suspend fun getMovementDetail(id: Long): Flow<MovementDetail> =
-        resultDao.getResultsForMovement(id).map { it.asExternalMovementDetail() }
+        resultDao.getResultsForMovement(id).map { map ->
+            map.entries.first().asExternalMovementDetail() // TODO: Use firstOrNull?
+        }
 
     override suspend fun addResult(result: Result, weightUnit: WeightUnit) {
         val weight = if (weightUnit.isPounds()) {
