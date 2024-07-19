@@ -269,13 +269,13 @@ fun MovementDetailScreen(
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = {
-                                resultToEdit = null
+                                showAddResultDialog = false
                             },
                             onConfirm = { editedResult ->
                                 addResult(editedResult, movementDetailUiState.weightUnit)
-                                resultToEdit = null
+                                showAddResultDialog = false
                             },
-                            onCancel = { resultToEdit = null },
+                            onCancel = { showAddResultDialog = false },
                         )
                     }
 
