@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -149,30 +150,43 @@ fun MovementsListScreen(
             is Success -> Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 24.dp),
+                    .padding(bottom = 24.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val analyticsHelper = LocalAnalyticsHelper.current
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    movementsListUiState.movements.map { movement ->
-                        item(key = movement.id) {
-                            MovementCard(
-                                modifier = Modifier.animateItemPlacement(),
-                                movement = movement,
-                                weightUnit = movementsListUiState.weightUnit,
-                                onMovementClick = onMovementClick,
-                                onEditMovementClick = { movement ->
-                                    analyticsHelper.logMovementList_EditMovementClick(movement)
-                                    movementToEdit = movement
-                                },
-                                onDeleteMovementClick = { movement ->
-                                    analyticsHelper.logMovementList_DeleteMovementClick(movement)
-                                    movementToDelete = movement
-                                }
-                            )
+                if (movementsListUiState.movements.isEmpty()) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = "Start by adding your first result",
+                            style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.padding(top = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp)
+                    ) {
+                        movementsListUiState.movements.map { movement ->
+                            item(key = movement.id) {
+                                MovementCard(
+                                    modifier = Modifier.animateItemPlacement(),
+                                    movement = movement,
+                                    weightUnit = movementsListUiState.weightUnit,
+                                    onMovementClick = onMovementClick,
+                                    onEditMovementClick = { movement ->
+                                        analyticsHelper.logMovementList_EditMovementClick(movement)
+                                        movementToEdit = movement
+                                    },
+                                    onDeleteMovementClick = { movement ->
+                                        analyticsHelper.logMovementList_DeleteMovementClick(movement)
+                                        movementToDelete = movement
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -664,7 +678,24 @@ private fun MovementsListLoadingPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MovementsListScreenSuccessPreview() {
+private fun MovementsListScreenSuccessEmptyPreview() {
+    OneRepMaxTrackerTheme {
+        DefaultScaffold { innerPadding ->
+            MovementsListScreen(
+                innerPadding = innerPadding,
+                movementsListUiState = Success(
+                    listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
+                ),
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun MovementsListScreenSuccessContentPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
             MovementsListScreen(
