@@ -58,7 +58,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_AddClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_DeleteResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_DeleteMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_ResultClick
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
@@ -122,6 +131,7 @@ fun MovementDetailScreen(
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showDeleteMovementConfirmDialog by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
+    val analyticsHelper = LocalAnalyticsHelper.current
 
     Column(
         modifier = Modifier
@@ -145,7 +155,10 @@ fun MovementDetailScreen(
             }
             Box(
                 modifier = Modifier
-                    .clickable(onClick = { navigateBack(lifecycleOwner.lifecycle.currentState) })
+                    .clickable(onClick = {
+                        analyticsHelper.logMovementDetail_NavBackClick()
+                        navigateBack(lifecycleOwner.lifecycle.currentState)
+                    })
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -187,7 +200,10 @@ fun MovementDetailScreen(
                                     modifier = Modifier.animateItemPlacement(),
                                     result = result,
                                     weightUnit = movementDetailUiState.weightUnit,
-                                    onOneRepMaxClick = { resultToEdit = result },
+                                    onResultClick = {
+                                        analyticsHelper.logMovementDetail_ResultClick(result)
+                                        resultToEdit = result
+                                    },
                                     getRelativeDateString = getRelativeDateString,
                                 )
                             }
@@ -204,7 +220,10 @@ fun MovementDetailScreen(
                                     contentDescription =
                                         context.getString(R.string.movement_detail_screen_delete_result_button_content_description)
                                 },
-                            onClick = { showDeleteMovementConfirmDialog = true },
+                            onClick = {
+                                analyticsHelper.logMovementDetail_DeleteMovementClick(movementId, movementName)
+                                showDeleteMovementConfirmDialog = true
+                            },
                         ) {
                             Text(
                                 modifier = Modifier.padding(
@@ -221,7 +240,10 @@ fun MovementDetailScreen(
                                     contentDescription =
                                         context.getString(R.string.movement_detail_screen_add_result_button_content_description)
                                 },
-                            onClick = { showAddResultDialog = true },
+                            onClick = {
+                                analyticsHelper.logMovementDetail_AddResultClick(movementId, movementName)
+                                showAddResultDialog = true
+                            },
                         ) {
                             Text(
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -239,7 +261,9 @@ fun MovementDetailScreen(
                                 offsetDateTime = OffsetDateTime.now()
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
-                            onDismissRequest = { showAddResultDialog = false },
+                            onDismissRequest = {
+                                showAddResultDialog = false
+                            },
                             onConfirmation = { result ->
                                 addResult(result, movementDetailUiState.weightUnit)
                                 showAddResultDialog = false
@@ -286,7 +310,7 @@ fun ResultCard(
     modifier: Modifier = Modifier,
     result: Result,
     weightUnit: WeightUnit,
-    onOneRepMaxClick: (Result) -> Unit = { },
+    onResultClick: (Result) -> Unit = { },
     getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     val context = LocalContext.current
@@ -294,7 +318,7 @@ fun ResultCard(
         modifier = modifier.semantics {
             contentDescription = context.getString(R.string.movement_detail_screen_result_card_content_description)
         },
-        onClick = { onOneRepMaxClick(result) },
+        onClick = { onResultClick(result) },
         shape = RoundedCornerShape(8.dp),
     ) {
         Row(
@@ -352,8 +376,12 @@ fun AddOrEditResultDialog(
     var date by remember { mutableStateOf(result.offsetDateTime) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val analyticsHelper = LocalAnalyticsHelper.current
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = {
+        analyticsHelper.logAddOrEditResultDialog_Dismissed(result)
+        onDismissRequest()
+    }) {
         val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
@@ -420,7 +448,10 @@ fun AddOrEditResultDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp),
-                        onClick = { onDismissRequest() },
+                        onClick = {
+                            analyticsHelper.logAddOrEditResultDialog_CancelClick(result)
+                            onDismissRequest()
+                        },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Black,
                             containerColor = White,
@@ -434,14 +465,14 @@ fun AddOrEditResultDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            onConfirmation(
-                                Result(
-                                    id = result.id,
-                                    movementId = result.movementId,
-                                    weight = weightText.text.toFloat(),
-                                    offsetDateTime = date,
-                                )
+                            val newResult = Result(
+                                id = result.id,
+                                movementId = result.movementId,
+                                weight = weightText.text.toFloat(),
+                                offsetDateTime = date,
                             )
+                            analyticsHelper.logAddOrEditResultDialog_AddClick(newResult)
+                            onConfirmation(newResult)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = White,
@@ -469,6 +500,7 @@ fun AddOrEditResultDialog(
                             .fillMaxWidth()
                             .height(40.dp),
                         onClick = {
+                            analyticsHelper.logAddOrEditResultDialog_DeleteResultClick(result)
                             onDeleteClicked(result.id)
                         },
                     ) {

@@ -65,10 +65,12 @@ import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementClick
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditMovementDialog_CancelClick
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditMovementDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
@@ -211,8 +213,12 @@ fun MovementsListScreen(
                 if (showAddMovementDialog) {
                     AddMovementDialog(
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = {
-                            analyticsHelper.logAddOrEditMovementDialog_Dismissed()
+                        onDismissRequest = { movement ->
+                            analyticsHelper.logAddMovementDialog_Dismissed(movement)
+                            showAddMovementDialog = false
+                        },
+                        onCancelRequest = { movement ->
+                            analyticsHelper.logAddMovementDialog_CancelClick(movement)
                             showAddMovementDialog = false
                         },
                         onConfirmation = { movement, weightUnit ->
@@ -226,8 +232,12 @@ fun MovementsListScreen(
                     EditMovementDialog(
                         movement = movement,
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = {
-                            analyticsHelper.logAddOrEditMovementDialog_Dismissed(movement)
+                        onDismissRequest = { editedMovement ->
+                            analyticsHelper.logEditMovementDialog_Dismissed(editedMovement)
+                            movementToEdit = null
+                        },
+                        onCancelRequest = { editedMovement ->
+                            analyticsHelper.logEditMovementDialog_CancelClick(editedMovement)
                             movementToEdit = null
                         },
                         onConfirmation = { editedMovement, _ ->
@@ -452,14 +462,20 @@ fun DeleteMovementConfirmDialog(
 @Composable
 fun AddMovementDialog(
     weightUnit: WeightUnit,
-    onDismissRequest: () -> Unit = {},
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancelRequest: (Movement) -> Unit = {},
     onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
-        isAdd = true,
+        movement = Movement(name = ""),
         weightUnit = weightUnit,
+        cardContentDescription = stringResource(R.string.movement_list_screen_add_movement_dialog_content_description),
+        title = stringResource(R.string.movement_list_screen_add_movement_dialog_title),
+        showWeightField = true,
+        confirmButtonText = stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button),
         onDismissRequest = onDismissRequest,
-        onConfirmation = onConfirmation
+        onCancelRequest = onCancelRequest,
+        onConfirmation = onConfirmation,
     )
 }
 
@@ -467,42 +483,55 @@ fun AddMovementDialog(
 fun EditMovementDialog(
     movement: Movement,
     weightUnit: WeightUnit,
-    onDismissRequest: () -> Unit = {},
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancelRequest: (Movement) -> Unit = {},
     onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     AddOrEditMovementDialog(
-        isAdd = false,
         movement = movement,
         weightUnit = weightUnit,
+        cardContentDescription = stringResource(R.string.movement_list_screen_edit_movement_dialog_content_description),
+        title = stringResource(R.string.movement_list_screen_edit_movement_dialog_title),
+        showWeightField = false,
+        confirmButtonText = stringResource(R.string.edit),
         onDismissRequest = onDismissRequest,
-        onConfirmation = onConfirmation
+        onCancelRequest = onCancelRequest,
+        onConfirmation = onConfirmation,
     )
 }
 
 @Composable
 private fun AddOrEditMovementDialog(
-    isAdd: Boolean,
-    movement: Movement = Movement(name = ""),
+    movement: Movement,
     weightUnit: WeightUnit,
-    onDismissRequest: () -> Unit = {},
+    cardContentDescription: String,
+    title: String,
+    showWeightField: Boolean,
+    confirmButtonText: String,
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancelRequest: (Movement) -> Unit = {},
     onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
-
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
     var movementWeightText by remember { mutableStateOf(weightInitialValue) }
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = {
+        onDismissRequest(
+            createMovementOfInput(
+                movementId = movement.id,
+                movementNameText = movementNameText.text,
+                movementWeightText = movementWeightText,
+            ),
+        )
+    }) {
         val focusRequester = remember { FocusRequester() }
         val context = LocalContext.current
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .semantics {
-                    contentDescription =
-                        if (isAdd) context.getString(R.string.movement_list_screen_add_movement_dialog_content_description)
-                        else context.getString(R.string.movement_list_screen_edit_movement_dialog_content_description)
+                    contentDescription = cardContentDescription
                 },
             shape = RoundedCornerShape(16.dp),
         ) {
@@ -511,8 +540,7 @@ private fun AddOrEditMovementDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    text = if (isAdd) stringResource(R.string.movement_list_screen_add_movement_dialog_title)
-                    else stringResource(R.string.movement_list_screen_edit_movement_dialog_title),
+                    text = title,
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Box(modifier = Modifier.height(24.dp))
@@ -533,7 +561,7 @@ private fun AddOrEditMovementDialog(
                                 context.getString(R.string.movement_list_screen_add_or_edit_movement_dialog_name_field_content_description)
                         },
                 )
-                if (isAdd) {
+                if (showWeightField) {
                     Spacer(modifier = Modifier.size(24.dp))
                     Text(
                         text = stringResource(
@@ -563,8 +591,13 @@ private fun AddOrEditMovementDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            analyticsHelper.logAddOrEditMovementDialog_CancelClick(movement)
-                            onDismissRequest()
+                            onCancelRequest(
+                                createMovementOfInput(
+                                    movementId = movement.id,
+                                    movementNameText = movementNameText.text,
+                                    movementWeightText = movementWeightText,
+                                ),
+                            )
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Black,
@@ -579,10 +612,10 @@ private fun AddOrEditMovementDialog(
                             .height(40.dp),
                         onClick = {
                             onConfirmation(
-                                Movement(
-                                    id = movement.id,
-                                    name = movementNameText.text,
-                                    weight = movementWeightText.toFloatOrNull()
+                                createMovementOfInput(
+                                    movementId = movement.id,
+                                    movementNameText = movementNameText.text,
+                                    movementWeightText = movementWeightText,
                                 ),
                                 weightUnit,
                             )
@@ -595,10 +628,7 @@ private fun AddOrEditMovementDialog(
                         ),
                         enabled = movementNameText.text.isNotBlank()
                     ) {
-                        Text(
-                            if (isAdd) stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button)
-                            else stringResource(R.string.edit)
-                        )
+                        Text(confirmButtonText)
                     }
                 }
             }
@@ -608,6 +638,16 @@ private fun AddOrEditMovementDialog(
         }
     }
 }
+
+private fun createMovementOfInput(
+    movementId: Long,
+    movementNameText: String,
+    movementWeightText: String,
+) = Movement(
+    id = movementId,
+    name = movementNameText,
+    weight = movementWeightText.toFloatOrNull()
+)
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -645,36 +685,32 @@ private fun MovementsListScreenSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddMovementDialogEnabledPreview() {
-    OneRepMaxTrackerTheme {
-        AddOrEditMovementDialog(
-            isAdd = true,
-            weightUnit = WeightUnit.KILOGRAMS,
-            movement = Movement(id = 1, name = "Movement 1", weight = 102.25f)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
 private fun AddMovementDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
-        AddOrEditMovementDialog(
-            isAdd = true,
+        AddMovementDialog(
             weightUnit = WeightUnit.KILOGRAMS,
-            movement = Movement(id = 1, name = "", weight = 102.25f)
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun EditMovementDialogPreview() {
+private fun EditMovementDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
-        AddOrEditMovementDialog(
-            isAdd = false,
+        EditMovementDialog(
+            movement = Movement(id = 1, name = "Movement 1", weight = 100.75f),
             weightUnit = WeightUnit.KILOGRAMS,
-            movement = Movement(id = 1, name = "Movement 1", weight = 100.75f)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EditMovementDialogDisabledPreview() {
+    OneRepMaxTrackerTheme {
+        EditMovementDialog(
+            movement = Movement(id = 1, name = "", weight = 55.75f),
+            weightUnit = WeightUnit.KILOGRAMS,
         )
     }
 }
