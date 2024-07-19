@@ -228,15 +228,9 @@ fun MovementsListScreen(
                 if (showAddMovementDialog) {
                     AddMovementDialog(
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = { movement ->
-                            analyticsHelper.logAddMovementDialog_Dismissed(movement)
-                            showAddMovementDialog = false
-                        },
-                        onCancelRequest = { movement ->
-                            analyticsHelper.logAddMovementDialog_CancelClick(movement)
-                            showAddMovementDialog = false
-                        },
-                        onConfirmation = { movement, weightUnit ->
+                        onDismissRequest = { showAddMovementDialog = false },
+                        onCancel = { showAddMovementDialog = false },
+                        onConfirm = { movement, weightUnit ->
                             onAddMovementClick(movement, weightUnit)
                             showAddMovementDialog = false
                         }
@@ -247,15 +241,9 @@ fun MovementsListScreen(
                     EditMovementDialog(
                         movement = movement,
                         weightUnit = movementsListUiState.weightUnit,
-                        onDismissRequest = { editedMovement ->
-                            analyticsHelper.logEditMovementDialog_Dismissed(editedMovement)
-                            movementToEdit = null
-                        },
-                        onCancelRequest = { editedMovement ->
-                            analyticsHelper.logEditMovementDialog_CancelClick(editedMovement)
-                            movementToEdit = null
-                        },
-                        onConfirmation = { editedMovement, _ ->
+                        onDismissRequest = { movementToEdit = null },
+                        onCancel = { movementToEdit = null },
+                        onConfirm = { editedMovement, _ ->
                             onEditMovementClick(editedMovement)
                             movementToEdit = null
                         }
@@ -430,9 +418,10 @@ fun DeleteMovementConfirmDialog(
 fun AddMovementDialog(
     weightUnit: WeightUnit,
     onDismissRequest: (Movement) -> Unit = {},
-    onCancelRequest: (Movement) -> Unit = {},
-    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
+    val analyticsHelper = LocalAnalyticsHelper.current
     AddOrEditMovementDialog(
         movement = Movement(name = ""),
         weightUnit = weightUnit,
@@ -440,9 +429,15 @@ fun AddMovementDialog(
         title = stringResource(R.string.movement_list_screen_add_movement_dialog_title),
         showWeightField = true,
         confirmButtonText = stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button),
-        onDismissRequest = onDismissRequest,
-        onCancelRequest = onCancelRequest,
-        onConfirmation = onConfirmation,
+        onDismissRequest = { movement ->
+            analyticsHelper.logAddMovementDialog_Dismissed(movement)
+            onDismissRequest(movement)
+        },
+        onCancel = { movement ->
+            analyticsHelper.logAddMovementDialog_CancelClick(movement)
+            onCancel(movement)
+        },
+        onConfirm = onConfirm,
     )
 }
 
@@ -451,9 +446,10 @@ fun EditMovementDialog(
     movement: Movement,
     weightUnit: WeightUnit,
     onDismissRequest: (Movement) -> Unit = {},
-    onCancelRequest: (Movement) -> Unit = {},
-    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
+    val analyticsHelper = LocalAnalyticsHelper.current
     AddOrEditMovementDialog(
         movement = movement,
         weightUnit = weightUnit,
@@ -461,9 +457,15 @@ fun EditMovementDialog(
         title = stringResource(R.string.movement_list_screen_edit_movement_dialog_title),
         showWeightField = false,
         confirmButtonText = stringResource(R.string.edit),
-        onDismissRequest = onDismissRequest,
-        onCancelRequest = onCancelRequest,
-        onConfirmation = onConfirmation,
+        onDismissRequest = { editedMovement ->
+            analyticsHelper.logEditMovementDialog_Dismissed(editedMovement)
+            onDismissRequest(editedMovement)
+        },
+        onCancel = { editedMovement ->
+            analyticsHelper.logEditMovementDialog_CancelClick(editedMovement)
+            onCancel(editedMovement)
+        },
+        onConfirm = onConfirm,
     )
 }
 
@@ -476,8 +478,8 @@ private fun AddOrEditMovementDialog(
     showWeightField: Boolean,
     confirmButtonText: String,
     onDismissRequest: (Movement) -> Unit = {},
-    onCancelRequest: (Movement) -> Unit = {},
-    onConfirmation: (Movement, WeightUnit) -> Unit = { _, _ -> },
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement, WeightUnit) -> Unit = { _, _ -> },
 ) {
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
@@ -558,7 +560,7 @@ private fun AddOrEditMovementDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            onCancelRequest(
+                            onCancel(
                                 createMovementOfInput(
                                     movementId = movement.id,
                                     movementNameText = movementNameText.text,
@@ -578,7 +580,7 @@ private fun AddOrEditMovementDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            onConfirmation(
+                            onConfirm(
                                 createMovementOfInput(
                                     movementId = movement.id,
                                     movementNameText = movementNameText.text,

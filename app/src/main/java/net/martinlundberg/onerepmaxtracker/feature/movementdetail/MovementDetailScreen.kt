@@ -60,12 +60,16 @@ import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_AddClick
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_CancelClick
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_DeleteResultClick
-import net.martinlundberg.onerepmaxtracker.analytics.logAddOrEditResultDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_ConfirmClick
+import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_ConfirmClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_DeleteMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
@@ -257,8 +261,7 @@ fun MovementDetailScreen(
                     }
 
                     if (showAddResultDialog) {
-                        AddOrEditResultDialog(
-                            isAdd = true,
+                        AddResultDialog(
                             result = Result(
                                 movementId = movementId,
                                 weight = 0f,
@@ -266,27 +269,28 @@ fun MovementDetailScreen(
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = {
-                                showAddResultDialog = false
+                                resultToEdit = null
                             },
-                            onConfirmation = { result ->
-                                addResult(result, movementDetailUiState.weightUnit)
-                                showAddResultDialog = false
+                            onConfirm = { editedResult ->
+                                addResult(editedResult, movementDetailUiState.weightUnit)
+                                resultToEdit = null
                             },
+                            onCancel = { resultToEdit = null },
                         )
                     }
 
-                    resultToEdit?.let {
-                        AddOrEditResultDialog(
-                            isAdd = false,
-                            result = it,
+                    resultToEdit?.let { result ->
+                        EditResultDialog(
+                            result = result,
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = { resultToEdit = null },
-                            onConfirmation = { result ->
-                                addResult(result, movementDetailUiState.weightUnit)
+                            onConfirm = { editedResult ->
+                                addResult(editedResult, movementDetailUiState.weightUnit)
                                 resultToEdit = null
                             },
-                            onDeleteClicked = { result ->
-                                resultToDelete = result
+                            onCancel = { resultToEdit = null },
+                            onDelete = { editedResult ->
+                                resultToDelete = editedResult
                                 resultToEdit = null
                             },
                         )
@@ -393,18 +397,92 @@ fun DeleteResultConfirmDialog(
             analyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId)
             onCancel()
         },
-        onConfirmation = onConfirmation,
+        onConfirmation = {
+            analyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId)
+            onConfirmation()
+        },
+    )
+}
+
+@Composable
+fun AddResultDialog(
+    result: Result,
+    weightUnit: WeightUnit,
+    onDismissRequest: (Result) -> Unit = {},
+    onConfirm: (Result) -> Unit = {},
+    onCancel: (Result) -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+    AddOrEditResultDialog(
+        result = result,
+        weightUnit = weightUnit,
+        cardContentDescription = stringResource(R.string.movement_detail_screen_add_result_dialog_content_description),
+        title = stringResource(R.string.movement_detail_screen_add_result_dialog_title),
+        confirmButtonText = stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button),
+        confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button_content_description),
+        onDismissRequest = { editedResult ->
+            analyticsHelper.logAddResultDialog_Dismissed(editedResult)
+            onDismissRequest(editedResult)
+        },
+        onConfirm = { editedResult ->
+            analyticsHelper.logAddResultDialog_ConfirmClick(editedResult)
+            onConfirm(editedResult)
+        },
+        onCancel = { editedResult ->
+            analyticsHelper.logAddResultDialog_CancelClick(editedResult)
+            onCancel(editedResult)
+        },
+    )
+}
+
+@Composable
+fun EditResultDialog(
+    result: Result,
+    weightUnit: WeightUnit,
+    onDismissRequest: (Result) -> Unit = {},
+    onConfirm: (Result) -> Unit = {},
+    onCancel: (Result) -> Unit = {},
+    onDelete: (Result) -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+    AddOrEditResultDialog(
+        result = result,
+        weightUnit = weightUnit,
+        cardContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_content_description),
+        title = stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
+        confirmButtonText = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button),
+        confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
+        onDismissRequest = { editedResult ->
+            analyticsHelper.logEditResultDialog_Dismissed(editedResult)
+            onDismissRequest(editedResult)
+        },
+        onConfirm = { editedResult ->
+            analyticsHelper.logEditResultDialog_ConfirmClick(editedResult)
+            onConfirm(editedResult)
+        },
+        onCancel = { editedResult ->
+            analyticsHelper.logEditResultDialog_CancelClick(editedResult)
+            onCancel(editedResult)
+        },
+        onDelete = { editedResult ->
+            analyticsHelper.logEditResultDialog_DeleteResultClick(editedResult.id)
+            onDelete(editedResult)
+        },
     )
 }
 
 @Composable
 fun AddOrEditResultDialog(
-    isAdd: Boolean,
     result: Result,
     weightUnit: WeightUnit,
-    onDismissRequest: () -> Unit = {},
-    onConfirmation: (Result) -> Unit = {},
-    onDeleteClicked: (Result) -> Unit = {},
+    cardContentDescription: String,
+    title: String,
+    confirmButtonText: String,
+    confirmButtonContentDescription: String,
+    onDismissRequest: (Result) -> Unit = {},
+    onConfirm: (Result) -> Unit = {},
+    onCancel: (Result) -> Unit = {},
+    onDelete: (Result) -> Unit = {},
 ) {
     val weightInitialValue = if (result.weight == 0f) {
         ""
@@ -430,17 +508,14 @@ fun AddOrEditResultDialog(
     val analyticsHelper = LocalAnalyticsHelper.current
 
     Dialog(onDismissRequest = {
-        analyticsHelper.logAddOrEditResultDialog_Dismissed(result)
-        onDismissRequest()
+        onDismissRequest(createResultOfInput(result, weightText, date))
     }) {
         val focusRequester = remember { FocusRequester() }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .semantics {
-                    contentDescription =
-                        if (isAdd) context.getString(R.string.movement_detail_screen_add_result_dialog_content_description)
-                        else context.getString(R.string.movement_detail_screen_edit_result_dialog_content_description)
+                    contentDescription = cardContentDescription
                 },
             shape = RoundedCornerShape(16.dp),
         ) {
@@ -449,8 +524,7 @@ fun AddOrEditResultDialog(
                     .padding(all = 16.dp),
             ) {
                 Text(
-                    text = if (isAdd) stringResource(R.string.movement_detail_screen_add_result_dialog_title)
-                    else stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
+                    text = title,
                     style = MaterialTheme.typography.headlineLarge,
                 )
                 Box(modifier = Modifier.height(24.dp))
@@ -500,8 +574,9 @@ fun AddOrEditResultDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            analyticsHelper.logAddOrEditResultDialog_CancelClick(result)
-                            onDismissRequest()
+                            val editedResult = createResultOfInput(result, weightText, date)
+
+                            onCancel(editedResult)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Black,
@@ -516,14 +591,8 @@ fun AddOrEditResultDialog(
                             .weight(1f)
                             .height(40.dp),
                         onClick = {
-                            val newResult = Result(
-                                id = result.id,
-                                movementId = result.movementId,
-                                weight = weightText.text.toFloat(),
-                                offsetDateTime = date,
-                            )
-                            analyticsHelper.logAddOrEditResultDialog_AddClick(newResult)
-                            onConfirmation(newResult)
+                            val editedResult = createResultOfInput(result, weightText, date)
+                            onConfirm(editedResult)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = White,
@@ -534,25 +603,22 @@ fun AddOrEditResultDialog(
                         enabled = weightText.text.isNotBlank(),
                     ) {
                         Text(
-                            text = if (isAdd) stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button)
-                            else stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button),
+                            text = confirmButtonText,
                             modifier = Modifier.semantics {
-                                contentDescription =
-                                    if (isAdd) context.getString(R.string.movement_detail_screen_add_result_dialog_confirm_button_content_description)
-                                    else context.getString(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description)
+                                contentDescription = confirmButtonContentDescription
                             },
                         )
                     }
                 }
                 Box(modifier = Modifier.height(24.dp))
-                if (!isAdd) {
+                if (onDelete != {}) {
                     TextButton(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
                         onClick = {
-                            analyticsHelper.logAddOrEditResultDialog_DeleteResultClick(result.id)
-                            onDeleteClicked(result)
+                            val editedResult = createResultOfInput(result, weightText, date)
+                            onDelete(editedResult)
                         },
                     ) {
                         Text(text = stringResource(R.string.movement_detail_screen_edit_result_dialog_delete_button))
@@ -565,6 +631,17 @@ fun AddOrEditResultDialog(
         }
     }
 }
+
+private fun createResultOfInput(
+    result: Result,
+    weightText: TextFieldValue,
+    date: OffsetDateTime,
+) = Result(
+    id = result.id,
+    movementId = result.movementId,
+    weight = weightText.text.toFloat(),
+    offsetDateTime = date,
+)
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -624,11 +701,10 @@ private fun MovementDetailScreenSuccessPreview() {
 @Composable
 private fun AddResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
-        AddOrEditResultDialog(
-            isAdd = true,
+        AddResultDialog(
             result = Result(
                 movementId = 3,
-                weight = 0f,
+                weight = 55f,
                 offsetDateTime = OffsetDateTime.now()
             ),
             weightUnit = WeightUnit.KILOGRAMS,
@@ -640,8 +716,7 @@ private fun AddResultDialogEnabledPreview() {
 @Composable
 private fun AddResultDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
-        AddOrEditResultDialog(
-            isAdd = true,
+        AddResultDialog(
             result = Result(
                 movementId = 1,
                 weight = 0f,
@@ -656,8 +731,7 @@ private fun AddResultDialogDisabledPreview() {
 @Composable
 private fun EditResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
-        AddOrEditResultDialog(
-            isAdd = false,
+        EditResultDialog(
             result = Result(
                 movementId = 2,
                 weight = 5f,
