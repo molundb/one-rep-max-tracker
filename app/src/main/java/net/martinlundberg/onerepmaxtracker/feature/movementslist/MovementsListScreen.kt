@@ -456,7 +456,7 @@ fun EditMovementDialog(
         cardContentDescription = stringResource(R.string.movement_list_screen_edit_movement_dialog_content_description),
         title = stringResource(R.string.movement_list_screen_edit_movement_dialog_title),
         showWeightField = false,
-        confirmButtonText = stringResource(R.string.edit),
+        confirmButtonText = stringResource(R.string.save),
         onDismissRequest = { editedMovement ->
             analyticsHelper.logEditMovementDialog_Dismissed(editedMovement)
             onDismissRequest(editedMovement)

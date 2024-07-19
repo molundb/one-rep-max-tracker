@@ -450,7 +450,7 @@ fun EditResultDialog(
         weightUnit = weightUnit,
         cardContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_content_description),
         title = stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
-        confirmButtonText = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button),
+        confirmButtonText = stringResource(R.string.save),
         confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
         onDismissRequest = { editedResult ->
             analyticsHelper.logEditResultDialog_Dismissed(editedResult)

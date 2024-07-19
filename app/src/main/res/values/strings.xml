@@ -3,6 +3,7 @@
     <string name="app_name">One Rep Max Tracker</string>
     <string name="cancel">Cancel</string>
     <string name="edit">Edit</string>
+    <string name="save">Save</string>
     <string name="delete">Delete</string>
 
     <!-- Top Bar Titles -->
@@ -46,7 +47,6 @@
     <string name="movement_detail_screen_add_or_edit_result_dialog_date_label">Date</string>
     <string name="movement_detail_screen_add_result_dialog_confirm_button">Add result</string>
     <string name="movement_detail_screen_add_result_dialog_confirm_button_content_description">Add result button</string>
-    <string name="movement_detail_screen_edit_result_dialog_confirm_button">Edit result</string>
     <string name="movement_detail_screen_edit_result_dialog_confirm_button_content_description">Edit result button</string>
     <string name="movement_detail_screen_edit_result_dialog_delete_button">Delete result</string>
 
