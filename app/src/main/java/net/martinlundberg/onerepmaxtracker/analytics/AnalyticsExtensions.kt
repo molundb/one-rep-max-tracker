@@ -149,6 +149,17 @@ fun AnalyticsHelper.logAddMovementDialog_Dismissed(movement: Movement) {
     )
 }
 
+fun AnalyticsHelper.logAddMovementDialog_ConfirmClick(movement: Movement) {
+    val type = "add_movement_dialog_confirm_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
 fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: Movement) {
     val type = "edit_movement_dialog_cancel_click"
     val extras = createMovementParams(movement)
@@ -162,6 +173,28 @@ fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: Movement) {
 
 fun AnalyticsHelper.logEditMovementDialog_Dismissed(movement: Movement) {
     val type = "edit_movement_dialog_dismissed"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logEditMovementDialog_ConfirmClick(movement: Movement) {
+    val type = "edit_movement_dialog_confirm_click"
+    val extras = createMovementParams(movement)
+    logEvent(
+        AnalyticsEvent(
+            type = type,
+            extras = extras,
+        )
+    )
+}
+
+fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: Movement) {
+    val type = "edit_movement_dialog_delete_movement_click"
     val extras = createMovementParams(movement)
     logEvent(
         AnalyticsEvent(
