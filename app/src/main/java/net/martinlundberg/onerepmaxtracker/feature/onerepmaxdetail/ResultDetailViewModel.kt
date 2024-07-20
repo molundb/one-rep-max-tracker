@@ -9,18 +9,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.NavigationService
+import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
 
 @HiltViewModel
 class ResultDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
+    private val clockService: ClockService,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<ResultDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<ResultDetailUiState> = _uiState.asStateFlow()
@@ -31,16 +35,31 @@ class ResultDetailViewModel @Inject constructor(
                 resultRepository.getResult(id),
                 resultRepository.getWeightUnitFlow(),
             ) { result, weightUnit ->
-                Success(result, weightUnit)
+                val percentages = mutableListOf<Percentage>()
+                for (percentage in 100 downTo 40 step 10) {
+                    percentages.add(
+                        Percentage(
+                            percentage,
+                            (result.weight * percentage / 100).toInt()
+                        )
+                    )
+                }
+
+                Success(result, percentages, weightUnit)
             }.collect { newState ->
-                _uiState.update { newState }
+                val stateWithFormattedDate = newState.copy(
+                    result = newState.result.copy(
+                        dateTimeFormatted = newState.result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis()),
+                    )
+                )
+                _uiState.update { stateWithFormattedDate }
             }
         }
     }
 
-    fun updateResult(result: Result) {
+    fun updateResult(result: Result, weightUnit: WeightUnit) {
         viewModelScope.launch {
-            resultRepository.addResult(result, WeightUnit.KILOGRAMS)
+            resultRepository.addResult(result, weightUnit)
         }
     }
 
@@ -50,12 +69,6 @@ class ResultDetailViewModel @Inject constructor(
             navigationService.navController.popBackStack()
         }
     }
-
-    fun setWeightUnit(isPounds: Boolean) {
-        viewModelScope.launch {
-            resultRepository.setWeightUnit(isPounds)
-        }
-    }
 }
 
 sealed interface ResultDetailUiState {
@@ -63,6 +76,7 @@ sealed interface ResultDetailUiState {
 
     data class Success(
         val result: Result,
+        val percentagesOf1RM: List<Percentage>,
         val weightUnit: WeightUnit,
     ) : ResultDetailUiState
 }

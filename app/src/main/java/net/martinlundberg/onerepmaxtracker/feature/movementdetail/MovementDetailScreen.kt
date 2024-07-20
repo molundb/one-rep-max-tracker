@@ -66,10 +66,6 @@ import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_Dismisse
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_Dismissed
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_CancelClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_ConfirmClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
@@ -117,7 +113,7 @@ fun MovementDetailRoute(
         onEditMovementClick = movementDetailViewModel::editMovement,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
-        getRelativeDateString = movementDetailViewModel::getRelativeDateString,
+//        getRelativeDateString = movementDetailViewModel::getRelativeDateString,
     )
 }
 
@@ -133,7 +129,7 @@ fun MovementDetailScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
-    getRelativeDateString: (OffsetDateTime) -> String = { "" },
+//    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     TrackScreenViewEvent(screenName = "MovementDetail")
 
@@ -219,7 +215,7 @@ fun MovementDetailScreen(
 //                                        resultToEdit = result
                                         onResultClick(result.id, movementDetailUiState.movement.movementName)
                                     },
-                                    getRelativeDateString = getRelativeDateString,
+//                                    getRelativeDateString = getRelativeDateString,
                                 )
                             }
                         }
@@ -375,15 +371,19 @@ fun ResultCard(
     modifier: Modifier = Modifier,
     result: Result,
     weightUnit: WeightUnit,
-    onResultClick: (Result) -> Unit = { },
-    getRelativeDateString: (OffsetDateTime) -> String = { "" },
+    onResultClick: ((Result) -> Unit)? = null,
+//    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     val context = LocalContext.current
     Card(
         modifier = modifier.semantics {
             contentDescription = context.getString(R.string.movement_detail_screen_result_card_content_description)
         },
-        onClick = { onResultClick(result) },
+        onClick = {
+            if (onResultClick != null) {
+                onResultClick(result)
+            }
+        },
         shape = RoundedCornerShape(8.dp),
     ) {
         Row(
@@ -399,14 +399,16 @@ fun ResultCard(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = getRelativeDateString(result.offsetDateTime),
+                text = result.dateTimeFormatted ?: "",
                 style = MaterialTheme.typography.titleMedium
             )
             Box(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(id = R.drawable.ic_edit),
-                contentDescription = context.getString(R.string.movement_list_screen_movement_card_nav_icon_content_description),
-            )
+            if (onResultClick != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = context.getString(R.string.movement_list_screen_movement_card_nav_icon_content_description),
+                )
+            }
         }
     }
 }
@@ -466,42 +468,6 @@ fun AddResultDialog(
         onCancel = { editedResult ->
             analyticsHelper.logAddResultDialog_CancelClick(editedResult)
             onCancel(editedResult)
-        },
-    )
-}
-
-@Composable
-fun EditResultDialog(
-    result: Result,
-    weightUnit: WeightUnit,
-    onDismissRequest: (Result) -> Unit = {},
-    onConfirm: (Result) -> Unit = {},
-    onCancel: (Result) -> Unit = {},
-    onDelete: (Result) -> Unit = {},
-) {
-    val analyticsHelper = LocalAnalyticsHelper.current
-    AddOrEditResultDialog(
-        result = result,
-        weightUnit = weightUnit,
-        cardContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_content_description),
-        title = stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
-        confirmButtonText = stringResource(R.string.save),
-        confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
-        onDismissRequest = { editedResult ->
-            analyticsHelper.logEditResultDialog_Dismissed(editedResult)
-            onDismissRequest(editedResult)
-        },
-        onConfirm = { editedResult ->
-            analyticsHelper.logEditResultDialog_ConfirmClick(editedResult)
-            onConfirm(editedResult)
-        },
-        onCancel = { editedResult ->
-            analyticsHelper.logEditResultDialog_CancelClick(editedResult)
-            onCancel(editedResult)
-        },
-        onDelete = { editedResult ->
-            analyticsHelper.logEditResultDialog_DeleteResultClick(editedResult.id)
-            onDelete(editedResult)
         },
     )
 }
@@ -689,7 +655,7 @@ private fun createResultOfInput(
 ) = Result(
     id = result.id,
     movementId = result.movementId,
-    weight = weightText.text.toFloat(),
+    weight = weightText.text.toFloatOrNull() ?: 0f,
     offsetDateTime = date,
     comment = commentText
 )
@@ -713,6 +679,8 @@ private fun MovementDetailLoadingPreview() {
 private fun MovementDetailScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
+            val offsetDateTimeAndFormatted =
+                OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
             MovementDetailScreen(
                 innerPadding = innerPadding,
                 movementId = 111L,
@@ -724,27 +692,32 @@ private fun MovementDetailScreenSuccessPreview() {
                                 id = 80,
                                 movementId = 18,
                                 weight = 15.5f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "This is a nice comment",
                             ),
                             Result(
                                 id = 75,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 3, 0, 0, 0, 0, ZoneOffset.UTC),
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "Happiness comes from within",
                             ),
                             Result(
                                 id = 70,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = OffsetDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "You are the universe experiencing itself",
                             ),
                         )
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
+//                getRelativeDateString = DateUtils.getRelativeTimeSpanString(
+//                    offsetDateTime.toInstant().toEpochMilli(),
+//                    clockService.getCurrentTimeMillis(),
+//                    DateUtils.MINUTE_IN_MILLIS,
+//                ).toString()
             )
         }
     }
@@ -778,22 +751,6 @@ private fun AddResultDialogDisabledPreview() {
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now(),
                 comment = "",
-            ),
-            weightUnit = WeightUnit.POUNDS,
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun EditResultDialogEnabledPreview() {
-    OneRepMaxTrackerTheme {
-        EditResultDialog(
-            result = Result(
-                movementId = 2,
-                weight = 5f,
-                offsetDateTime = OffsetDateTime.now(),
-                comment = "Not much",
             ),
             weightUnit = WeightUnit.POUNDS,
         )

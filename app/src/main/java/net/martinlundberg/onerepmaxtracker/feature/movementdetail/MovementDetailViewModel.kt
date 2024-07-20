@@ -1,6 +1,5 @@
 package net.martinlundberg.onerepmaxtracker.feature.movementdetail
 
-import android.text.format.DateUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +23,7 @@ import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import java.time.OffsetDateTime
+import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,13 +45,17 @@ class MovementDetailViewModel @Inject constructor(
             ) { result, weightUnit ->
                 Success(result, weightUnit)
             }.collect { newState ->
-                val sortedByDate = newState.movement.results.sortedByDescending { it.offsetDateTime }
+                val sortedByDateAndFormattedDate = newState.movement.results.map { result ->
+                    result.copy(
+                        dateTimeFormatted = result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis())
+                    )
+                }.sortedByDescending { it.offsetDateTime }
 
                 _uiState.update {
                     newState.copy(
                         movement = MovementDetail(
                             newState.movement.movementName,
-                            sortedByDate
+                            sortedByDateAndFormattedDate,
                         )
                     )
                 }
@@ -92,13 +95,6 @@ class MovementDetailViewModel @Inject constructor(
             resultRepository.deleteResult(id)
         }
     }
-
-    fun getRelativeDateString(offsetDateTime: OffsetDateTime) =
-        DateUtils.getRelativeTimeSpanString(
-            offsetDateTime.toInstant().toEpochMilli(),
-            clockService.getCurrentTimeMillis(),
-            DateUtils.MINUTE_IN_MILLIS,
-        ).toString()
 }
 
 sealed interface MovementDetailUiState {

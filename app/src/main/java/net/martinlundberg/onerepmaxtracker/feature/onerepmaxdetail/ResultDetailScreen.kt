@@ -10,15 +10,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,11 +41,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_ConfirmClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
+import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
+import net.martinlundberg.onerepmaxtracker.feature.movementdetail.AddOrEditResultDialog
+import net.martinlundberg.onerepmaxtracker.feature.movementdetail.DeleteResultConfirmDialog
+import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
-import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldTimePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -68,27 +76,25 @@ fun ResultDetailRoute(
 
     ResultDetailScreen(
         innerPadding = innerPadding,
-        resultId = resultId,
         resultDetailUiState = resultDetailUiState,
         movementName = movementName,
         navigateBack = navigateBack,
         updateResultDetail = resultDetailViewModel::updateResult,
         onDeleteClick = resultDetailViewModel::deleteResult,
-        setWeightUnitToPounds = resultDetailViewModel::setWeightUnit
     )
 }
 
 @Composable
 fun ResultDetailScreen(
     innerPadding: PaddingValues,
-    resultId: Long,
     movementName: String,
     resultDetailUiState: ResultDetailUiState,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    updateResultDetail: (Result) -> Unit = {},
+    updateResultDetail: (Result, WeightUnit) -> Unit = { _, _ -> },
     onDeleteClick: (Long) -> Unit = {},
-    setWeightUnitToPounds: (Boolean) -> Unit = {},
 ) {
+    TrackScreenViewEvent(screenName = "ResultDetail")
+
     val lifecycleOwner = LocalLifecycleOwner.current
 
     Column(
@@ -163,72 +169,228 @@ fun ResultDetailScreen(
                 var showDatePickerDialog by remember { mutableStateOf(false) }
                 var showTimePickerDialog by remember { mutableStateOf(false) }
 
+                var resultToEdit by remember { mutableStateOf<Result?>(null) }
+                var resultToDelete by remember { mutableStateOf<Result?>(null) }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(all = 8.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                        .padding(all = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Row {
-                        Column {
-                            Text(text = "Weight")
-                            TextField(
-                                value = weightText,
-                                onValueChange = { weightText = it }
-                            )
-                        }
-                        // TODO: decide how to handle reps
-                        Column {
-                            Text(text = "Reps")
-                            Text(text = "1")
-                        }
-                    }
-                    Row {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(text = "Date")
-                            OutlinedTextFieldDatePicker(
-                                currentDateTime = resultDetailUiState.result.offsetDateTime,
-                                showDialog = showDatePickerDialog,
-                                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
-                                setDialogVisibility = { showDatePickerDialog = it },
-                                onAccept = { offsetDateTime ->
-                                    updateResultDetail(
-                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
-                                    )
-                                },
-                            )
-                        }
-                        Spacer(Modifier.size(8.dp))
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(text = "Time")
-                            OutlinedTextFieldTimePicker(
-                                currentDateTime = resultDetailUiState.result.offsetDateTime,
-                                showDialog = showTimePickerDialog,
-                                setDialogVisibility = { showTimePickerDialog = it },
-                                updateResultDetail = { offsetDateTime ->
-                                    updateResultDetail(
-                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-                Column {
-                    Text(text = "Notes")
-                    TextField(
-                        value = notesText,
-                        onValueChange = { notesText = it }
+                    ResultCard(
+                        result = resultDetailUiState.result,
+                        weightUnit = resultDetailUiState.weightUnit,
                     )
+                    Text(
+                        text = "Percentages of 1RM",
+                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+                    )
+                    resultDetailUiState.percentagesOf1RM.forEach { percentage ->
+                        Percentage(percentage, resultDetailUiState.weightUnit)
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TextButton(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .semantics {
+                                    contentDescription =
+                                        context.getString(R.string.movement_detail_screen_edit_movement_button_content_description)
+                                },
+                            onClick = {
+//                                analyticsHelper.logMovementDetail_EditMovementClick(
+//                                    movementId,
+//                                    movementDetailUiState.movement.movementName
+//                                )
+                                resultToEdit = resultDetailUiState.result
+                            },
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    horizontal = 24.dp,
+                                    vertical = 12.dp
+                                ),
+                                text = stringResource(R.string.edit),
+                                style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                            )
+                        }
+                        Button(
+                            modifier = Modifier
+                                .semantics {
+                                    contentDescription =
+                                        context.getString(R.string.movement_detail_screen_add_result_button_content_description)
+                                },
+                            onClick = {
+//                                analyticsHelper.logMovementDetail_AddResultClick(
+//                                    movementId,
+//                                    movementDetailUiState.movement.movementName
+//                                )
+                                resultToDelete = resultDetailUiState.result
+                            },
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = stringResource(R.string.delete),
+                            )
+                        }
+                    }
+
+                    resultToEdit?.let { result ->
+                        EditResultDialog(
+                            result = result,
+                            weightUnit = resultDetailUiState.weightUnit,
+                            onDismissRequest = { resultToEdit = null },
+                            onConfirm = { editedResult ->
+                                updateResultDetail(editedResult, resultDetailUiState.weightUnit)
+                                resultToEdit = null
+                            },
+                            onCancel = { resultToEdit = null },
+                            onDelete = { editedResult ->
+                                resultToDelete = editedResult
+                                resultToEdit = null
+                            },
+                        )
+                    }
+
+                    resultToDelete?.let { result ->
+                        DeleteResultConfirmDialog(
+                            resultId = result.id,
+                            movementName = movementName,
+                            onDismissRequest = {
+                                resultToDelete = null
+                            },
+                            onCancel = {
+                                resultToDelete = null
+                            },
+                            onConfirmation = {
+                                onDeleteClick(result.id)
+                                resultToDelete = null
+                            }
+                        )
+                    }
+
+//                    Row {
+//                        Column {
+//                            Text(text = "Weight")
+//                            TextField(
+//                                value = weightText,
+//                                onValueChange = { weightText = it }
+//                            )
+//                        }
+//                        // TODO: decide how to handle reps
+//                        Column {
+//                            Text(text = "Reps")
+//                            Text(text = "1")
+//                        }
+//                    }
+//                    Row {
+//                        Column(
+//                            modifier = Modifier.weight(1f)
+//                        ) {
+//                            Text(text = "Date")
+//                            OutlinedTextFieldDatePicker(
+//                                currentDateTime = resultDetailUiState.result.offsetDateTime,
+//                                showDialog = showDatePickerDialog,
+//                                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+//                                setDialogVisibility = { showDatePickerDialog = it },
+//                                onAccept = { offsetDateTime ->
+//                                    updateResultDetail(
+//                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
+//                                    )
+//                                },
+//                            )
+//                        }
+//                        Spacer(Modifier.size(8.dp))
+//                        Column(
+//                            modifier = Modifier.weight(1f)
+//                        ) {
+//                            Text(text = "Time")
+//                            OutlinedTextFieldTimePicker(
+//                                currentDateTime = resultDetailUiState.result.offsetDateTime,
+//                                showDialog = showTimePickerDialog,
+//                                setDialogVisibility = { showTimePickerDialog = it },
+//                                updateResultDetail = { offsetDateTime ->
+//                                    updateResultDetail(
+//                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
+//                                    )
+//                                },
+//                            )
+//                        }
+//                    }
                 }
+//                Column {
+//                    Text(text = "Notes")
+//                    TextField(
+//                        value = notesText,
+//                        onValueChange = { notesText = it }
+//                    )
+//                }
             }
         }
+    }
+}
+
+@Composable
+fun EditResultDialog(
+    result: Result,
+    weightUnit: WeightUnit,
+    onDismissRequest: (Result) -> Unit = {},
+    onConfirm: (Result) -> Unit = {},
+    onCancel: (Result) -> Unit = {},
+    onDelete: (Result) -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+    AddOrEditResultDialog(
+        result = result,
+        weightUnit = weightUnit,
+        cardContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_content_description),
+        title = stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
+        confirmButtonText = stringResource(R.string.save),
+        confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
+        onDismissRequest = { editedResult ->
+            analyticsHelper.logEditResultDialog_Dismissed(editedResult)
+            onDismissRequest(editedResult)
+        },
+        onConfirm = { editedResult ->
+            analyticsHelper.logEditResultDialog_ConfirmClick(editedResult)
+            onConfirm(editedResult)
+        },
+        onCancel = { editedResult ->
+            analyticsHelper.logEditResultDialog_CancelClick(editedResult)
+            onCancel(editedResult)
+        },
+        onDelete = { editedResult ->
+            analyticsHelper.logEditResultDialog_DeleteResultClick(editedResult.id)
+            onDelete(editedResult)
+        },
+    )
+}
+
+@Composable
+fun Percentage(percentage: Percentage, weightUnit: WeightUnit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(
+                R.string.percentage,
+                percentage.percentage,
+            ),
+        )
+        Text(
+            text = stringResource(
+                R.string.weight_with_unit,
+                percentage.weight,
+                weightUnit.toString(LocalContext.current)
+            )
+        )
     }
 }
 
@@ -239,7 +401,6 @@ private fun ResultDetailScreenLoadingPreview() {
         DefaultScaffold { innerPadding ->
             ResultDetailScreen(
                 innerPadding = innerPadding,
-                resultId = 0,
                 movementName = "Back Squat",
                 resultDetailUiState = Loading,
             )
@@ -254,7 +415,6 @@ private fun ResultDetailScreenSuccessPreview() {
         DefaultScaffold { innerPadding ->
             ResultDetailScreen(
                 innerPadding = innerPadding,
-                resultId = 0,
                 movementName = "Thrusters",
                 resultDetailUiState = Success(
                     result = Result(
@@ -262,11 +422,38 @@ private fun ResultDetailScreenSuccessPreview() {
                         movementId = 15,
                         weight = 100.5f,
                         offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+                        dateTimeFormatted = "5 days ago",
                         comment = "Bring it on!",
+                    ),
+                    percentagesOf1RM = listOf(
+                        Percentage(
+                            percentage = 90,
+                            weight = 80,
+                        ),
+                        Percentage(
+                            percentage = 85,
+                            weight = 74,
+                        ),
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EditResultDialogEnabledPreview() {
+    OneRepMaxTrackerTheme {
+        EditResultDialog(
+            result = Result(
+                movementId = 2,
+                weight = 5f,
+                offsetDateTime = OffsetDateTime.now(),
+                comment = "Not much",
+            ),
+            weightUnit = WeightUnit.POUNDS,
+        )
     }
 }
