@@ -129,6 +129,8 @@ fun MovementsListScreen(
     var showAddMovementDialog by remember { mutableStateOf(false) }
     var movementToDelete by remember { mutableStateOf<Movement?>(null) }
 
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -146,7 +148,11 @@ fun MovementsListScreen(
                 Box(modifier = Modifier.height(24.dp))
                 CircularProgressIndicator(
                     modifier = Modifier
-                        .width(64.dp),
+                        .width(64.dp)
+                        .semantics {
+                            contentDescription =
+                                context.getString(R.string.loading_indicator_content_description)
+                        },
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )

@@ -10,8 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Rule
 import org.junit.Test
@@ -27,8 +27,8 @@ class OneRepMaxDetailScreenTest {
     @Test
     fun givenMovementName_thenNameOfMovementIsDisplayed() {
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
             )
         }
@@ -39,8 +39,8 @@ class OneRepMaxDetailScreenTest {
     @Test
     fun givenStateIsLoading_thenLoadingIndicatorAndTextAreDisplayed() {
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Loading(weightUnit = WeightUnit.KILOGRAMS),
             )
@@ -53,14 +53,15 @@ class OneRepMaxDetailScreenTest {
     @Test
     fun givenResult_thenInfoIsDisplayed() {
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
@@ -77,14 +78,15 @@ class OneRepMaxDetailScreenTest {
     @Test
     fun whenDateIsClicked_thenCalendarDialogIsDisplayed() {
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
@@ -100,18 +102,19 @@ class OneRepMaxDetailScreenTest {
     fun givenCalendarDialog_whenCancelButtonIsClicked_thenDialogIsClosedAndUpdateIsNotCalled() {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateOneRepMaxDetail = {
+                updateResultDetail = {
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -130,18 +133,19 @@ class OneRepMaxDetailScreenTest {
     fun givenCalendarDialog_whenAcceptButtonIsClicked_thenDialogIsClosedAndUpdateIsCalled() {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateOneRepMaxDetail = {
+                updateResultDetail = {
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -160,14 +164,15 @@ class OneRepMaxDetailScreenTest {
     @Test
     fun whenTimeIsClicked_thenTimePickerDialogIsDisplayed() {
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
@@ -183,18 +188,19 @@ class OneRepMaxDetailScreenTest {
     fun givenTimePickerDialog_whenCancelButtonIsClicked_thenDialogIsClosedAndUpdateIsNotCalled() {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateOneRepMaxDetail = {
+                updateResultDetail = {
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -213,18 +219,19 @@ class OneRepMaxDetailScreenTest {
     fun givenTimePickerDialog_whenAcceptButtonIsClicked_thenDialogIsClosedAndUpdateIsCalled() {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
-            OneRepMaxDetailScreen(
-                oneRepMaxId = 1,
+            ResultDetailScreen(
+                resultId = 1,
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
                         movementId = 55,
                         weight = 100f,
-                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateOneRepMaxDetail = {
+                updateResultDetail = {
                     updateOneRepMaxDetailCalled = true
                 }
             )

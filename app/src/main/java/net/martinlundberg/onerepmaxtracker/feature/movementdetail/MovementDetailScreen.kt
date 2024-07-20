@@ -98,7 +98,7 @@ fun MovementDetailRoute(
     innerPadding: PaddingValues,
     movementId: Long,
     movementName: String,
-//    onOneRepMaxClick: (Long, String) -> Unit = { _, _ -> },
+    onResultClick: (Long, String) -> Unit = { _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
 ) {
@@ -111,7 +111,7 @@ fun MovementDetailRoute(
         innerPadding = innerPadding,
         movementId = movementId,
         movementDetailUiState = movementDetailUiState,
-//        onOneRepMaxClick = onOneRepMaxClick,
+        onResultClick = onResultClick,
         navigateBack = navigateBack,
         addResult = movementDetailViewModel::addResult,
         onEditMovementClick = movementDetailViewModel::editMovement,
@@ -127,6 +127,7 @@ fun MovementDetailScreen(
     innerPadding: PaddingValues,
     movementId: Long,
     movementDetailUiState: MovementDetailUiState,
+    onResultClick: (Long, String) -> Unit = { _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
@@ -136,7 +137,7 @@ fun MovementDetailScreen(
 ) {
     TrackScreenViewEvent(screenName = "MovementDetail")
 
-    var resultToEdit by remember { mutableStateOf<Result?>(null) }
+//    var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showEditMovementDialog by remember { mutableStateOf(false) }
@@ -189,7 +190,7 @@ fun MovementDetailScreen(
                         .width(64.dp)
                         .semantics {
                             contentDescription =
-                                context.getString(R.string.movement_detail_screen_loading_indicator_content_description)
+                                context.getString(R.string.loading_indicator_content_description)
                         },
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -215,7 +216,8 @@ fun MovementDetailScreen(
                                     weightUnit = movementDetailUiState.weightUnit,
                                     onResultClick = {
                                         analyticsHelper.logMovementDetail_ResultClick(result)
-                                        resultToEdit = result
+//                                        resultToEdit = result
+                                        onResultClick(result.id, movementDetailUiState.movement.movementName)
                                     },
                                     getRelativeDateString = getRelativeDateString,
                                 )
@@ -291,22 +293,22 @@ fun MovementDetailScreen(
                         )
                     }
 
-                    resultToEdit?.let { result ->
-                        EditResultDialog(
-                            result = result,
-                            weightUnit = movementDetailUiState.weightUnit,
-                            onDismissRequest = { resultToEdit = null },
-                            onConfirm = { editedResult ->
-                                addResult(editedResult, movementDetailUiState.weightUnit)
-                                resultToEdit = null
-                            },
-                            onCancel = { resultToEdit = null },
-                            onDelete = { editedResult ->
-                                resultToDelete = editedResult
-                                resultToEdit = null
-                            },
-                        )
-                    }
+//                    resultToEdit?.let { result ->
+//                        EditResultDialog(
+//                            result = result,
+//                            weightUnit = movementDetailUiState.weightUnit,
+//                            onDismissRequest = { resultToEdit = null },
+//                            onConfirm = { editedResult ->
+//                                addResult(editedResult, movementDetailUiState.weightUnit)
+//                                resultToEdit = null
+//                            },
+//                            onCancel = { resultToEdit = null },
+//                            onDelete = { editedResult ->
+//                                resultToDelete = editedResult
+//                                resultToEdit = null
+//                            },
+//                        )
+//                    }
 
                     resultToDelete?.let { result ->
                         DeleteResultConfirmDialog(

@@ -35,7 +35,7 @@ import androidx.navigation.navArgument
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListRoute
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailRoute
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailRoute
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
@@ -139,15 +139,17 @@ private fun NavigationHost(
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
             enterTransition = slideInFromRight,
+            popEnterTransition = slideInFromLeft,
+            exitTransition = slideOutToLeft,
             popExitTransition = slideOutToRight,
         ) { backStackEntry ->
             MovementDetailRoute(
                 innerPadding = innerPadding,
                 movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
-                //                onOneRepMaxClick = { oneRepMaxId, movementName ->
-                //                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
-                //                },
+                onResultClick = { oneRepMaxId, movementName ->
+                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
+                },
                 navigateBack = { lifeCycleState ->
                     if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
                         navController.popBackStack()
@@ -162,12 +164,17 @@ private fun NavigationHost(
                 navArgument(MOVEMENT_NAME) { type = NavType.StringType }
             ),
             enterTransition = slideInFromRight,
-            popEnterTransition = null,
             popExitTransition = slideOutToRight,
         ) { backStackEntry ->
-            OneRepMaxDetailRoute(
-                oneRepMaxId = backStackEntry.arguments?.getLong(ONE_REP_MAX_ID) ?: -1,
+            ResultDetailRoute(
+                innerPadding = innerPadding,
+                resultId = backStackEntry.arguments?.getLong(ONE_REP_MAX_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
+                navigateBack = { lifeCycleState ->
+                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        navController.popBackStack()
+                    }
+                }
             )
         }
     }

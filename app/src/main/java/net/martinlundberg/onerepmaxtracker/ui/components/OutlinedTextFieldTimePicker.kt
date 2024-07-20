@@ -37,7 +37,7 @@ fun OutlinedTextFieldTimePicker(
     currentDateTime: OffsetDateTime,
     showDialog: Boolean,
     setDialogVisibility: (Boolean) -> Unit = {},
-    updateOneRepMaxDetail: (OffsetDateTime) -> Unit = {},
+    updateResultDetail: (OffsetDateTime) -> Unit = {},
 ) {
     val timePickerState = rememberTimePickerState(currentDateTime.hour, currentDateTime.minute)
 
@@ -61,7 +61,7 @@ fun OutlinedTextFieldTimePicker(
     if (showDialog) {
         TimePickerDialog(
             onConfirm = {
-                updateOneRepMaxDetail(currentDateTime.withHour(timePickerState.hour).withMinute(timePickerState.minute))
+                updateResultDetail(currentDateTime.withHour(timePickerState.hour).withMinute(timePickerState.minute))
                 setDialogVisibility(false)
             },
             onCancel = {

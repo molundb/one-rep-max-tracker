@@ -13,6 +13,8 @@
     <string name="weight_unit_kilograms">kg</string>
     <string name="weight_unit_pounds">lb</string>
 
+    <string name="loading_indicator_content_description">Circular progress indicator</string>
+
     <!-- Movement List Screen -->
     <string name="movement_list_screen_list_title">Your top results</string>
     <string name="movement_list_screen_add_movement_button">+ Add movement</string>
@@ -36,7 +38,6 @@
 
     <!-- Movement Detail Screen -->
     <string name="movement_detail_screen_back_button_content_description">Back button</string>
-    <string name="movement_detail_screen_loading_indicator_content_description">Circular progress indicator</string>
     <string name="movement_detail_screen_edit_movement_button_content_description">Edit movement button</string>
     <string name="movement_detail_screen_add_result_button_content_description">Add result button</string>
     <string name="movement_detail_screen_add_result_button">+ Add new</string>

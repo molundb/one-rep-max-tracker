@@ -50,9 +50,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 11,
-                movementName = "Name of movement",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name of movement"),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
             )
@@ -67,8 +66,7 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 15,
-                movementName = "The name",
-                movementDetailUiState = MovementDetailUiState.Loading,
+                movementDetailUiState = MovementDetailUiState.Loading(MovementDetail("The name")),
             )
         }
 
@@ -81,27 +79,31 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 2,
-                movementName = "Name",
+
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
+                        movementName = "Name",
                         listOf(
                             Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             ),
                             Result(
                                 id = 2,
                                 movementId = 2,
                                 weight = 72f,
-                                offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             ),
                             Result(
                                 id = 3,
                                 movementId = 2,
                                 weight = 75f,
-                                offsetDateTime = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 8, 28, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "Comment",
                             ),
                         ),
                     ),
@@ -131,9 +133,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
                 )
             )
@@ -151,9 +152,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
@@ -175,9 +175,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
                 )
             )
@@ -194,9 +193,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
                 )
             )
@@ -214,9 +212,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 addResult = { _, _ ->
@@ -241,9 +238,8 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Name",
                 movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(),
+                    MovementDetail("Name"),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
                 addResult = { _, _ ->
@@ -267,15 +263,16 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Back Squat",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
+                        "Back Squat",
                         listOf(
                             Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             )
                         )
                     ),
@@ -296,15 +293,16 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Back Squat",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
+                        "Back Squat",
                         listOf(
                             Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             )
                         )
                     ),
@@ -331,16 +329,17 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Back Squat",
 
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
+                        "Back Squat",
                         listOf(
                             Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             )
                         )
                     ),
@@ -364,15 +363,16 @@ class MovementDetailScreenTest {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
                 movementId = 17,
-                movementName = "Back Squat",
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail(
+                        "Back Squat",
                         listOf(
                             Result(
                                 id = 1,
                                 movementId = 2,
                                 weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC)
+                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
+                                comment = "",
                             )
                         )
                     ),

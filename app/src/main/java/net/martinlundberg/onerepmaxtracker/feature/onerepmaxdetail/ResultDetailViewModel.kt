@@ -12,18 +12,18 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.OneRepMaxDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class OneRepMaxDetailViewModel @Inject constructor(
+class ResultDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<OneRepMaxDetailUiState> = MutableStateFlow(Loading(WeightUnit.KILOGRAMS))
-    val uiState: StateFlow<OneRepMaxDetailUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<ResultDetailUiState> = MutableStateFlow(Loading)
+    val uiState: StateFlow<ResultDetailUiState> = _uiState.asStateFlow()
 
     fun getResult(id: Long) {
         viewModelScope.launch {
@@ -31,7 +31,9 @@ class OneRepMaxDetailViewModel @Inject constructor(
                 resultRepository.getResult(id),
                 resultRepository.getWeightUnitFlow(),
             ) { result, weightUnit ->
-                _uiState.update { Success(result, weightUnit) }
+                Success(result, weightUnit)
+            }.collect { newState ->
+                _uiState.update { newState }
             }
         }
     }
@@ -56,15 +58,11 @@ class OneRepMaxDetailViewModel @Inject constructor(
     }
 }
 
-sealed interface OneRepMaxDetailUiState {
-    val weightUnit: WeightUnit
-
-    data class Loading(
-        override val weightUnit: WeightUnit,
-    ) : OneRepMaxDetailUiState
+sealed interface ResultDetailUiState {
+    data object Loading : ResultDetailUiState
 
     data class Success(
         val result: Result,
-        override val weightUnit: WeightUnit,
-    ) : OneRepMaxDetailUiState
+        val weightUnit: WeightUnit,
+    ) : ResultDetailUiState
 }

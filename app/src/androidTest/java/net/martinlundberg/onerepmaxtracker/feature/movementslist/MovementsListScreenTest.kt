@@ -27,6 +27,18 @@ class MovementsListScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
+    fun givenStateIsLoading_thenLoadingIndicatorIsDisplayed() {
+        composeTestRule.setContent {
+            MovementsListScreen(
+                innerPadding = PaddingValues(),
+                movementsListUiState = MovementsListUiState.Loading,
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("Circular progress indicator").assertIsDisplayed()
+    }
+
+    @Test
     fun givenListWithMovement_thenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {
