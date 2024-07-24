@@ -85,7 +85,7 @@ import net.martinlundberg.onerepmaxtracker.ui.theme.White
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.kilosToPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.toStringWithoutTrailingZero
+import net.martinlundberg.onerepmaxtracker.util.removeTrailingZeros
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -393,7 +393,7 @@ fun ResultCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                result.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
+                result.weight.weightWithUnit(weightUnit, LocalContext.current),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -490,7 +490,7 @@ fun AddOrEditResultDialog(
         if (weightUnit.isPounds()) {
             result.weight.kilosToPounds()
         } else {
-            result.weight.toStringWithoutTrailingZero()
+            result.weight.removeTrailingZeros().toString()
         }
     }
 

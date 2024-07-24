@@ -6,7 +6,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="percentage">%1$d %%</string>
-    <string name="weight_with_unit">%1$d %2$s</string>
+    <string name="weight_with_unit">%1$s %2$s</string>
 
     <!-- Top Bar Titles -->
     <string name="top_bar_title">1RM Tracker</string>

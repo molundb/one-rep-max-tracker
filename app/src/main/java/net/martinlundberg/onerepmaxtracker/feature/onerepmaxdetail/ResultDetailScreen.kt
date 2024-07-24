@@ -161,7 +161,7 @@ fun ResultDetailScreen(
                 var weightText by remember {
                     mutableStateOf(
                         resultDetailUiState.result.weight.weightWithUnit(
-                            resultDetailUiState.weightUnit.isPounds(),
+                            resultDetailUiState.weightUnit,
                             context,
                         )
                     )

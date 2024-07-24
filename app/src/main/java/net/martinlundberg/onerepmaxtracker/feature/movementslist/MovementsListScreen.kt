@@ -201,7 +201,6 @@ fun MovementsListScreen(
                         }
                     }
                 }
-                val context = LocalContext.current
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Button(
                         modifier = Modifier
@@ -334,7 +333,7 @@ fun MovementCard(
                 )
             } else {
                 Text(
-                    text = movement.weight.weightWithUnit(weightUnit.isPounds(), LocalContext.current),
+                    text = movement.weight.weightWithUnit(weightUnit, LocalContext.current),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
