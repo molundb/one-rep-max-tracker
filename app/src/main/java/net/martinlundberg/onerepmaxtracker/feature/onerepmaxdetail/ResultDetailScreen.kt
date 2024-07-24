@@ -158,18 +158,6 @@ fun ResultDetailScreen(
             }
 
             is Success -> {
-                var weightText by remember {
-                    mutableStateOf(
-                        resultDetailUiState.result.weight.weightWithUnit(
-                            resultDetailUiState.weightUnit,
-                            context,
-                        )
-                    )
-                }
-                var notesText by remember { mutableStateOf("") }
-                var showDatePickerDialog by remember { mutableStateOf(false) }
-                var showTimePickerDialog by remember { mutableStateOf(false) }
-
                 var resultToEdit by remember { mutableStateOf<Result?>(null) }
                 var resultToDelete by remember { mutableStateOf<Result?>(null) }
 
