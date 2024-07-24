@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -222,6 +223,7 @@ fun ResultDetailScreen(
                         }
                         Button(
                             modifier = Modifier
+                                .widthIn(min = 120.dp)
                                 .semantics {
                                     contentDescription =
                                         context.getString(R.string.movement_detail_screen_add_result_button_content_description)
@@ -385,11 +387,12 @@ fun Percentage(percentage: Percentage, weightUnit: WeightUnit) {
             ),
         )
         Text(
-            text = stringResource(
-                R.string.weight_with_unit,
-                percentage.weight,
-                weightUnit.toString(LocalContext.current)
-            )
+//            text = stringResource(
+//                R.string.weight_with_unit,
+//                percentage.weight,
+//                weightUnit.toString(LocalContext.current)
+//            )
+            text = percentage.weight.weightWithUnit(weightUnit, LocalContext.current),
         )
     }
 }

@@ -372,7 +372,6 @@ fun ResultCard(
     result: Result,
     weightUnit: WeightUnit,
     onResultClick: ((Result) -> Unit)? = null,
-//    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     val context = LocalContext.current
     Card(

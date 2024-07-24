@@ -19,6 +19,7 @@ import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailU
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class ResultDetailViewModel @Inject constructor(
@@ -40,7 +41,7 @@ class ResultDetailViewModel @Inject constructor(
                     percentages.add(
                         Percentage(
                             percentage,
-                            (result.weight * percentage / 100).toInt()
+                            (result.weight * percentage / 100).roundToInt()
                         )
                     )
                 }

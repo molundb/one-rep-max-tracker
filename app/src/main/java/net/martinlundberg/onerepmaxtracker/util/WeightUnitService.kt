@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.POUNDS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -61,6 +62,21 @@ class WeightUnitServiceImpl @Inject constructor(
                         .toStringWithoutTrailingZero()
                 } ${context.getString(R.string.weight_unit_kilograms)}"
             }
+
+        fun Int.weightWithUnit(weightUnit: WeightUnit, context: Context): String {
+            val weight = if (weightUnit == POUNDS) (this * KILOS_TO_POUNDS_RATIO).toInt() else this
+            return context.getString(R.string.weight_with_unit, weight, weightUnit.toString(context))
+
+//        return if (isPounds)
+//        {
+//            "${
+//                (this * KILOS_TO_POUNDS_RATIO)
+//            } ${context.getString(R.string.weight_unit_pounds)}"
+//        } else
+//        {
+//            "$this ${context.getString(R.string.weight_unit_kilograms)}"
+//        }
+        }
 
         fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
         fun Float.kilosToPounds() = (this * KILOS_TO_POUNDS_RATIO).toStringWithoutTrailingZero()
