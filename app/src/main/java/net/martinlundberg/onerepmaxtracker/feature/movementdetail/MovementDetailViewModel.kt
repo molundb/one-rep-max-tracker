@@ -43,7 +43,7 @@ class MovementDetailViewModel @Inject constructor(
                 resultRepository.getMovementDetail(id),
                 resultRepository.getWeightUnitFlow(),
             ) { result, weightUnit ->
-                Success(result, weightUnit)
+                Success(result ?: MovementDetail(""), weightUnit)
             }.collect { newState ->
                 val sortedByDateAndFormattedDate = newState.movement.results.map { result ->
                     result.copy(

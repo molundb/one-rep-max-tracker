@@ -22,9 +22,9 @@ class DefaultResultRepository @Inject constructor(
     private val analyticsService: AnalyticsServiceImpl,
 ) : ResultRepository {
 
-    override suspend fun getMovementDetail(id: Long): Flow<MovementDetail> =
+    override suspend fun getMovementDetail(id: Long): Flow<MovementDetail?> =
         resultDao.getResultsForMovement(id).map { map ->
-            map.entries.first().asExternalMovementDetail() // TODO: Use firstOrNull?
+            map.entries.firstOrNull()?.asExternalMovementDetail()
         }
 
     override suspend fun addResult(result: Result, weightUnit: WeightUnit) {
