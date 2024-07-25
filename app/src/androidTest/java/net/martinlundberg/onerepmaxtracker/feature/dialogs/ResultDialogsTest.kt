@@ -3,6 +3,7 @@ package net.martinlundberg.onerepmaxtracker.feature.dialogs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -20,6 +21,7 @@ import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailS
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -227,4 +229,71 @@ class ResultDialogsTest {
     // TODO: Add tests for delete result confirm dialog
 
     // TODO: Add tests for calendar
+
+    @Test
+    @Ignore
+    fun givenCalendarDialog_whenCancelButtonIsClicked_thenDialogIsClosedAndUpdateIsNotCalled() {
+        var updateOneRepMaxDetailCalled = false
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
+                    ),
+                    percentagesOf1RM = emptyList(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+                onEditResultClick = { _, _ ->
+                    updateOneRepMaxDetailCalled = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+
+        composeTestRule.onNodeWithText("Cancel").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
+        assertFalse(updateOneRepMaxDetailCalled)
+    }
+
+    @Test
+    @Ignore
+    fun givenCalendarDialog_whenAcceptButtonIsClicked_thenDialogIsClosedAndUpdateIsCalled() {
+        var updateOneRepMaxDetailCalled = false
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
+                    ),
+                    percentagesOf1RM = emptyList(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+                onEditResultClick = { _, _ ->
+                    updateOneRepMaxDetailCalled = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+
+        composeTestRule.onNodeWithText("Wednesday, July 17, 2024").performClick()
+        composeTestRule.onNodeWithText("Accept").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
+        assertTrue(updateOneRepMaxDetailCalled)
+    }
 }
