@@ -2,7 +2,6 @@ package net.martinlundberg.onerepmaxtracker.feature.movementdetail
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -13,7 +12,6 @@ import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -188,84 +186,5 @@ class MovementDetailScreenTest {
         composeTestRule.onNodeWithText("+ Add new").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add result dialog").assertIsDisplayed()
-    }
-
-    // TODO: Update
-    @Test
-    @Ignore
-    fun givenEditDialog_whenDateIsClicked_thenCalendarDialogIsDisplayed() {
-        composeTestRule.setContent {
-            MovementDetailScreen(
-                innerPadding = PaddingValues(),
-                movementId = 17,
-
-                movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(
-                        "Back Squat",
-                        listOf(
-                            Result(
-                                id = 1,
-                                movementId = 2,
-                                weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
-                                comment = "",
-                            )
-                        )
-                    ),
-                    weightUnit = KILOGRAMS,
-                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
-                )
-            )
-        }
-
-        composeTestRule.onNodeWithContentDescription("Edit movement button").performClick()
-        composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertIsDisplayed()
-
-        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
-
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
-    }
-
-    // TODO: Update
-    @Test
-    @Ignore
-    fun givenCalendarDialog_whenDateIsSelectedAndAcceptButtonIsClicked_thenDialogIsClosedAndAddResultIsCalled() {
-        var addResultCalled = false
-        composeTestRule.setContent {
-            MovementDetailScreen(
-                innerPadding = PaddingValues(),
-                movementId = 17,
-                movementDetailUiState = MovementDetailUiState.Success(
-                    MovementDetail(
-                        "Back Squat",
-                        listOf(
-                            Result(
-                                id = 1,
-                                movementId = 2,
-                                weight = 70f,
-                                offsetDateTime = OffsetDateTime.of(2024, 6, 10, 0, 0, 0, 0, ZoneOffset.UTC),
-                                comment = "",
-                            )
-                        )
-                    ),
-                    weightUnit = KILOGRAMS,
-                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
-                ),
-                addResult = { _, _ ->
-                    addResultCalled = true
-                },
-            )
-        }
-
-        composeTestRule.onNodeWithContentDescription("Edit movement button").performClick()
-        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
-
-        composeTestRule.onNodeWithText("Wednesday, July 17, 2024").performClick()
-        composeTestRule.onNodeWithText("Accept").performClick()
-        composeTestRule.onNodeWithContentDescription("Edit result button").performClick()
-
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
-        assertTrue(addResultCalled)
     }
 }

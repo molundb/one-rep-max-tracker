@@ -56,12 +56,12 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovem
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
-import net.martinlundberg.onerepmaxtracker.feature.dialogs.AddMovementDialog
-import net.martinlundberg.onerepmaxtracker.feature.dialogs.DeleteMovementConfirmDialog
-import net.martinlundberg.onerepmaxtracker.feature.dialogs.EditMovementDialog
-import net.martinlundberg.onerepmaxtracker.feature.menus.MovementDropDownMenu
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
+import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.AddMovementDialog
+import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementConfirmDialog
+import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
+import net.martinlundberg.onerepmaxtracker.ui.components.menus.MovementDropDownMenu
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit

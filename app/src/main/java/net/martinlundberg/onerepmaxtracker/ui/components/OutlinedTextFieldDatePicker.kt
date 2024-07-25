@@ -89,7 +89,7 @@ private fun CustomDatePickerDialog(
         )
     ) {
         DatePickerDialog(
-            modifier = Modifier.semantics { contentDescription = "Date Picker Dialog" },
+            modifier = Modifier.semantics { contentDescription = "Date picker dialog" },
             onDismissRequest = onCancel,
             confirmButton = {
                 Button(
@@ -100,7 +100,7 @@ private fun CustomDatePickerDialog(
             },
             dismissButton = {
                 Button(
-                    onClick = onCancel
+                    onClick = onCancel,
                 ) {
                     Text("Cancel")
                 }

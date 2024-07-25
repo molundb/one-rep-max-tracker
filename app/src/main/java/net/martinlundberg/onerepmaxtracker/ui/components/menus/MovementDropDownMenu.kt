@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.menus
+package net.martinlundberg.onerepmaxtracker.ui.components.menus
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

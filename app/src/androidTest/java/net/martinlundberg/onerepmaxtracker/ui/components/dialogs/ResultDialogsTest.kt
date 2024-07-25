@@ -1,10 +1,13 @@
-package net.martinlundberg.onerepmaxtracker.feature.dialogs
+package net.martinlundberg.onerepmaxtracker.ui.components.dialogs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasContentDescriptionExactly
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -21,7 +24,6 @@ import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailS
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -66,7 +68,7 @@ class ResultDialogsTest {
         composeTestRule.onNodeWithContentDescription("Add result button").performClick()
 
         composeTestRule.onNodeWithContentDescription("Add result dialog").assertIsDisplayed()
-        composeTestRule.onNodeWithText("5 Jan 2023").assertIsDisplayed()
+        composeTestRule.onNodeWithText("05 Jan 2023").assertIsDisplayed()
     }
 
     @Test
@@ -170,7 +172,7 @@ class ResultDialogsTest {
 
     @Test
     fun whenEditResultDialog_whenCancel_thenDialogIsClosedAndResultIsNotEdited() {
-        var editResultClicked = false
+        var editResultCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
                 innerPadding = PaddingValues(),
@@ -185,8 +187,8 @@ class ResultDialogsTest {
                     percentagesOf1RM = listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                onEditResultClick = { _, _ ->
-                    editResultClicked = true
+                onEditResult = { _, _ ->
+                    editResultCalled = true
                 }
             )
         }
@@ -194,12 +196,12 @@ class ResultDialogsTest {
         composeTestRule.onNodeWithText("Edit").performClick()
 
         composeTestRule.onNodeWithText("Cancel").performClick()
-        assertFalse(editResultClicked)
+        assertFalse(editResultCalled)
     }
 
     @Test
     fun whenEditResultDialog_whenConfirm_thenDialogIsClosedAndResultIsEdited() {
-        var editResultClicked = false
+        var editResultCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
                 innerPadding = PaddingValues(),
@@ -214,8 +216,8 @@ class ResultDialogsTest {
                     percentagesOf1RM = listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                onEditResultClick = { _, _ ->
-                    editResultClicked = true
+                onEditResult = { _, _ ->
+                    editResultCalled = true
                 }
             )
         }
@@ -223,17 +225,11 @@ class ResultDialogsTest {
         composeTestRule.onNodeWithText("Edit").performClick()
 
         composeTestRule.onNodeWithText("Save").performClick()
-        assertTrue(editResultClicked)
+        assertTrue(editResultCalled)
     }
 
-    // TODO: Add tests for delete result confirm dialog
-
-    // TODO: Add tests for calendar
-
     @Test
-    @Ignore
-    fun givenCalendarDialog_whenCancelButtonIsClicked_thenDialogIsClosedAndUpdateIsNotCalled() {
-        var updateOneRepMaxDetailCalled = false
+    fun whenEditResultDialog_whenDelete_thenDeleteResultConfirmDialogIsDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
                 innerPadding = PaddingValues(),
@@ -243,30 +239,107 @@ class ResultDialogsTest {
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("Delete result").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Delete result confirmation dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenEditResultDialog_whenDateClicked_thenCalendarDialogIsDisplayed() {
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 25, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
                     percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
+                )
+            )
+        }
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("25 Jul 2024").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date picker dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenDeleteResultConfirmDialog_thenMovementNameAndWeightAreDisplayed() {
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("Delete result").performClick()
+
+        composeTestRule.onNodeWithText("Name of movement").assertIsDisplayed()
+        composeTestRule.onNodeWithText("100 kg").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenDeleteResultConfirmDialog_whenCancel_thenDialogIsClosedAndResultIsNotDeleted() {
+        var deleteResultCalled = false
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                onEditResultClick = { _, _ ->
-                    updateOneRepMaxDetailCalled = true
+                onDeleteResult = {
+                    deleteResultCalled = true
                 }
             )
         }
 
-        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+        composeTestRule.onNodeWithText("Delete").performClick()
 
         composeTestRule.onNodeWithText("Cancel").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
-        assertFalse(updateOneRepMaxDetailCalled)
+        composeTestRule.onNodeWithContentDescription("Delete result dialog").assertDoesNotExist()
+        assertFalse(deleteResultCalled)
     }
 
     @Test
-    @Ignore
-    fun givenCalendarDialog_whenAcceptButtonIsClicked_thenDialogIsClosedAndUpdateIsCalled() {
-        var updateOneRepMaxDetailCalled = false
+    fun givenDeleteResultConfirmDialog_whenConfirm_thenDialogIsClosedAndResultIsDeleted() {
+        var deleteResultCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
                 innerPadding = PaddingValues(),
@@ -276,24 +349,82 @@ class ResultDialogsTest {
                         movementId = 55,
                         weight = 100f,
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+                onDeleteResult = {
+                    deleteResultCalled = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithText("Delete").performClick()
+
+        composeTestRule.onNodeWithText("Yes, delete").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Delete result dialog").assertDoesNotExist()
+        assertTrue(deleteResultCalled)
+    }
+
+    @Test
+    fun givenCalendarDialog_whenCancel_thenEditDialogIsDisplayed() {
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 25, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
                     percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                onEditResultClick = { _, _ ->
-                    updateOneRepMaxDetailCalled = true
-                }
             )
         }
+        composeTestRule.onNodeWithText("Edit").performClick()
+        composeTestRule.onNodeWithText("25 Jul 2024").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Outlined Text Field Date Picker").performClick()
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").isDisplayed()
+        composeTestRule.onNodeWithContentDescription("Date picker dialog").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithText("Cancel")
+            .filterToOne(hasAnyAncestor(hasContentDescriptionExactly("Date picker dialog")))
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription("Date picker dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenCalendarDialog_whenDateSelectedAndConfirm_thenSelectedDateIsDisplayed() {
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 25, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "",
+                    ),
+                    percentagesOf1RM = emptyList(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Edit").performClick()
+        composeTestRule.onNodeWithText("25 Jul 2024").performClick()
 
         composeTestRule.onNodeWithText("Wednesday, July 17, 2024").performClick()
         composeTestRule.onNodeWithText("Accept").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Date Picker Dialog").assertDoesNotExist()
-        assertTrue(updateOneRepMaxDetailCalled)
+        composeTestRule.onNodeWithContentDescription("Date picker dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
+        composeTestRule.onNodeWithText("17 Jul 2024").assertIsDisplayed()
     }
 }

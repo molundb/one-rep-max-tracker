@@ -58,7 +58,7 @@ class ResultDetailViewModel @Inject constructor(
         }
     }
 
-    fun updateResult(result: Result, weightUnit: WeightUnit) {
+    fun editResult(result: Result, weightUnit: WeightUnit) {
         viewModelScope.launch {
             resultRepository.addResult(result, weightUnit)
         }

@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.dialogs
+package net.martinlundberg.onerepmaxtracker.ui.components.dialogs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed

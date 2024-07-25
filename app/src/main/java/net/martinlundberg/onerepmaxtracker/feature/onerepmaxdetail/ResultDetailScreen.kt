@@ -45,11 +45,11 @@ import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.feature.dialogs.DeleteResultConfirmDialog
-import net.martinlundberg.onerepmaxtracker.feature.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
+import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -75,8 +75,8 @@ fun ResultDetailRoute(
         resultDetailUiState = resultDetailUiState,
         movementName = movementName,
         navigateBack = navigateBack,
-        onEditResultClick = resultDetailViewModel::updateResult,
-        onDeleteClick = resultDetailViewModel::deleteResult,
+        onEditResult = resultDetailViewModel::editResult,
+        onDeleteResult = resultDetailViewModel::deleteResult,
     )
 }
 
@@ -86,8 +86,8 @@ fun ResultDetailScreen(
     movementName: String,
     resultDetailUiState: ResultDetailUiState,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    onEditResultClick: (Result, WeightUnit) -> Unit = { _, _ -> },
-    onDeleteClick: (Long) -> Unit = {},
+    onEditResult: (Result, WeightUnit) -> Unit = { _, _ -> },
+    onDeleteResult: (Long) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "ResultDetail")
 
@@ -228,7 +228,7 @@ fun ResultDetailScreen(
                             weightUnit = resultDetailUiState.weightUnit,
                             onDismissRequest = { resultToEdit = null },
                             onConfirm = { editedResult ->
-                                onEditResultClick(editedResult, resultDetailUiState.weightUnit)
+                                onEditResult(editedResult, resultDetailUiState.weightUnit)
                                 resultToEdit = null
                             },
                             onCancel = { resultToEdit = null },
@@ -250,7 +250,7 @@ fun ResultDetailScreen(
                                 resultToDelete = null
                             },
                             onConfirmation = {
-                                onDeleteClick(result.id)
+                                onDeleteResult(result.id)
                                 resultToDelete = null
                             }
                         )

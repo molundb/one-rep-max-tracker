@@ -2,7 +2,6 @@ package net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -123,7 +122,7 @@ class ResultDetailScreenTest {
 
         composeTestRule.onNodeWithText("Edit").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Edit result dialog").isDisplayed()
+        composeTestRule.onNodeWithContentDescription("Edit result dialog").assertIsDisplayed()
     }
 
     @Test
@@ -147,6 +146,6 @@ class ResultDetailScreenTest {
 
         composeTestRule.onNodeWithText("Delete").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Delete result confirmation dialog").isDisplayed()
+        composeTestRule.onNodeWithContentDescription("Delete result confirmation dialog").assertIsDisplayed()
     }
 }

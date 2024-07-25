@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.dialogs
+package net.martinlundberg.onerepmaxtracker.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,13 +49,14 @@ import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Confirm
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.kilosToPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.POUNDS
 import net.martinlundberg.onerepmaxtracker.util.removeTrailingZeros
 import java.time.OffsetDateTime
 
@@ -355,7 +356,7 @@ private fun AddResultDialogEnabledPreview() {
                           "Hey there. This is a longer comment testing what happens if there is a lot of text.\n\n" +
                           "Hey there. This is a longer comment testing what happens if there is a lot of text.",
             ),
-            weightUnit = WeightUnit.KILOGRAMS,
+            weightUnit = KILOGRAMS,
         )
     }
 }
@@ -371,7 +372,7 @@ private fun AddResultDialogDisabledPreview() {
                 offsetDateTime = OffsetDateTime.now(),
                 comment = "",
             ),
-            weightUnit = WeightUnit.POUNDS,
+            weightUnit = POUNDS,
         )
     }
 }
@@ -387,7 +388,7 @@ private fun EditResultDialogEnabledPreview() {
                 offsetDateTime = OffsetDateTime.now(),
                 comment = "Not much",
             ),
-            weightUnit = WeightUnit.POUNDS,
+            weightUnit = POUNDS,
         )
     }
 }
