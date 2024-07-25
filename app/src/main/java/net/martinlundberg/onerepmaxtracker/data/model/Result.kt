@@ -9,7 +9,7 @@ data class Result(
     val weight: Float,
 //    val offsetDateTimeAndFormatted: OffsetDateTimeAndFormatted,
     val offsetDateTime: OffsetDateTime,
-    val dateTimeFormatted: String? = null,
+    val dateTimeFormatted: String? = null, // This should be in UI model
     val comment: String,
 )
 

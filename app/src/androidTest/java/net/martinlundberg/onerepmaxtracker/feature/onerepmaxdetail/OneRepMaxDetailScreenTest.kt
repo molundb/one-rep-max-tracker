@@ -1,5 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -28,8 +29,9 @@ class OneRepMaxDetailScreenTest {
     fun givenMovementName_thenNameOfMovementIsDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
+                resultDetailUiState = Loading,
             )
         }
 
@@ -40,9 +42,9 @@ class OneRepMaxDetailScreenTest {
     fun givenStateIsLoading_thenLoadingIndicatorAndTextAreDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
-                resultDetailUiState = Loading(weightUnit = WeightUnit.KILOGRAMS),
+                resultDetailUiState = Loading,
             )
         }
 
@@ -54,7 +56,7 @@ class OneRepMaxDetailScreenTest {
     fun givenResult_thenInfoIsDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -63,6 +65,7 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
@@ -79,7 +82,7 @@ class OneRepMaxDetailScreenTest {
     fun whenDateIsClicked_thenCalendarDialogIsDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -88,6 +91,7 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = listOf(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
@@ -103,7 +107,7 @@ class OneRepMaxDetailScreenTest {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -112,9 +116,10 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = {
+                updateResultDetail = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -134,7 +139,7 @@ class OneRepMaxDetailScreenTest {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -143,9 +148,10 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = {
+                updateResultDetail = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -165,7 +171,7 @@ class OneRepMaxDetailScreenTest {
     fun whenTimeIsClicked_thenTimePickerDialogIsDisplayed() {
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -174,6 +180,7 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 )
             )
@@ -189,7 +196,7 @@ class OneRepMaxDetailScreenTest {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -198,9 +205,10 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = {
+                updateResultDetail = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -220,7 +228,7 @@ class OneRepMaxDetailScreenTest {
         var updateOneRepMaxDetailCalled = false
         composeTestRule.setContent {
             ResultDetailScreen(
-                resultId = 1,
+                innerPadding = PaddingValues(),
                 movementName = "Name of movement",
                 resultDetailUiState = Success(
                     result = Result(
@@ -229,9 +237,10 @@ class OneRepMaxDetailScreenTest {
                         offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
                         comment = "",
                     ),
+                    percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = {
+                updateResultDetail = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )

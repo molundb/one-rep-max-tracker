@@ -212,10 +212,8 @@ fun MovementDetailScreen(
                                     weightUnit = movementDetailUiState.weightUnit,
                                     onResultClick = {
                                         analyticsHelper.logMovementDetail_ResultClick(result)
-//                                        resultToEdit = result
                                         onResultClick(result.id, movementDetailUiState.movement.movementName)
                                     },
-//                                    getRelativeDateString = getRelativeDateString,
                                 )
                             }
                         }

@@ -131,7 +131,7 @@ class MovementsListScreenTest {
     }
 
     @Test
-    fun givenAddMovementDialogWithMovementName_whenDismissButtonIsClicked_thenDialogIsClosedAndNoNewMovementIsAdded() {
+    fun givenAddMovementDialogWithMovementName_whenCancelButtonIsClicked_thenDialogIsClosedAndNoNewMovementIsAdded() {
         // Given
         var addMovementCalled = false
         composeTestRule.setContent {
@@ -314,6 +314,92 @@ class MovementsListScreenTest {
         // Then
         composeTestRule.onNodeWithContentDescription("Movement drop down menu").assertIsNotDisplayed()
         composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenEditMovementDialog_whenSaveClicked_thenDialogIsClosedAndMovementIsEdited() {
+        // Given
+        var editMovementCalled = false
+        composeTestRule.setContent {
+            MovementsListScreen(
+                innerPadding = PaddingValues(),
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement(id = 2, name = "Test movement", weight = 3f)
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
+                ),
+                onEditMovementClick = {
+                    editMovementCalled = true
+                }
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        // When
+        composeTestRule.onNodeWithText("Save").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertDoesNotExist()
+        assertTrue(editMovementCalled)
+    }
+
+    @Test
+    fun givenEditMovementDialog_whenDeleteClicked_thenDeleteMovementConfirmationDialogIsDisplayed() {
+        // Given
+        composeTestRule.setContent {
+            MovementsListScreen(
+                innerPadding = PaddingValues(),
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement(id = 2, name = "Test movement", weight = 3f)
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
+                ),
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        // When
+        composeTestRule.onNodeWithText("Delete movement").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Delete movement confirmation dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun givenEditMovementDialog_whenCancelClicked_thenEditDialogIsClosedAndMovementIsNotEdited() {
+        // Given
+        var editMovementCalled = false
+        composeTestRule.setContent {
+            MovementsListScreen(
+                innerPadding = PaddingValues(),
+                movementsListUiState = MovementsListUiState.Success(
+                    listOf(
+                        Movement(id = 2, name = "Test movement", weight = 3f)
+                    ),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                    isAnalyticsEnabled = false,
+                ),
+                onEditMovementClick = {
+                    editMovementCalled = true
+                }
+            )
+        }
+        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        // When
+        composeTestRule.onNodeWithText("Cancel").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Edit movement dialog").assertDoesNotExist()
+        assertFalse(editMovementCalled)
     }
 
     @Test
