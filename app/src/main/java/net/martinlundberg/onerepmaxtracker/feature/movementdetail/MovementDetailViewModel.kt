@@ -24,6 +24,9 @@ import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
+import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +46,11 @@ class MovementDetailViewModel @Inject constructor(
                 resultRepository.getMovementDetail(id),
                 resultRepository.getWeightUnitFlow(),
             ) { result, weightUnit ->
-                Success(result ?: MovementDetail(""), weightUnit)
+                Success(
+                    result ?: MovementDetail(""),
+                    weightUnit,
+                    clockService.getCurrentTimeMillis().millisToOffsetDateTime(ZoneId.systemDefault()),
+                )
             }.collect { newState ->
                 val sortedByDateAndFormattedDate = newState.movement.results.map { result ->
                     result.copy(
@@ -89,7 +96,7 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun deleteResult(id: Long) {
-        // TODO: Move to repo and rename?
+        // TODO: Move tracking to repo and rename?
         analyticsHelper.logDeleteResult(id)
         viewModelScope.launch {
             resultRepository.deleteResult(id)
@@ -107,5 +114,6 @@ sealed interface MovementDetailUiState {
     data class Success(
         override val movement: MovementDetail,
         val weightUnit: WeightUnit,
+        val currentOffsetDateTime: OffsetDateTime,
     ) : MovementDetailUiState
 }

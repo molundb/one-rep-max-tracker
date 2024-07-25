@@ -8,40 +8,23 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
-import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.util.Locale
-import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
 class MovementDetailScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @Before
-    fun setUp() {
-        setLocalTo(Locale("en", "US"))
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-    }
-
-    private fun setLocalTo(testLocale: Locale) {
-        Locale.setDefault(testLocale)
-        val config = InstrumentationRegistry.getInstrumentation().targetContext.resources.configuration
-        config.setLocale(testLocale)
-        InstrumentationRegistry.getInstrumentation().targetContext.createConfigurationContext(config)
-    }
 
     @Test
     fun givenLoading_thenLoadingIndicatorAndMovementNameAreDisplayed() {
@@ -94,6 +77,7 @@ class MovementDetailScreenTest {
                         ),
                     ),
                     weightUnit = KILOGRAMS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
             )
         }
@@ -116,6 +100,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
                 navigateBack = {
                     navigateBackCalled = true
@@ -152,6 +137,7 @@ class MovementDetailScreenTest {
                         ),
                     ),
                     weightUnit = KILOGRAMS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
                 onResultClick = { _, _ ->
                     onResultClickCalled = true
@@ -175,6 +161,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             )
         }
@@ -193,6 +180,7 @@ class MovementDetailScreenTest {
                 movementDetailUiState = MovementDetailUiState.Success(
                     MovementDetail("Name"),
                     weightUnit = WeightUnit.POUNDS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             )
         }
@@ -225,6 +213,7 @@ class MovementDetailScreenTest {
                         )
                     ),
                     weightUnit = KILOGRAMS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 )
             )
         }
@@ -260,6 +249,7 @@ class MovementDetailScreenTest {
                         )
                     ),
                     weightUnit = KILOGRAMS,
+                    OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
                 addResult = { _, _ ->
                     addResultCalled = true

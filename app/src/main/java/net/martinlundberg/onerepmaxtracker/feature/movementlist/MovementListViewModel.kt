@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
 import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
@@ -21,13 +22,15 @@ import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import java.time.OffsetDateTime
+import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
 class MovementListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
+    private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementListUiState> = MutableStateFlow(Loading)
@@ -55,7 +58,9 @@ class MovementListViewModel @Inject constructor(
                 resultRepository.addResult(
                     Result(
                         weight = it,
-                        offsetDateTime = OffsetDateTime.now(),
+                        offsetDateTime = clockService
+                            .getCurrentTimeMillis()
+                            .millisToOffsetDateTime(ZoneId.systemDefault()),
                         movementId = movementId,
                         comment = "",
                     ),

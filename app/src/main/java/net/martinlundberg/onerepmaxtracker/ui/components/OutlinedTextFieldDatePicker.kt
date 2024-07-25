@@ -39,13 +39,6 @@ fun OutlinedTextFieldDatePicker(
             .semantics { contentDescription = "Outlined Text Field Date Picker" },
         enabled = false,
         value = currentDateTime.formatTo("dd MMM yyyy"),
-//        value = DateUtils.getRelativeDateTimeString(
-//            LocalContext.current,
-//            currentDateTime.toInstant().toEpochMilli(),
-//            DateUtils.DAY_IN_MILLIS,
-//            DateUtils.WEEK_IN_MILLIS,
-//            0
-//        ).toString(),
         onValueChange = {},
         textStyle = textStyle,
         colors = OutlinedTextFieldDefaults.colors(

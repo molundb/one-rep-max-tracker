@@ -124,7 +124,7 @@ fun ResultDetailScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = stringResource(R.string.movement_detail_screen_back_button_content_description)
+                    contentDescription = stringResource(R.string.back_button_content_description)
                 )
             }
         }
@@ -185,7 +185,7 @@ fun ResultDetailScreen(
                                 .width(120.dp)
                                 .semantics {
                                     contentDescription =
-                                        context.getString(R.string.movement_detail_screen_edit_movement_button_content_description)
+                                        context.getString(R.string.result_detail_screen_edit_result_button_content_description)
                                 },
                             onClick = {
 //                                analyticsHelper.logMovementDetail_EditMovementClick(
@@ -206,11 +206,7 @@ fun ResultDetailScreen(
                         }
                         Button(
                             modifier = Modifier
-                                .widthIn(min = 120.dp)
-                                .semantics {
-                                    contentDescription =
-                                        context.getString(R.string.movement_detail_screen_add_result_button_content_description)
-                                },
+                                .widthIn(min = 120.dp),
                             onClick = {
 //                                analyticsHelper.logMovementDetail_AddResultClick(
 //                                    movementId,

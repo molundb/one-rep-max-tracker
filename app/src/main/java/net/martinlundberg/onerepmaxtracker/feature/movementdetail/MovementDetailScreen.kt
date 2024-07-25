@@ -93,7 +93,6 @@ fun MovementDetailRoute(
         onEditMovementClick = movementDetailViewModel::editMovement,
         onDeleteMovementClick = movementDetailViewModel::deleteMovement,
         onDeleteResultClick = movementDetailViewModel::deleteResult,
-//        getRelativeDateString = movementDetailViewModel::getRelativeDateString,
     )
 }
 
@@ -109,7 +108,6 @@ fun MovementDetailScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
-//    getRelativeDateString: (OffsetDateTime) -> String = { "" },
 ) {
     TrackScreenViewEvent(screenName = "MovementDetail")
 
@@ -152,7 +150,7 @@ fun MovementDetailScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = stringResource(R.string.movement_detail_screen_back_button_content_description)
+                    contentDescription = stringResource(R.string.back_button_content_description)
                 )
             }
         }
@@ -252,7 +250,7 @@ fun MovementDetailScreen(
                             result = Result(
                                 movementId = movementId,
                                 weight = 0f,
-                                offsetDateTime = OffsetDateTime.now(),
+                                offsetDateTime = movementDetailUiState.currentOffsetDateTime,
                                 comment = "",
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
@@ -442,12 +440,8 @@ private fun MovementDetailScreenSuccessPreview() {
                         )
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
+                    currentOffsetDateTime = offsetDateTimeAndFormatted,
                 ),
-//                getRelativeDateString = DateUtils.getRelativeTimeSpanString(
-//                    offsetDateTime.toInstant().toEpochMilli(),
-//                    clockService.getCurrentTimeMillis(),
-//                    DateUtils.MINUTE_IN_MILLIS,
-//                ).toString()
             )
         }
     }
