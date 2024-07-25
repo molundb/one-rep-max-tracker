@@ -16,14 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -62,11 +59,10 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.dialogs.AddMovementDialog
 import net.martinlundberg.onerepmaxtracker.feature.dialogs.DeleteMovementConfirmDialog
 import net.martinlundberg.onerepmaxtracker.feature.dialogs.EditMovementDialog
+import net.martinlundberg.onerepmaxtracker.feature.menus.MovementDropDownMenu
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
-import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.ui.theme.White
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
@@ -335,55 +331,6 @@ fun MovementCard(
         }
     }
 }
-
-@Composable
-fun MovementDropDownMenu(
-    movement: Movement,
-    onEditMovementClick: (Movement) -> Unit = {},
-    onDeleteMovementClick: (Movement) -> Unit = {},
-    onDismiss: () -> Unit = {},
-) {
-    MaterialTheme(
-        colorScheme = MaterialTheme.colorScheme.copy(
-            surface = White,
-            onSurface = Black,
-        )
-    ) {
-        val context = LocalContext.current
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentSize(Alignment.TopEnd)
-                .semantics {
-                    contentDescription =
-                        context.getString(R.string.movement_list_screen_movement_drop_down_menu_content_description)
-                }
-        ) {
-            DropdownMenu(
-                expanded = true,
-                onDismissRequest = {
-                    onDismiss()
-                }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.edit)) },
-                    onClick = {
-                        onDismiss()
-                        onEditMovementClick(movement)
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.delete)) },
-                    onClick = {
-                        onDismiss()
-                        onDeleteMovementClick(movement)
-                    }
-                )
-            }
-        }
-    }
-}
-
 
 
 @Preview(showBackground = true, showSystemUi = true)
