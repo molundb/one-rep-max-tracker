@@ -46,7 +46,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialo
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResultConfirmDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_ConfirmClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
@@ -120,9 +120,9 @@ fun EditResultDialog(
             analyticsHelper.logEditResultDialog_CancelClick(editedResult)
             onCancel(editedResult)
         },
-        onDelete = { editedResult ->
-            analyticsHelper.logEditResultDialog_DeleteResultClick(editedResult.id)
-            onDelete(editedResult)
+        onDelete = {
+            analyticsHelper.logEditResultDialog_DeleteClick(result)
+            onDelete(result)
         },
     )
 }
@@ -138,7 +138,7 @@ private fun AddOrEditResultDialog(
     onDismissRequest: (Result) -> Unit = {},
     onConfirm: (Result) -> Unit = {},
     onCancel: (Result) -> Unit = {},
-    onDelete: ((Result) -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
 ) {
     val weightInitialValue = if (result.weight == 0f) {
         ""
@@ -286,10 +286,7 @@ private fun AddOrEditResultDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
-                        onClick = {
-                            val editedResult = createResultOfInput(result, weightText, date, commentText)
-                            onDelete(editedResult)
-                        },
+                        onClick = onDelete,
                     ) {
                         Text(text = stringResource(R.string.movement_detail_screen_edit_result_dialog_delete_button))
                     }

@@ -44,6 +44,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_Cancel
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_CancelClick
+import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_ConfirmClick
@@ -139,9 +140,9 @@ fun EditMovementDialog(
             analyticsHelper.logEditMovementDialog_ConfirmClick(editedMovement)
             onConfirm(editedMovement)
         },
-        onDelete = { editedMovement ->
-            analyticsHelper.logEditMovementDialog_DeleteMovementClick(editedMovement)
-            onDelete(editedMovement)
+        onDelete = {
+            analyticsHelper.logEditMovementDialog_DeleteMovementClick(movement)
+            onDelete(movement)
         },
     )
 }
@@ -157,7 +158,7 @@ private fun AddOrEditMovementDialog(
     onDismissRequest: (Movement) -> Unit = {},
     onCancel: (Movement) -> Unit = {},
     onConfirm: (Movement) -> Unit = { },
-    onDelete: ((Movement) -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
 ) {
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
     val weightInitialValue = movement.weight?.toString() ?: ""
@@ -283,14 +284,7 @@ private fun AddOrEditMovementDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
-                        onClick = {
-                            val editedMovement = createMovementOfInput(
-                                movementId = movement.id,
-                                movementNameText = movementNameText.text,
-                                movementWeightText = movementWeightText,
-                            )
-                            onDelete(editedMovement)
-                        },
+                        onClick = onDelete,
                     ) {
                         Text(text = stringResource(R.string.movement_list_screen_edit_movement_dialog_delete_button))
                     }
