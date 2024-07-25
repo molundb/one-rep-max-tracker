@@ -75,7 +75,7 @@ fun ResultDetailRoute(
         resultDetailUiState = resultDetailUiState,
         movementName = movementName,
         navigateBack = navigateBack,
-        updateResultDetail = resultDetailViewModel::updateResult,
+        onEditResultClick = resultDetailViewModel::updateResult,
         onDeleteClick = resultDetailViewModel::deleteResult,
     )
 }
@@ -86,7 +86,7 @@ fun ResultDetailScreen(
     movementName: String,
     resultDetailUiState: ResultDetailUiState,
     navigateBack: (Lifecycle.State) -> Unit = {},
-    updateResultDetail: (Result, WeightUnit) -> Unit = { _, _ -> },
+    onEditResultClick: (Result, WeightUnit) -> Unit = { _, _ -> },
     onDeleteClick: (Long) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "ResultDetail")
@@ -228,7 +228,7 @@ fun ResultDetailScreen(
                             weightUnit = resultDetailUiState.weightUnit,
                             onDismissRequest = { resultToEdit = null },
                             onConfirm = { editedResult ->
-                                updateResultDetail(editedResult, resultDetailUiState.weightUnit)
+                                onEditResultClick(editedResult, resultDetailUiState.weightUnit)
                                 resultToEdit = null
                             },
                             onCancel = { resultToEdit = null },

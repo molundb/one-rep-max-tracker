@@ -13,8 +13,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
+import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailScreen
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailScreen
+import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Before
 import org.junit.Rule
@@ -65,7 +68,7 @@ class ResultDialogsTest {
     }
 
     @Test
-    fun givenAddResultDialogWithNoWeight_thenAddButtonIsDisabled() {
+    fun givenAddResultDialogWithNoWeight_thenConfirmButtonIsDisabled() {
         composeTestRule.setContent {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
@@ -84,7 +87,7 @@ class ResultDialogsTest {
     }
 
     @Test
-    fun givenAddResultDialogWithWeight_whenAdd_thenDialogIsClosedAndResultIsAdded() {
+    fun givenAddResultDialogWithWeight_whenConfirm_thenDialogIsClosedAndResultIsAdded() {
         var addResultCalled = false
         composeTestRule.setContent {
             MovementDetailScreen(
@@ -136,4 +139,92 @@ class ResultDialogsTest {
         composeTestRule.onNodeWithContentDescription("Add result dialog").assertDoesNotExist()
         assertFalse(addResultCalled)
     }
+
+    @Test
+    fun whenEditResultDialog_thenResultInfoIsDisplayed() {
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("100 kg").assertIsDisplayed()
+        composeTestRule.onNodeWithText("17 Jul 2024").assertIsDisplayed()
+        composeTestRule.onNodeWithText("This is a comment").assertIsDisplayed()
+    }
+
+    @Test
+    fun whenEditResultDialog_whenCancel_thenDialogIsClosedAndResultIsNotEdited() {
+        var editResultClicked = false
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+                onEditResultClick = { _, _ ->
+                    editResultClicked = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("Cancel").performClick()
+        assertFalse(editResultClicked)
+    }
+
+    @Test
+    fun whenEditResultDialog_whenConfirm_thenDialogIsClosedAndResultIsEdited() {
+        var editResultClicked = false
+        composeTestRule.setContent {
+            ResultDetailScreen(
+                innerPadding = PaddingValues(),
+                movementName = "Name of movement",
+                resultDetailUiState = Success(
+                    result = Result(
+                        movementId = 55,
+                        weight = 100f,
+                        offsetDateTime = OffsetDateTime.of(2024, 7, 17, 0, 0, 0, 0, ZoneOffset.UTC),
+                        comment = "This is a comment",
+                    ),
+                    percentagesOf1RM = listOf(),
+                    weightUnit = WeightUnit.KILOGRAMS,
+                ),
+                onEditResultClick = { _, _ ->
+                    editResultClicked = true
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithText("Edit").performClick()
+
+        composeTestRule.onNodeWithText("Save").performClick()
+        assertTrue(editResultClicked)
+    }
+
+    // TODO: Add tests for delete result confirm dialog
+
+    // TODO: Add tests for calendar
 }

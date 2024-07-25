@@ -171,7 +171,7 @@ class ResultDetailScreenTest {
                     percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = { _, _ ->
+                onEditResultClick = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )
@@ -204,7 +204,7 @@ class ResultDetailScreenTest {
                     percentagesOf1RM = emptyList(),
                     weightUnit = WeightUnit.KILOGRAMS,
                 ),
-                updateResultDetail = { _, _ ->
+                onEditResultClick = { _, _ ->
                     updateOneRepMaxDetailCalled = true
                 }
             )
