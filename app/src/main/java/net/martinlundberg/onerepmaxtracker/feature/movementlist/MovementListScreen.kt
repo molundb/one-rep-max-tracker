@@ -51,7 +51,7 @@ import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
-import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_AddMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
@@ -187,7 +187,7 @@ fun MovementListScreen(
                                     context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                             },
                         onClick = {
-                            analyticsHelper.logAddMovementClick()
+                            analyticsHelper.logMovementList_AddMovementClick()
                             showAddMovementDialog = true
                         },
                     ) {

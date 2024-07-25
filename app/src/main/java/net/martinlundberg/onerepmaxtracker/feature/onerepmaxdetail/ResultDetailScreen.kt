@@ -42,7 +42,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
+import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_AddResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_EditResultClick
+import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_NavBackClick
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
@@ -92,6 +96,7 @@ fun ResultDetailScreen(
     TrackScreenViewEvent(screenName = "ResultDetail")
 
     val lifecycleOwner = LocalLifecycleOwner.current
+    val analyticsHelper = LocalAnalyticsHelper.current
 
     Column(
         modifier = Modifier
@@ -117,7 +122,7 @@ fun ResultDetailScreen(
                 modifier = Modifier
                     .clickable(
                         onClick = {
-//                            analyticsHelper.logMovementDetail_NavBackClick()
+                            analyticsHelper.logResultDetail_NavBackClick()
                             navigateBack(lifecycleOwner.lifecycle.currentState)
                         }
                     )
@@ -188,11 +193,9 @@ fun ResultDetailScreen(
                                         context.getString(R.string.result_detail_screen_edit_result_button_content_description)
                                 },
                             onClick = {
-//                                analyticsHelper.logMovementDetail_EditMovementClick(
-//                                    movementId,
-//                                    movementDetailUiState.movement.movementName
-//                                )
-                                resultToEdit = resultDetailUiState.result
+                                val result = resultDetailUiState.result
+                                analyticsHelper.logResultDetail_EditResultClick(result)
+                                resultToEdit = result
                             },
                         ) {
                             Text(
@@ -208,11 +211,9 @@ fun ResultDetailScreen(
                             modifier = Modifier
                                 .widthIn(min = 120.dp),
                             onClick = {
-//                                analyticsHelper.logMovementDetail_AddResultClick(
-//                                    movementId,
-//                                    movementDetailUiState.movement.movementName
-//                                )
-                                resultToDelete = resultDetailUiState.result
+                                val result = resultDetailUiState.result
+                                analyticsHelper.logResultDetail_AddResultClick(result)
+                                resultToDelete = result
                             },
                         ) {
                             Text(
@@ -257,62 +258,7 @@ fun ResultDetailScreen(
                         )
                     }
 
-//                    Row {
-//                        Column {
-//                            Text(text = "Weight")
-//                            TextField(
-//                                value = weightText,
-//                                onValueChange = { weightText = it }
-//                            )
-//                        }
-//                        // TODO: decide how to handle reps
-//                        Column {
-//                            Text(text = "Reps")
-//                            Text(text = "1")
-//                        }
-//                    }
-//                    Row {
-//                        Column(
-//                            modifier = Modifier.weight(1f)
-//                        ) {
-//                            Text(text = "Date")
-//                            OutlinedTextFieldDatePicker(
-//                                currentDateTime = resultDetailUiState.result.offsetDateTime,
-//                                showDialog = showDatePickerDialog,
-//                                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
-//                                setDialogVisibility = { showDatePickerDialog = it },
-//                                onAccept = { offsetDateTime ->
-//                                    updateResultDetail(
-//                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
-//                                    )
-//                                },
-//                            )
-//                        }
-//                        Spacer(Modifier.size(8.dp))
-//                        Column(
-//                            modifier = Modifier.weight(1f)
-//                        ) {
-//                            Text(text = "Time")
-//                            OutlinedTextFieldTimePicker(
-//                                currentDateTime = resultDetailUiState.result.offsetDateTime,
-//                                showDialog = showTimePickerDialog,
-//                                setDialogVisibility = { showTimePickerDialog = it },
-//                                updateResultDetail = { offsetDateTime ->
-//                                    updateResultDetail(
-//                                        resultDetailUiState.result.copy(offsetDateTime = offsetDateTime),
-//                                    )
-//                                },
-//                            )
-//                        }
-//                    }
                 }
-//                Column {
-//                    Text(text = "Notes")
-//                    TextField(
-//                        value = notesText,
-//                        onValueChange = { notesText = it }
-//                    )
-//                }
             }
         }
     }
@@ -331,11 +277,6 @@ fun Percentage(percentage: Percentage, weightUnit: WeightUnit) {
             ),
         )
         Text(
-//            text = stringResource(
-//                R.string.weight_with_unit,
-//                percentage.weight,
-//                weightUnit.toString(LocalContext.current)
-//            )
             text = percentage.weight.weightWithUnit(weightUnit, LocalContext.current),
         )
     }

@@ -111,7 +111,6 @@ fun MovementDetailScreen(
 ) {
     TrackScreenViewEvent(screenName = "MovementDetail")
 
-//    var resultToEdit by remember { mutableStateOf<Result?>(null) }
     var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
     var showEditMovementDialog by remember { mutableStateOf(false) }
@@ -264,23 +263,6 @@ fun MovementDetailScreen(
                             onCancel = { showAddResultDialog = false },
                         )
                     }
-
-//                    resultToEdit?.let { result ->
-//                        EditResultDialog(
-//                            result = result,
-//                            weightUnit = movementDetailUiState.weightUnit,
-//                            onDismissRequest = { resultToEdit = null },
-//                            onConfirm = { editedResult ->
-//                                addResult(editedResult, movementDetailUiState.weightUnit)
-//                                resultToEdit = null
-//                            },
-//                            onCancel = { resultToEdit = null },
-//                            onDelete = { editedResult ->
-//                                resultToDelete = editedResult
-//                                resultToEdit = null
-//                            },
-//                        )
-//                    }
 
                     resultToDelete?.let { result ->
                         DeleteResultConfirmDialog(

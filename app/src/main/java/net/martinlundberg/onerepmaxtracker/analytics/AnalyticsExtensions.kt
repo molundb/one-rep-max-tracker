@@ -9,6 +9,8 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
+// General
+
 fun AnalyticsHelper.logScreenView(screenName: String) {
     logEvent(
         AnalyticsEvent(
@@ -20,21 +22,45 @@ fun AnalyticsHelper.logScreenView(screenName: String) {
     )
 }
 
+fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
+    logEvent(
+        "weight_unit_toggled", listOf(
+            Param(key = "weight_unit", value = weightUnit.toString()),
+        )
+    )
+}
+
+fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
+    logEvent(
+        "analytics_enabled_toggled", listOf(
+            Param(key = "analytics_enabled", value = isEnabled.toString()),
+        )
+    )
+}
+
+// Movement List Screen
+
 fun AnalyticsHelper.logMovementList_MovementClick(movement: Movement) {
-    logEvent("movement_click", createMovementParams(movement))
+    logEvent("movement_list_movement_click", createMovementParams(movement))
 }
 
 fun AnalyticsHelper.logMovementList_MovementLongClick(movement: Movement) {
-    logEvent("movement_long_click", createMovementParams(movement))
+    logEvent("movement_list_movement_long_click", createMovementParams(movement))
 }
 
 fun AnalyticsHelper.logMovementList_EditMovementClick(movement: Movement) {
-    logEvent("movement_edit_click", createMovementParams(movement))
+    logEvent("movement_list_edit_movement_click", createMovementParams(movement))
 }
 
 fun AnalyticsHelper.logMovementList_DeleteMovementClick(movement: Movement) {
-    logEvent("movement_delete_click", createMovementParams(movement))
+    logEvent("movement_list_delete_movement_click", createMovementParams(movement))
 }
+
+fun AnalyticsHelper.logMovementList_AddMovementClick() {
+    logEvent("movement_list_add_movement_click")
+}
+
+// Delete Movement Confirm Dialog
 
 fun AnalyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movementId: Long) {
     logEvent(
@@ -60,8 +86,6 @@ fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
     )
 }
 
-// TODO: Track Text Field focused?
-
 fun AnalyticsHelper.logAddMovement(movement: Movement) {
     logEvent("add_movement", createMovementParams(movement))
 }
@@ -69,6 +93,8 @@ fun AnalyticsHelper.logAddMovement(movement: Movement) {
 fun AnalyticsHelper.logEditMovement(movement: Movement) {
     logEvent("edit_movement", createMovementParams(movement))
 }
+
+// Add Movement Dialog
 
 fun AnalyticsHelper.logAddMovementDialog_CancelClick(movement: Movement) {
     logEvent("add_movement_dialog_cancel_click", createMovementParams(movement))
@@ -81,6 +107,8 @@ fun AnalyticsHelper.logAddMovementDialog_Dismissed(movement: Movement) {
 fun AnalyticsHelper.logAddMovementDialog_ConfirmClick(movement: Movement) {
     logEvent("add_movement_dialog_confirm_click", createMovementParams(movement))
 }
+
+// Edit Movement Dialog
 
 fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: Movement) {
     logEvent("edit_movement_dialog_cancel_click", createMovementParams(movement))
@@ -98,35 +126,35 @@ fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: Movement
     logEvent("edit_movement_dialog_delete_movement_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logAddMovementClick() {
-    logEvent("add_movement_click")
-}
-
-fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
-    logEvent(
-        "weight_unit_toggled", listOf(
-            Param(key = "weight_unit", value = weightUnit.toString()),
-        )
-    )
-}
-
-fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
-    logEvent(
-        "analytics_enabled_toggled", listOf(
-            Param(key = "analytics_enabled", value = isEnabled.toString()),
-        )
-    )
-}
-
-// MovementDetailScreen
+// Movement Detail Screen
 
 fun AnalyticsHelper.logMovementDetail_NavBackClick() {
-    logEvent("nav_back_click")
+    logEvent("movement_detail_nav_back_click")
 }
 
 fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
-    logEvent("result_click", createResultParams(result))
+    logEvent("movement_detail_result_click", createResultParams(result))
 }
+
+fun AnalyticsHelper.logMovementDetail_EditMovementClick(movementId: Long, movementName: String) {
+    logEvent(
+        "movement_detail_edit_movement_click", listOf(
+            Param(key = "movement_id", value = movementId.toString()),
+            Param(key = "movement_name", value = movementName),
+        )
+    )
+}
+
+fun AnalyticsHelper.logMovementDetail_AddResultClick(movementId: Long, movementName: String) {
+    logEvent(
+        "movement_detail_add_result_click", listOf(
+            Param(key = "movement_id", value = movementId.toString()),
+            Param(key = "movement_name", value = movementName),
+        )
+    )
+}
+
+// Add Result Dialog
 
 fun AnalyticsHelper.logAddResultDialog_CancelClick(result: Result) {
     logEvent("add_result_dialog_cancel_click", createResultParams(result))
@@ -140,13 +168,7 @@ fun AnalyticsHelper.logAddResultDialog_Dismissed(result: Result) {
     logEvent("add_result_dialog_dismissed", createResultParams(result))
 }
 
-fun AnalyticsHelper.logAddResultDialog_DeleteResultClick(resultId: Long) {
-    logEvent(
-        "add_result_dialog_delete_result_click", listOf(
-            Param(key = "result_id", value = resultId.toString()),
-        )
-    )
-}
+// Edit Result Dialog
 
 fun AnalyticsHelper.logEditResultDialog_CancelClick(result: Result) {
     logEvent("edit_result_dialog_cancel_click", createResultParams(result))
@@ -167,6 +189,8 @@ fun AnalyticsHelper.logEditResultDialog_DeleteResultClick(resultId: Long) {
         )
     )
 }
+
+// Delete Result Confirm Dialog
 
 fun AnalyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
     logEvent(
@@ -200,22 +224,18 @@ fun AnalyticsHelper.logDeleteResult(resultId: Long) {
     )
 }
 
-fun AnalyticsHelper.logMovementDetail_EditMovementClick(movementId: Long, movementName: String) {
-    logEvent(
-        "edit_movement_click", listOf(
-            Param(key = "movement_id", value = movementId.toString()),
-            Param(key = "movement_name", value = movementName),
-        )
-    )
+// Result Detail Screen
+
+fun AnalyticsHelper.logResultDetail_NavBackClick() {
+    logEvent("result_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logMovementDetail_AddResultClick(movementId: Long, movementName: String) {
-    logEvent(
-        "add_result_click", listOf(
-            Param(key = "movement_id", value = movementId.toString()),
-            Param(key = "movement_name", value = movementName),
-        )
-    )
+fun AnalyticsHelper.logResultDetail_AddResultClick(result: Result) {
+    logEvent("result_detail_add_result_click", createResultParams(result))
+}
+
+fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
+    logEvent("result_detail_edit_result_click", createResultParams(result))
 }
 
 private fun AnalyticsHelper.logEvent(type: String, params: List<Param> = emptyList()) {
