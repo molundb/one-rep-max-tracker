@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.movementslist
+package net.martinlundberg.onerepmaxtracker.feature.movementlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,20 +18,20 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class MovementsListViewModel @Inject constructor(
+class MovementListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<MovementsListUiState> = MutableStateFlow(Loading)
-    val uiState: StateFlow<MovementsListUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<MovementListUiState> = MutableStateFlow(Loading)
+    val uiState: StateFlow<MovementListUiState> = _uiState.asStateFlow()
 
     fun getMovements() {
         viewModelScope.launch {
@@ -87,12 +87,12 @@ class MovementsListViewModel @Inject constructor(
     }
 }
 
-sealed interface MovementsListUiState {
-    data object Loading : MovementsListUiState
+sealed interface MovementListUiState {
+    data object Loading : MovementListUiState
 
     data class Success(
         val movements: List<Movement> = emptyList(),
         val weightUnit: WeightUnit,
         val isAnalyticsEnabled: Boolean,
-    ) : MovementsListUiState
+    ) : MovementListUiState
 }

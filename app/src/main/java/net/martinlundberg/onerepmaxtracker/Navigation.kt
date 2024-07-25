@@ -34,11 +34,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailRoute
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListRoute
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListRoute
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailRoute
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
-const val MOVEMENTS_LIST_ROUTE = "movements_list_route"
+const val MOVEMENT_LIST_ROUTE = "movement_list_route"
 
 const val MOVEMENT_DETAIL_ROUTE = "movement_detail_route"
 const val MOVEMENT_ID = "movementId"
@@ -118,14 +118,14 @@ private fun NavigationHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MOVEMENTS_LIST_ROUTE,
+        startDestination = MOVEMENT_LIST_ROUTE,
     ) {
         composable(
-            route = MOVEMENTS_LIST_ROUTE,
+            route = MOVEMENT_LIST_ROUTE,
             exitTransition = slideOutToLeft,
             enterTransition = slideInFromLeft,
         ) {
-            MovementsListRoute(
+            MovementListRoute(
                 innerPadding = innerPadding,
                 onMovementClick = { movement, lifeCycleState ->
                     navigateToDetail(movement, lifeCycleState, "$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")

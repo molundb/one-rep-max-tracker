@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.movementslist
+package net.martinlundberg.onerepmaxtracker.feature.movementlist
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
@@ -16,22 +16,25 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.POUNDS
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class MovementsListScreenTest {
+class MovementListScreenTest {
 
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
     fun givenStateIsLoading_thenLoadingIndicatorIsDisplayed() {
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Loading,
+                movementListUiState = Loading,
             )
         }
 
@@ -42,13 +45,13 @@ class MovementsListScreenTest {
     fun givenListWithMovement_thenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 2f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
                 )
             )
@@ -63,13 +66,13 @@ class MovementsListScreenTest {
     fun whenAddButtonIsClicked_thenAddMovementDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 2f)
                     ),
-                    weightUnit = WeightUnit.POUNDS,
+                    weightUnit = POUNDS,
                     isAnalyticsEnabled = true,
                 )
             )
@@ -88,11 +91,11 @@ class MovementsListScreenTest {
         var addMovementCalled = false
 
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
                 onAddMovementClick = { _, _ ->
@@ -115,11 +118,11 @@ class MovementsListScreenTest {
     fun givenAddMovementDialogWithoutMovementName_thenAddButtonIsDisabled() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(),
-                    weightUnit = WeightUnit.POUNDS,
+                    weightUnit = POUNDS,
                     isAnalyticsEnabled = false,
                 )
             )
@@ -135,11 +138,11 @@ class MovementsListScreenTest {
         // Given
         var addMovementCalled = false
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
                 onAddMovementClick = { _, _ ->
@@ -164,13 +167,13 @@ class MovementsListScreenTest {
         var onMovementClickCalled = false
 
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
                 ),
                 onMovementClick = { _, _ -> onMovementClickCalled = true }
@@ -188,13 +191,13 @@ class MovementsListScreenTest {
     fun whenMovementIsLongClicked_thenDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -212,13 +215,13 @@ class MovementsListScreenTest {
     fun givenMovementDropDownMenu_whenClickOutsideOfMenu_thenMenuIsDismissed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -237,13 +240,13 @@ class MovementsListScreenTest {
     fun givenMovementDropDownMenu_whenDeleteIsClicked_thenMenuIsDismissedAndConfirmationDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -264,9 +267,9 @@ class MovementsListScreenTest {
         // Given
         var deleteMovementCalled = false
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(
                             id = 17,
@@ -274,7 +277,7 @@ class MovementsListScreenTest {
                             weight = 3f
                         )
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
@@ -295,13 +298,13 @@ class MovementsListScreenTest {
     fun givenMovementDropDownMenu_whenEditIsClicked_thenMenuIsDismissedAndEditDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(id = 2, name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -321,13 +324,13 @@ class MovementsListScreenTest {
         // Given
         var editMovementCalled = false
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(id = 2, name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
                 onEditMovementClick = {
@@ -350,13 +353,13 @@ class MovementsListScreenTest {
     fun givenEditMovementDialog_whenDeleteClicked_thenDeleteMovementConfirmationDialogIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(id = 2, name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -377,13 +380,13 @@ class MovementsListScreenTest {
         // Given
         var editMovementCalled = false
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(id = 2, name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
                 onEditMovementClick = {
@@ -406,13 +409,13 @@ class MovementsListScreenTest {
     fun givenMovementDropDownMenuDismissed_whenMovementLongClicked_thenDropDownMenuIsDisplayed() {
         // Given
         composeTestRule.setContent {
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = PaddingValues(),
-                movementsListUiState = MovementsListUiState.Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(name = "Test movement", weight = 3f)
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )

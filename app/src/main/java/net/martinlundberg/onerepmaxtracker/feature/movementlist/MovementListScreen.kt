@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.movementslist
+package net.martinlundberg.onerepmaxtracker.feature.movementlist
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -80,43 +80,44 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovem
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.MovementsListUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
 
 @Composable
-fun MovementsListRoute(
+fun MovementListRoute(
     innerPadding: PaddingValues,
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
-    movementsListViewModel: MovementsListViewModel = hiltViewModel(),
+    movementListViewModel: MovementListViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        movementsListViewModel.getMovements()
+        movementListViewModel.getMovements()
     }
 
-    val movementsListUiState by movementsListViewModel.uiState.collectAsState()
+    val movementListUiState by movementListViewModel.uiState.collectAsState()
 
-    MovementsListScreen(
+    MovementListScreen(
         innerPadding = innerPadding,
-        movementsListUiState = movementsListUiState,
-        onAddMovementClick = movementsListViewModel::addMovement,
+        movementListUiState = movementListUiState,
+        onAddMovementClick = movementListViewModel::addMovement,
         onMovementClick = onMovementClick,
-        onEditMovementClick = movementsListViewModel::editMovement,
-        onDeleteMovementClick = movementsListViewModel::deleteMovement,
-        setAnalyticsCollectionEnabled = movementsListViewModel::setAnalyticsCollectionEnabled,
+        onEditMovementClick = movementListViewModel::editMovement,
+        onDeleteMovementClick = movementListViewModel::deleteMovement,
+        setAnalyticsCollectionEnabled = movementListViewModel::setAnalyticsCollectionEnabled,
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovementsListScreen(
+fun MovementListScreen(
     innerPadding: PaddingValues,
-    movementsListUiState: MovementsListUiState = Loading,
+    movementListUiState: MovementListUiState = Loading,
     onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
@@ -143,7 +144,7 @@ fun MovementsListScreen(
             style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
         )
 
-        when (movementsListUiState) {
+        when (movementListUiState) {
             Loading -> {
                 Box(modifier = Modifier.height(24.dp))
                 CircularProgressIndicator(
@@ -166,7 +167,7 @@ fun MovementsListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val analyticsHelper = LocalAnalyticsHelper.current
-                if (movementsListUiState.movements.isEmpty()) {
+                if (movementListUiState.movements.isEmpty()) {
                     Column(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.Center,
@@ -181,12 +182,12 @@ fun MovementsListScreen(
                         modifier = Modifier.padding(top = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
-                        movementsListUiState.movements.map { movement ->
+                        movementListUiState.movements.map { movement ->
                             item(key = movement.id) {
                                 MovementCard(
                                     modifier = Modifier.animateItemPlacement(),
                                     movement = movement,
-                                    weightUnit = movementsListUiState.weightUnit,
+                                    weightUnit = movementListUiState.weightUnit,
                                     onMovementClick = onMovementClick,
                                     onEditMovementClick = { movement ->
                                         analyticsHelper.logMovementList_EditMovementClick(movement)
@@ -226,7 +227,7 @@ fun MovementsListScreen(
                         )
                         Box(modifier = Modifier.size(4.dp))
                         Switch(
-                            checked = movementsListUiState.isAnalyticsEnabled,
+                            checked = movementListUiState.isAnalyticsEnabled,
                             onCheckedChange = {
                                 setAnalyticsCollectionEnabled(it)
                             },
@@ -236,11 +237,11 @@ fun MovementsListScreen(
 
                 if (showAddMovementDialog) {
                     AddMovementDialog(
-                        weightUnit = movementsListUiState.weightUnit,
+                        weightUnit = movementListUiState.weightUnit,
                         onDismissRequest = { showAddMovementDialog = false },
                         onCancel = { showAddMovementDialog = false },
                         onConfirm = { movement ->
-                            onAddMovementClick(movement, movementsListUiState.weightUnit)
+                            onAddMovementClick(movement, movementListUiState.weightUnit)
                             showAddMovementDialog = false
                         }
                     )
@@ -249,7 +250,7 @@ fun MovementsListScreen(
                 movementToEdit?.let { movement ->
                     EditMovementDialog(
                         movement = movement,
-                        weightUnit = movementsListUiState.weightUnit,
+                        weightUnit = movementListUiState.weightUnit,
                         onDismissRequest = { movementToEdit = null },
                         onCancel = { movementToEdit = null },
                         onConfirm = { editedMovement ->
@@ -662,12 +663,12 @@ private fun createMovementOfInput(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MovementsListLoadingPreview() {
+private fun MovementListLoadingPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = innerPadding,
-                movementsListUiState = Loading,
+                movementListUiState = Loading,
             )
         }
     }
@@ -675,14 +676,14 @@ private fun MovementsListLoadingPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MovementsListScreenSuccessEmptyPreview() {
+private fun MovementListScreenSuccessEmptyPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = innerPadding,
-                movementsListUiState = Success(
+                movementListUiState = Success(
                     listOf(),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -692,18 +693,18 @@ private fun MovementsListScreenSuccessEmptyPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MovementsListScreenSuccessContentPreview() {
+private fun MovementListScreenSuccessContentPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
-            MovementsListScreen(
+            MovementListScreen(
                 innerPadding = innerPadding,
-                movementsListUiState = Success(
+                movementListUiState = Success(
                     listOf(
                         Movement(1, "Movement 1", 100f),
                         Movement(2, "Movement 4", 4.4f),
                         Movement(3, "No weight", null),
                     ),
-                    weightUnit = WeightUnit.KILOGRAMS,
+                    weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
                 ),
             )
@@ -716,7 +717,7 @@ private fun MovementsListScreenSuccessContentPreview() {
 private fun AddMovementDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         AddMovementDialog(
-            weightUnit = WeightUnit.KILOGRAMS,
+            weightUnit = KILOGRAMS,
         )
     }
 }
@@ -727,7 +728,7 @@ private fun EditMovementDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         EditMovementDialog(
             movement = Movement(id = 1, name = "Movement 1", weight = 100.75f),
-            weightUnit = WeightUnit.KILOGRAMS,
+            weightUnit = KILOGRAMS,
         )
     }
 }
@@ -738,7 +739,7 @@ private fun EditMovementDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         EditMovementDialog(
             movement = Movement(id = 1, name = "", weight = 55.75f),
-            weightUnit = WeightUnit.KILOGRAMS,
+            weightUnit = KILOGRAMS,
         )
     }
 }

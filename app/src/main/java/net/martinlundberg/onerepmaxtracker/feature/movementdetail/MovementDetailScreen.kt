@@ -75,8 +75,8 @@ import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.DeleteMovementConfirmDialog
-import net.martinlundberg.onerepmaxtracker.feature.movementslist.EditMovementDialog
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.DeleteMovementConfirmDialog
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.ConfirmDeletionDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
