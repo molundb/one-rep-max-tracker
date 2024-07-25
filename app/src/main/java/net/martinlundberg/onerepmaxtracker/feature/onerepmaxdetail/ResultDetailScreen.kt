@@ -42,16 +42,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_CancelClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_ConfirmClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteResultClick
-import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.feature.movementdetail.AddOrEditResultDialog
-import net.martinlundberg.onerepmaxtracker.feature.movementdetail.DeleteResultConfirmDialog
+import net.martinlundberg.onerepmaxtracker.feature.dialogs.DeleteResultConfirmDialog
+import net.martinlundberg.onerepmaxtracker.feature.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
@@ -327,42 +322,6 @@ fun ResultDetailScreen(
 }
 
 @Composable
-fun EditResultDialog(
-    result: Result,
-    weightUnit: WeightUnit,
-    onDismissRequest: (Result) -> Unit = {},
-    onConfirm: (Result) -> Unit = {},
-    onCancel: (Result) -> Unit = {},
-    onDelete: (Result) -> Unit = {},
-) {
-    val analyticsHelper = LocalAnalyticsHelper.current
-    AddOrEditResultDialog(
-        result = result,
-        weightUnit = weightUnit,
-        cardContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_content_description),
-        title = stringResource(R.string.movement_detail_screen_edit_result_dialog_title),
-        confirmButtonText = stringResource(R.string.save),
-        confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
-        onDismissRequest = { editedResult ->
-            analyticsHelper.logEditResultDialog_Dismissed(editedResult)
-            onDismissRequest(editedResult)
-        },
-        onConfirm = { editedResult ->
-            analyticsHelper.logEditResultDialog_ConfirmClick(editedResult)
-            onConfirm(editedResult)
-        },
-        onCancel = { editedResult ->
-            analyticsHelper.logEditResultDialog_CancelClick(editedResult)
-            onCancel(editedResult)
-        },
-        onDelete = { editedResult ->
-            analyticsHelper.logEditResultDialog_DeleteResultClick(editedResult.id)
-            onDelete(editedResult)
-        },
-    )
-}
-
-@Composable
 fun Percentage(percentage: Percentage, weightUnit: WeightUnit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -430,21 +389,5 @@ private fun ResultDetailScreenSuccessPreview() {
                 ),
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun EditResultDialogEnabledPreview() {
-    OneRepMaxTrackerTheme {
-        EditResultDialog(
-            result = Result(
-                movementId = 2,
-                weight = 5f,
-                offsetDateTime = OffsetDateTime.now(),
-                comment = "Not much",
-            ),
-            weightUnit = WeightUnit.POUNDS,
-        )
     }
 }
