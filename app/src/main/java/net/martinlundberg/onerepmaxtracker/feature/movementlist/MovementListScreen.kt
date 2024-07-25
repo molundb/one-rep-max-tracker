@@ -51,9 +51,9 @@ import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_AddMovementClick
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_DeleteMovementClick
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_EditMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_DeleteClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_EditClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_AddMovementButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
@@ -167,11 +167,11 @@ fun MovementListScreen(
                                     weightUnit = movementListUiState.weightUnit,
                                     onMovementClick = onMovementClick,
                                     onEditMovementClick = { movement ->
-                                        analyticsHelper.logMovementList_EditMovementClick(movement)
+                                        analyticsHelper.logMovementListDropDownMenu_EditClick(movement)
                                         movementToEdit = movement
                                     },
                                     onDeleteMovementClick = { movement ->
-                                        analyticsHelper.logMovementList_DeleteMovementClick(movement)
+                                        analyticsHelper.logMovementListDropDownMenu_DeleteClick(movement)
                                         movementToDelete = movement
                                     }
                                 )
@@ -187,7 +187,7 @@ fun MovementListScreen(
                                     context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                             },
                         onClick = {
-                            analyticsHelper.logMovementList_AddMovementClick()
+                            analyticsHelper.logMovementList_AddMovementButtonClick()
                             showAddMovementDialog = true
                         },
                     ) {

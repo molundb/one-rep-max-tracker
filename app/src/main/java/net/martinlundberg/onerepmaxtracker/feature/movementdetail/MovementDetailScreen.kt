@@ -50,8 +50,8 @@ import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddResultClick
-import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditMovementClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddButtonClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_ResultClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
@@ -207,7 +207,7 @@ fun MovementDetailScreen(
                                         context.getString(R.string.movement_detail_screen_edit_movement_button_content_description)
                                 },
                             onClick = {
-                                analyticsHelper.logMovementDetail_EditMovementClick(
+                                analyticsHelper.logMovementDetail_EditButtonClick(
                                     movementId,
                                     movementDetailUiState.movement.movementName
                                 )
@@ -230,7 +230,7 @@ fun MovementDetailScreen(
                                         context.getString(R.string.movement_detail_screen_add_result_button_content_description)
                                 },
                             onClick = {
-                                analyticsHelper.logMovementDetail_AddResultClick(
+                                analyticsHelper.logMovementDetail_AddButtonClick(
                                     movementId,
                                     movementDetailUiState.movement.movementName
                                 )

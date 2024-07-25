@@ -4,7 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultMovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultResultRepository
@@ -18,8 +19,11 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun provideMovementsRepository(db: OneRepMaxTrackerDatabase): MovementsRepository {
-        return DefaultMovementsRepository(db.movementDao(), db.resultDao())
+    fun provideMovementsRepository(
+        db: OneRepMaxTrackerDatabase,
+        analyticsHelper: AnalyticsHelper,
+    ): MovementsRepository {
+        return DefaultMovementsRepository(db.movementDao(), db.resultDao(), analyticsHelper)
     }
 
     @Provides
@@ -27,8 +31,14 @@ object RepositoryModule {
     fun provideOneRepMaxRepository(
         db: OneRepMaxTrackerDatabase,
         weightUnitService: WeightUnitServiceImpl,
-        analyticsService: AnalyticsServiceImpl,
+        analyticsEnabledService: AnalyticsEnabledServiceImpl,
+        analyticsHelper: AnalyticsHelper,
     ): ResultRepository {
-        return DefaultResultRepository(db.resultDao(), weightUnitService, analyticsService)
+        return DefaultResultRepository(
+            db.resultDao(),
+            weightUnitService,
+            analyticsEnabledService,
+            analyticsHelper,
+        )
     }
 }

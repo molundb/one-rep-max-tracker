@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.NavigationService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.logEditResult
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
@@ -26,6 +28,7 @@ class ResultDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val navigationService: NavigationService,
     private val clockService: ClockService,
+    private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<ResultDetailUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<ResultDetailUiState> = _uiState.asStateFlow()
@@ -59,8 +62,9 @@ class ResultDetailViewModel @Inject constructor(
     }
 
     fun editResult(result: Result, weightUnit: WeightUnit) {
+        analyticsHelper.logEditResult(result)
         viewModelScope.launch {
-            resultRepository.addResult(result, weightUnit)
+            resultRepository.setResult(result, weightUnit)
         }
     }
 

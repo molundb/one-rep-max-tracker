@@ -6,8 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.ClockServiceImpl
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledServiceImpl
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
 import javax.inject.Singleton
@@ -22,7 +22,7 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideAnalyticsService(analyticsService: AnalyticsServiceImpl): AnalyticsService
+    abstract fun provideAnalyticsService(analyticsService: AnalyticsEnabledServiceImpl): AnalyticsEnabledService
 
     @Binds
     @Singleton

@@ -8,7 +8,7 @@ import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 interface ResultRepository {
     suspend fun getMovementDetail(id: Long): Flow<MovementDetail?>
-    suspend fun addResult(result: Result, weightUnit: WeightUnit)
+    suspend fun setResult(result: Result, weightUnit: WeightUnit)
     suspend fun getResult(id: Long): Flow<Result>
     suspend fun deleteResult(id: Long)
     fun getWeightUnitFlow(): StateFlow<WeightUnit>

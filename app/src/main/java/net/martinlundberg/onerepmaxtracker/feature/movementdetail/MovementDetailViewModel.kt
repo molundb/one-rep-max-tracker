@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_DeleteClick
-import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
+import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
@@ -71,8 +70,9 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun addResult(result: Result, weightUnit: WeightUnit) {
+        analyticsHelper.logAddResult(result)
         viewModelScope.launch {
-            resultRepository.addResult(
+            resultRepository.setResult(
                 result = result,
                 weightUnit = weightUnit,
             )
@@ -87,8 +87,6 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun deleteMovement(id: Long) {
-        // TODO: Move to repo and rename?
-        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(id)
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
             navigationService.navController.popBackStack()
@@ -96,8 +94,6 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun deleteResult(id: Long) {
-        // TODO: Move tracking to repo and rename?
-        analyticsHelper.logDeleteResult(id)
         viewModelScope.launch {
             resultRepository.deleteResult(id)
         }

@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
+import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
-import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovementConfirmDialog_DeleteClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
@@ -55,15 +55,17 @@ class MovementListViewModel @Inject constructor(
         viewModelScope.launch {
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
-                resultRepository.addResult(
-                    Result(
-                        weight = it,
-                        offsetDateTime = clockService
-                            .getCurrentTimeMillis()
-                            .millisToOffsetDateTime(ZoneId.systemDefault()),
-                        movementId = movementId,
-                        comment = "",
-                    ),
+                val result = Result(
+                    weight = it,
+                    offsetDateTime = clockService
+                        .getCurrentTimeMillis()
+                        .millisToOffsetDateTime(ZoneId.systemDefault()),
+                    movementId = movementId,
+                    comment = "",
+                )
+                analyticsHelper.logAddResult(result)
+                resultRepository.setResult(
+                    result,
                     weightUnit = weightUnit,
                 )
             }
@@ -78,7 +80,6 @@ class MovementListViewModel @Inject constructor(
     }
 
     fun deleteMovement(movementId: Long) {
-        analyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movementId)
         viewModelScope.launch {
             movementsRepository.deleteMovement(movementId)
         }

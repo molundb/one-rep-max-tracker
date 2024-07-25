@@ -48,50 +48,60 @@ fun AnalyticsHelper.logMovementList_MovementLongClick(movement: Movement) {
     logEvent("movement_list_movement_long_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementList_EditMovementClick(movement: Movement) {
-    logEvent("movement_list_edit_movement_click", createMovementParams(movement))
+fun AnalyticsHelper.logMovementList_AddMovementButtonClick() {
+    logEvent("movement_list_add_movement_button_click")
 }
 
-fun AnalyticsHelper.logMovementList_DeleteMovementClick(movement: Movement) {
-    logEvent("movement_list_delete_movement_click", createMovementParams(movement))
+// Movement Detail Screen
+
+fun AnalyticsHelper.logMovementDetail_NavBackClick() {
+    logEvent("movement_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logMovementList_AddMovementClick() {
-    logEvent("movement_list_add_movement_click")
+fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
+    logEvent("movement_detail_result_click", createResultParams(result))
 }
 
-// Delete Movement Confirm Dialog
-
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_DeleteClick(movementId: Long) {
+fun AnalyticsHelper.logMovementDetail_EditButtonClick(movementId: Long, movementName: String) {
     logEvent(
-        "delete_movement_confirm_dialog_delete_click", listOf(
+        "movement_detail_edit_button_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
+            Param(key = "movement_name", value = movementName),
         )
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long) {
+fun AnalyticsHelper.logMovementDetail_AddButtonClick(movementId: Long, movementName: String) {
     logEvent(
-        "delete_movement_confirm_dialog_cancel_click", listOf(
+        "movement_detail_add_button_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
+            Param(key = "movement_name", value = movementName),
         )
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
-    logEvent(
-        "delete_movement_confirm_dialog_dismissed", listOf(
-            Param(key = "movement_id", value = movementId.toString()),
-        )
-    )
+// Result Detail Screen
+
+fun AnalyticsHelper.logResultDetail_NavBackClick() {
+    logEvent("result_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logAddMovement(movement: Movement) {
-    logEvent("add_movement", createMovementParams(movement))
+fun AnalyticsHelper.logResultDetail_AddResultClick(result: Result) {
+    logEvent("result_detail_add_result_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditMovement(movement: Movement) {
-    logEvent("edit_movement", createMovementParams(movement))
+fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
+    logEvent("result_detail_edit_result_click", createResultParams(result))
+}
+
+// Movement List Drop Down Menu
+
+fun AnalyticsHelper.logMovementListDropDownMenu_EditClick(movement: Movement) {
+    logEvent("movement_list_drop_down_menu_edit_click", createMovementParams(movement))
+}
+
+fun AnalyticsHelper.logMovementListDropDownMenu_DeleteClick(movement: Movement) {
+    logEvent("movement_list_drop_down_menu_delete_click", createMovementParams(movement))
 }
 
 // Add Movement Dialog
@@ -126,30 +136,28 @@ fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: Movement
     logEvent("edit_movement_dialog_delete_movement_click", createMovementParams(movement))
 }
 
-// Movement Detail Screen
+// Delete Movement Confirm Dialog
 
-fun AnalyticsHelper.logMovementDetail_NavBackClick() {
-    logEvent("movement_detail_nav_back_click")
-}
-
-fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
-    logEvent("movement_detail_result_click", createResultParams(result))
-}
-
-fun AnalyticsHelper.logMovementDetail_EditMovementClick(movementId: Long, movementName: String) {
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_ConfirmClick(movementId: Long) {
     logEvent(
-        "movement_detail_edit_movement_click", listOf(
+        "delete_movement_confirm_dialog_confirm_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
-            Param(key = "movement_name", value = movementName),
         )
     )
 }
 
-fun AnalyticsHelper.logMovementDetail_AddResultClick(movementId: Long, movementName: String) {
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long) {
     logEvent(
-        "movement_detail_add_result_click", listOf(
+        "delete_movement_confirm_dialog_cancel_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
-            Param(key = "movement_name", value = movementName),
+        )
+    )
+}
+
+fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
+    logEvent(
+        "delete_movement_confirm_dialog_dismissed", listOf(
+            Param(key = "movement_id", value = movementId.toString()),
         )
     )
 }
@@ -178,19 +186,23 @@ fun AnalyticsHelper.logEditResultDialog_ConfirmClick(result: Result) {
     logEvent("edit_result_dialog_confirm_click", createResultParams(result))
 }
 
+fun AnalyticsHelper.logEditResultDialog_DeleteClick(result: Result) {
+    logEvent("edit_result_dialog_delete_click", createResultParams(result))
+}
+
 fun AnalyticsHelper.logEditResultDialog_Dismissed(result: Result) {
     logEvent("edit_result_dialog_dismissed", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResultDialog_DeleteResultClick(resultId: Long) {
+// Delete Result Confirm Dialog
+
+fun AnalyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId: Long) {
     logEvent(
-        "edit_result_dialog_delete_result_click", listOf(
+        "delete_result_confirm_dialog_confirm_click", listOf(
             Param(key = "result_id", value = resultId.toString()),
         )
     )
 }
-
-// Delete Result Confirm Dialog
 
 fun AnalyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
     logEvent(
@@ -208,12 +220,30 @@ fun AnalyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId: Long) {
     )
 }
 
-fun AnalyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId: Long) {
+// ViewModel & Repository events
+
+fun AnalyticsHelper.logAddMovement(movement: Movement) {
+    logEvent("add_movement", createMovementParams(movement))
+}
+
+fun AnalyticsHelper.logEditMovement(movement: Movement) {
+    logEvent("edit_movement", createMovementParams(movement))
+}
+
+fun AnalyticsHelper.logDeleteMovement(movementId: Long) {
     logEvent(
-        "delete_result_confirm_dialog_confirm_click", listOf(
-            Param(key = "result_id", value = resultId.toString()),
+        "edit_movement", listOf(
+            Param(key = "movement_id", value = movementId.toString()),
         )
     )
+}
+
+fun AnalyticsHelper.logAddResult(result: Result) {
+    logEvent("add_result", createResultParams(result))
+}
+
+fun AnalyticsHelper.logEditResult(result: Result) {
+    logEvent("edit_result", createResultParams(result))
 }
 
 fun AnalyticsHelper.logDeleteResult(resultId: Long) {
@@ -222,20 +252,6 @@ fun AnalyticsHelper.logDeleteResult(resultId: Long) {
             Param(key = "result_id", value = resultId.toString()),
         )
     )
-}
-
-// Result Detail Screen
-
-fun AnalyticsHelper.logResultDetail_NavBackClick() {
-    logEvent("result_detail_nav_back_click")
-}
-
-fun AnalyticsHelper.logResultDetail_AddResultClick(result: Result) {
-    logEvent("result_detail_add_result_click", createResultParams(result))
-}
-
-fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
-    logEvent("result_detail_edit_result_click", createResultParams(result))
 }
 
 private fun AnalyticsHelper.logEvent(type: String, params: List<Param> = emptyList()) {

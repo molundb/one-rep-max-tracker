@@ -77,7 +77,10 @@ fun DeleteMovementConfirmDialog(
             analyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId)
             onCancel()
         },
-        onConfirmation = onConfirmation,
+        onConfirmation = {
+            analyticsHelper.logDeleteMovementConfirmDialog_ConfirmClick(movementId)
+            onConfirmation()
+        },
     )
 }
 

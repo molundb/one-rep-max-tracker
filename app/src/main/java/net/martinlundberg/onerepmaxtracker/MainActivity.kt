@@ -9,8 +9,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledServiceImpl
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsServiceImpl
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.Red
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var analyticsService: AnalyticsServiceImpl
+    lateinit var analyticsService: AnalyticsEnabledServiceImpl
 
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
