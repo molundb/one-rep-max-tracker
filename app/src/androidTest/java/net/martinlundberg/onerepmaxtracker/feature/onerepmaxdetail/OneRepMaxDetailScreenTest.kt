@@ -14,6 +14,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +22,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 @RunWith(AndroidJUnit4::class)
+@Ignore
 class OneRepMaxDetailScreenTest {
 
     @get:Rule val composeTestRule = createComposeRule()

@@ -25,7 +25,7 @@ class MovementListScreenTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun givenStateIsLoading_thenLoadingIndicatorIsDisplayed() {
+    fun givenLoading_thenLoadingIndicatorIsDisplayed() {
         composeTestRule.setContent {
             MovementListScreen(
                 innerPadding = PaddingValues(),
@@ -76,29 +76,6 @@ class MovementListScreenTest {
     }
 
     @Test
-    fun whenAddMovementButtonIsClicked_thenAddMovementDialogIsDisplayed() {
-        // Given
-        composeTestRule.setContent {
-            MovementListScreen(
-                innerPadding = PaddingValues(),
-                movementListUiState = Success(
-                    listOf(
-                        Movement(name = "Test movement", weight = 2f)
-                    ),
-                    weightUnit = POUNDS,
-                    isAnalyticsEnabled = true,
-                )
-            )
-        }
-
-        // When
-        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
-
-        // Then
-        composeTestRule.onNodeWithContentDescription("Add movement dialog").assertIsDisplayed()
-    }
-
-    @Test
     fun whenMovementIsClicked_thenNavigateToMovementDetailScreen() {
         // Given
         var onMovementClickCalled = false
@@ -122,6 +99,29 @@ class MovementListScreenTest {
 
         // Then
         assertTrue(onMovementClickCalled)
+    }
+
+    @Test
+    fun whenAddMovementButtonIsClicked_thenAddMovementDialogIsDisplayed() {
+        // Given
+        composeTestRule.setContent {
+            MovementListScreen(
+                innerPadding = PaddingValues(),
+                movementListUiState = Success(
+                    listOf(
+                        Movement(name = "Test movement", weight = 2f)
+                    ),
+                    weightUnit = POUNDS,
+                    isAnalyticsEnabled = true,
+                )
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithContentDescription("Add movement button").performClick()
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Add movement dialog").assertIsDisplayed()
     }
 
     @Test
