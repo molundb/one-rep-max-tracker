@@ -37,6 +37,24 @@ class MovementListScreenTest {
     }
 
     @Test
+    fun givenEmptyMovementList_thenEmptyStateIsDisplayed() {
+        // Given
+        composeTestRule.setContent {
+            MovementListScreen(
+                innerPadding = PaddingValues(),
+                movementListUiState = Success(
+                    listOf(),
+                    weightUnit = KILOGRAMS,
+                    isAnalyticsEnabled = true,
+                )
+            )
+        }
+
+        // Then
+        composeTestRule.onNodeWithText("Start by adding your first result").assertIsDisplayed()
+    }
+
+    @Test
     fun givenListWithMovement_thenMovementInfoIsDisplayed() {
         // Given
         composeTestRule.setContent {

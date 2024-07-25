@@ -150,7 +150,7 @@ fun MovementListScreen(
                         verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
-                            text = "Start by adding your first result",
+                            text = stringResource(R.string.movement_list_screen_empty_list),
                             style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
                         )
                     }
