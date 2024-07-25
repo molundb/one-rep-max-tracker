@@ -243,6 +243,7 @@ fun ResultDetailScreen(
                         DeleteResultConfirmDialog(
                             resultId = result.id,
                             movementName = movementName,
+                            weight = result.weight.weightWithUnit(resultDetailUiState.weightUnit, LocalContext.current),
                             onDismissRequest = {
                                 resultToDelete = null
                             },

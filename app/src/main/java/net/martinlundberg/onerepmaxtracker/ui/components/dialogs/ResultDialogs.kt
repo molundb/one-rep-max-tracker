@@ -61,34 +61,6 @@ import net.martinlundberg.onerepmaxtracker.util.removeTrailingZeros
 import java.time.OffsetDateTime
 
 @Composable
-fun DeleteResultConfirmDialog(
-    resultId: Long,
-    movementName: String,
-    onDismissRequest: () -> Unit = {},
-    onCancel: () -> Unit = {},
-    onConfirmation: () -> Unit = {},
-) {
-    val analyticsHelper = LocalAnalyticsHelper.current
-    ConfirmDeletionDialog(
-        title = stringResource(R.string.delete_result_confirm_dialog_title),
-        movementName = movementName,
-        cardContentDescription = stringResource(R.string.delete_result_confirm_dialog_content_description),
-        onDismissRequest = {
-            analyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId)
-            onDismissRequest()
-        },
-        onCancel = {
-            analyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId)
-            onCancel()
-        },
-        onConfirmation = {
-            analyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId)
-            onConfirmation()
-        },
-    )
-}
-
-@Composable
 fun AddResultDialog(
     result: Result,
     weightUnit: WeightUnit,
@@ -343,6 +315,36 @@ private fun createResultOfInput(
     comment = commentText
 )
 
+@Composable
+fun DeleteResultConfirmDialog(
+    resultId: Long,
+    movementName: String,
+    weight: String,
+    onDismissRequest: () -> Unit = {},
+    onCancel: () -> Unit = {},
+    onConfirmation: () -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+    ConfirmDeletionDialog(
+        title = stringResource(R.string.delete_result_confirm_dialog_title),
+        movementName = movementName,
+        weight = weight,
+        cardContentDescription = stringResource(R.string.delete_result_confirm_dialog_content_description),
+        onDismissRequest = {
+            analyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId)
+            onDismissRequest()
+        },
+        onCancel = {
+            analyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId)
+            onCancel()
+        },
+        onConfirmation = {
+            analyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId)
+            onConfirmation()
+        },
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun AddResultDialogEnabledPreview() {
@@ -392,3 +394,16 @@ private fun EditResultDialogEnabledPreview() {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun DeleteResultConfirmDialogEnabledPreview() {
+    OneRepMaxTrackerTheme {
+        DeleteResultConfirmDialog(
+            resultId = 5,
+            movementName = "Movement Name",
+            weight = "87.25 lb"
+        )
+    }
+}
+

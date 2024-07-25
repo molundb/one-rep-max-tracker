@@ -1,5 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.ui.components.dialogs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 fun ConfirmDeletionDialog(
     title: String,
     movementName: String,
+    weight: String = "",
     cardContentDescription: String,
     onCancel: () -> Unit = {},
     onDismissRequest: () -> Unit = {},
@@ -65,10 +67,16 @@ fun ConfirmDeletionDialog(
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Box(modifier = Modifier.height(12.dp))
-                Text(
-                    text = movementName,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        text = movementName,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    )
+                    Text(
+                        text = weight,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -106,6 +114,7 @@ private fun ConfirmDeletionDialogPreview() {
         ConfirmDeletionDialog(
             title = "Delete result",
             movementName = "Bench Press",
+            weight = "50 kg",
             cardContentDescription = "description",
         )
     }

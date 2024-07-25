@@ -3,7 +3,11 @@ package net.martinlundberg.onerepmaxtracker.ui.components.dialogs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasContentDescriptionExactly
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -277,12 +281,15 @@ class ResultDialogsTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Edit").performClick()
+        composeTestRule.onNodeWithText("Delete").performClick()
 
-        composeTestRule.onNodeWithText("Delete result").performClick()
 
-        composeTestRule.onNodeWithText("Name of movement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("100 kg").assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("Name of movement")
+            .filterToOne(hasAnyAncestor(hasContentDescriptionExactly("Delete result confirmation dialog")))
+            .assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("100 kg")
+            .filterToOne(hasAnyAncestor(hasContentDescriptionExactly("Delete result confirmation dialog")))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -312,7 +319,7 @@ class ResultDialogsTest {
 
         composeTestRule.onNodeWithText("Cancel").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Delete result dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Delete result confirmation dialog").assertDoesNotExist()
         assertFalse(deleteResultCalled)
     }
 
@@ -343,7 +350,7 @@ class ResultDialogsTest {
 
         composeTestRule.onNodeWithText("Yes, delete").performClick()
 
-        composeTestRule.onNodeWithContentDescription("Delete result dialog").assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription("Delete result confirmation dialog").assertDoesNotExist()
         assertTrue(deleteResultCalled)
     }
 }
