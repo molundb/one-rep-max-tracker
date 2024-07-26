@@ -18,7 +18,6 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.ui.model.ResultUiModel
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
@@ -50,33 +49,22 @@ class ResultDetailViewModel @Inject constructor(
                     )
                 }
 
-                val resultUiModel = ResultUiModel(
-                    id = result.id,
-                    movementId = result.movementId,
-                    weight = result.weight,
-                    offsetDateTime = result.offsetDateTime,
-                    dateTimeFormatted = result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis()),
-                    comment = result.comment,
-                )
-
-                Success(resultUiModel, percentages, weightUnit)
+                Success(result, percentages, weightUnit)
             }.collect { newState ->
-                _uiState.update { newState }
+                val stateWithFormattedDate = newState.copy(
+                    result = newState.result.copy(
+                        dateTimeFormatted = newState.result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis()),
+                    )
+                )
+                _uiState.update { stateWithFormattedDate }
             }
         }
     }
 
     fun editResult(result: Result, weightUnit: WeightUnit) {
-        val resultDomain = Result(
-            id = result.id,
-            movementId = result.movementId,
-            weight = result.weight,
-            offsetDateTime = result.offsetDateTime,
-            comment = result.comment,
-        )
-        analyticsHelper.logEditResult(resultDomain)
+        analyticsHelper.logEditResult(result)
         viewModelScope.launch {
-            resultRepository.setResult(resultDomain, weightUnit)
+            resultRepository.setResult(result, weightUnit)
         }
     }
 
@@ -92,7 +80,7 @@ sealed interface ResultDetailUiState {
     data object Loading : ResultDetailUiState
 
     data class Success(
-        val result: ResultUiModel,
+        val result: Result,
         val percentagesOf1RM: List<Percentage>,
         val weightUnit: WeightUnit,
     ) : ResultDetailUiState

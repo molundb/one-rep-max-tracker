@@ -54,6 +54,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddButton
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_ResultClick
+import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
@@ -61,9 +62,7 @@ import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.AddResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementDetailUiModel
 import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
-import net.martinlundberg.onerepmaxtracker.ui.model.ResultUiModel
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -82,13 +81,7 @@ fun MovementDetailRoute(
     LaunchedEffect(Unit) {
         movementDetailViewModel.getMovementInfo(movementId)
     }
-    val movementDetailUiState by movementDetailViewModel.uiState.collectAsState(
-        Loading(
-            MovementDetailUiModel(
-                movementName
-            )
-        )
-    )
+    val movementDetailUiState by movementDetailViewModel.uiState.collectAsState(Loading(MovementDetail(movementName)))
 
     MovementDetailScreen(
         innerPadding = innerPadding,
@@ -253,11 +246,10 @@ fun MovementDetailScreen(
 
                     if (showAddResultDialog) {
                         AddResultDialog(
-                            result = ResultUiModel(
+                            result = Result(
                                 movementId = movementId,
                                 weight = 0f,
                                 offsetDateTime = movementDetailUiState.currentOffsetDateTime,
-                                dateTimeFormatted = "",
                                 comment = "",
                             ),
                             weightUnit = movementDetailUiState.weightUnit,
@@ -339,9 +331,9 @@ fun MovementDetailScreen(
 @Composable
 fun ResultCard(
     modifier: Modifier = Modifier,
-    result: ResultUiModel,
+    result: Result,
     weightUnit: WeightUnit,
-    onResultClick: ((ResultUiModel) -> Unit)? = null,
+    onResultClick: ((Result) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     Card(
@@ -390,7 +382,7 @@ private fun MovementDetailLoadingPreview() {
             MovementDetailScreen(
                 innerPadding = innerPadding,
                 movementId = 1,
-                movementDetailUiState = Loading(movement = MovementDetailUiModel("Bench Press")),
+                movementDetailUiState = Loading(movement = MovementDetail("Bench Press")),
             )
         }
     }
@@ -401,42 +393,40 @@ private fun MovementDetailLoadingPreview() {
 private fun MovementDetailScreenSuccessPreview() {
     OneRepMaxTrackerTheme {
         DefaultScaffold { innerPadding ->
-            val offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
+            val offsetDateTimeAndFormatted =
+                OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC)
             MovementDetailScreen(
                 innerPadding = innerPadding,
                 movementId = 111L,
                 movementDetailUiState = Success(
-                    MovementDetailUiModel(
+                    MovementDetail(
                         movementName = "Back Squat",
                         listOf(
-                            ResultUiModel(
+                            Result(
                                 id = 80,
                                 movementId = 18,
                                 weight = 15.5f,
-                                offsetDateTime = offsetDateTime,
-                                dateTimeFormatted = "Jul 22 2024",
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "This is a nice comment",
                             ),
-                            ResultUiModel(
+                            Result(
                                 id = 75,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = offsetDateTime,
-                                dateTimeFormatted = "Jul 21 2024",
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "Happiness comes from within",
                             ),
-                            ResultUiModel(
+                            Result(
                                 id = 70,
                                 movementId = 18,
                                 weight = 15f,
-                                offsetDateTime = offsetDateTime,
-                                dateTimeFormatted = "Jul 23 2024",
+                                offsetDateTime = offsetDateTimeAndFormatted,
                                 comment = "You are the universe experiencing itself",
                             ),
                         )
                     ),
                     weightUnit = WeightUnit.KILOGRAMS,
-                    currentOffsetDateTime = offsetDateTime,
+                    currentOffsetDateTime = offsetDateTimeAndFormatted,
                 ),
             )
         }

@@ -8,7 +8,6 @@ import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.Types
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
-import net.martinlundberg.onerepmaxtracker.ui.model.ResultUiModel
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 // General
@@ -60,7 +59,7 @@ fun AnalyticsHelper.logMovementDetail_NavBackClick() {
     logEvent("movement_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logMovementDetail_ResultClick(result: ResultUiModel) {
+fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
     logEvent("movement_detail_result_click", createResultParams(result))
 }
 
@@ -88,11 +87,11 @@ fun AnalyticsHelper.logResultDetail_NavBackClick() {
     logEvent("result_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logResultDetail_AddResultClick(result: ResultUiModel) {
+fun AnalyticsHelper.logResultDetail_AddResultClick(result: Result) {
     logEvent("result_detail_add_result_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logResultDetail_EditResultClick(result: ResultUiModel) {
+fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
     logEvent("result_detail_edit_result_click", createResultParams(result))
 }
 
@@ -188,7 +187,7 @@ fun AnalyticsHelper.logEditResultDialog_ConfirmClick(result: Result) {
     logEvent("edit_result_dialog_confirm_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResultDialog_DeleteClick(result: ResultUiModel) {
+fun AnalyticsHelper.logEditResultDialog_DeleteClick(result: Result) {
     logEvent("edit_result_dialog_delete_click", createResultParams(result))
 }
 
@@ -299,20 +298,6 @@ private fun createResultParams(result: Result): List<Param> {
         Param(key = paramKeyName, value = result.movementId.toString()),
         Param(key = paramKeyWeight, value = result.weight.toString()),
         Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
-    )
-    return extras
-}
-
-private fun createResultParams(result: ResultUiModel): List<Param> {
-    val paramKeyId = "result_id"
-    val paramKeyName = "movement_id"
-    val paramKeyWeight = "result_weight"
-    val paramKeyDateTime = "result_date_time"
-    val extras = listOf(
-        Param(key = paramKeyId, value = result.id.toString()),
-        Param(key = paramKeyName, value = result.movementId.toString()),
-        Param(key = paramKeyWeight, value = result.weight.toString()),
-        Param(key = paramKeyDateTime, value = result.toString()),
     )
     return extras
 }

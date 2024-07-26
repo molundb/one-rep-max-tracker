@@ -54,7 +54,6 @@ import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiSt
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
-import net.martinlundberg.onerepmaxtracker.ui.model.ResultUiModel
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -159,8 +158,8 @@ fun ResultDetailScreen(
             }
 
             is Success -> {
-                var resultToEdit by remember { mutableStateOf<ResultUiModel?>(null) }
-                var resultToDelete by remember { mutableStateOf<ResultUiModel?>(null) }
+                var resultToEdit by remember { mutableStateOf<Result?>(null) }
+                var resultToDelete by remember { mutableStateOf<Result?>(null) }
 
                 Column(
                     modifier = Modifier
@@ -306,11 +305,11 @@ private fun ResultDetailScreenSuccessPreview() {
                 innerPadding = innerPadding,
                 movementName = "Thrusters",
                 resultDetailUiState = Success(
-                    result = ResultUiModel(
+                    result = Result(
                         id = 1,
                         movementId = 15,
                         weight = 100.5f,
-                        offsetDateTime = OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
+                        offsetDateTime = OffsetDateTime.of(2024, 9, 1, 0, 0, 0, 0, ZoneOffset.UTC),
                         dateTimeFormatted = "5 days ago",
                         comment = "Bring it on!",
                     ),

@@ -13,6 +13,7 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalModel
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
+import net.martinlundberg.onerepmaxtracker.data.model.asEntity
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.poundsToKilos
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
