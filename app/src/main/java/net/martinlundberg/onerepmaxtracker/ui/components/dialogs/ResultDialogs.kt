@@ -50,6 +50,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_DeleteC
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResultDialog_Dismissed
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePicker
+import net.martinlundberg.onerepmaxtracker.ui.model.ResultUiModel
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
@@ -62,7 +63,7 @@ import java.time.OffsetDateTime
 
 @Composable
 fun AddResultDialog(
-    result: Result,
+    result: ResultUiModel,
     weightUnit: WeightUnit,
     onDismissRequest: (Result) -> Unit = {},
     onConfirm: (Result) -> Unit = {},
@@ -93,12 +94,12 @@ fun AddResultDialog(
 
 @Composable
 fun EditResultDialog(
-    result: Result,
+    result: ResultUiModel,
     weightUnit: WeightUnit,
     onDismissRequest: (Result) -> Unit = {},
     onConfirm: (Result) -> Unit = {},
     onCancel: (Result) -> Unit = {},
-    onDelete: (Result) -> Unit = {},
+    onDelete: (ResultUiModel) -> Unit = {},
 ) {
     val analyticsHelper = LocalAnalyticsHelper.current
     AddOrEditResultDialog(
@@ -129,7 +130,7 @@ fun EditResultDialog(
 
 @Composable
 private fun AddOrEditResultDialog(
-    result: Result,
+    result: ResultUiModel,
     weightUnit: WeightUnit,
     cardContentDescription: String,
     title: String,
@@ -300,7 +301,7 @@ private fun AddOrEditResultDialog(
 }
 
 private fun createResultOfInput(
-    result: Result,
+    result: ResultUiModel,
     weightText: TextFieldValue,
     date: OffsetDateTime,
     commentText: String,
@@ -347,10 +348,11 @@ fun DeleteResultConfirmDialog(
 private fun AddResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         AddResultDialog(
-            result = Result(
+            result = ResultUiModel(
                 movementId = 3,
                 weight = 55f,
                 offsetDateTime = OffsetDateTime.now(),
+                dateTimeFormatted = "20 Jul 2022",
                 comment = "Hey there. This is a longer comment testing what happens if there is a lot of text.\n\n" +
                           "Hey there. This is a longer comment testing what happens if there is a lot of text.\n\n" +
                           "Hey there. This is a longer comment testing what happens if there is a lot of text.",
@@ -365,10 +367,11 @@ private fun AddResultDialogEnabledPreview() {
 private fun AddResultDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         AddResultDialog(
-            result = Result(
+            result = ResultUiModel(
                 movementId = 1,
                 weight = 0f,
                 offsetDateTime = OffsetDateTime.now(),
+                dateTimeFormatted = "21 Jul 2022",
                 comment = "",
             ),
             weightUnit = POUNDS,
@@ -381,10 +384,12 @@ private fun AddResultDialogDisabledPreview() {
 private fun EditResultDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         EditResultDialog(
-            result = Result(
+            result = ResultUiModel(
+                id = 0,
                 movementId = 2,
                 weight = 5f,
                 offsetDateTime = OffsetDateTime.now(),
+                dateTimeFormatted = "20 Jul 2023",
                 comment = "Not much",
             ),
             weightUnit = POUNDS,
