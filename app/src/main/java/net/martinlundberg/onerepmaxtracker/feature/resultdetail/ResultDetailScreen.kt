@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail
+package net.martinlundberg.onerepmaxtracker.feature.resultdetail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,8 +50,8 @@ import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_NavBackClic
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme

@@ -19,8 +19,8 @@ import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailScreen
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailScreen
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailScreen
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Rule
 import org.junit.Test

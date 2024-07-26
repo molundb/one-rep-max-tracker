@@ -12,8 +12,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailScreen
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailScreen
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Rule
 import org.junit.Test

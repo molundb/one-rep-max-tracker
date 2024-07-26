@@ -1,4 +1,4 @@
-package net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail
+package net.martinlundberg.onerepmaxtracker.feature.resultdetail
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.assertIsDisplayed
@@ -10,8 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Loading
-import net.martinlundberg.onerepmaxtracker.feature.onerepmaxdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import org.junit.Rule
 import org.junit.Test
