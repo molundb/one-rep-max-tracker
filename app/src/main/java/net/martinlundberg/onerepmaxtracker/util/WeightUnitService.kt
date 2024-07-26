@@ -50,14 +50,17 @@ class WeightUnitServiceImpl @Inject constructor(
         Round pounds and kilograms to nearest quarter.
         */
         fun Float.weightWithUnit(weightUnit: WeightUnit, context: Context): String {
-            val weight = if (weightUnit == POUNDS) {
+            val weight = weightWithUnit(weightUnit)
+            return context.getString(R.string.weight_with_unit, weight, weightUnit.toString(context))
+        }
+
+        fun Float.weightWithUnit(weightUnit: WeightUnit) =
+            if (weightUnit == POUNDS) {
                 (this * KILOS_TO_POUNDS_RATIO)
             } else {
                 this
             }.roundToNearestQuarter()
                 .removeTrailingZeros()
-            return context.getString(R.string.weight_with_unit, weight, weightUnit.toString(context))
-        }
 
         fun Int.weightWithUnit(weightUnit: WeightUnit, context: Context): String {
             val weight = if (weightUnit == POUNDS) {

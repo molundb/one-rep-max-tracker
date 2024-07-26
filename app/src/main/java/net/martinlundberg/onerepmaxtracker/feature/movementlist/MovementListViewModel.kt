@@ -14,12 +14,13 @@ import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
-import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
+import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import java.time.ZoneId
@@ -42,18 +43,28 @@ class MovementListViewModel @Inject constructor(
                 resultRepository.getWeightUnitFlow(),
                 resultRepository.getAnalyticsCollectionEnabledFlow(),
             ) { movements, weightUnit, isAnalyticsEnabled ->
-                Success(movements, weightUnit, isAnalyticsEnabled)
+
+                val uiMovements = movements.map {
+                    MovementUiModel(
+                        id = it.id,
+                        name = it.name,
+                        weight = it.weight?.weightWithUnit(weightUnit)?.toString(),
+                    )
+                }
+
+                Success(uiMovements, weightUnit, isAnalyticsEnabled)
             }.collect { newState ->
                 _uiState.update { newState }
             }
         }
     }
 
-    fun addMovement(movement: Movement, weightUnit: WeightUnit) {
-        analyticsHelper.logAddMovement(movement)
+    fun addMovement(movement: MovementUiModel, weightUnit: WeightUnit) {
+        val movementDomain = movement.asDomain()
+        analyticsHelper.logAddMovement(movementDomain)
         viewModelScope.launch {
-            val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
-            movement.weight?.let {
+            val movementId = movementsRepository.setMovement(movementDomain.copy(name = movement.name.trim()))
+            movementDomain.weight?.let {
                 val result = Result(
                     weight = it,
                     offsetDateTime = clockService
@@ -71,10 +82,11 @@ class MovementListViewModel @Inject constructor(
         }
     }
 
-    fun editMovement(movement: Movement) {
-        analyticsHelper.logEditMovement(movement)
+    fun editMovement(movement: MovementUiModel) {
+        val movementDomain = movement.asDomain()
+        analyticsHelper.logEditMovement(movementDomain)
         viewModelScope.launch {
-            movementsRepository.setMovement(movement)
+            movementsRepository.setMovement(movementDomain)
         }
     }
 
@@ -95,7 +107,7 @@ sealed interface MovementListUiState {
     data object Loading : MovementListUiState
 
     data class Success(
-        val movements: List<Movement> = emptyList(),
+        val movements: List<MovementUiModel> = emptyList(),
         val weightUnit: WeightUnit,
         val isAnalyticsEnabled: Boolean,
     ) : MovementListUiState

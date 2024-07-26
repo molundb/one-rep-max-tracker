@@ -8,7 +8,6 @@ import net.martinlundberg.onerepmaxtracker.data.database.dao.MovementDao
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
-import net.martinlundberg.onerepmaxtracker.data.model.asEntity
 import javax.inject.Inject
 
 class DefaultMovementsRepository @Inject constructor(

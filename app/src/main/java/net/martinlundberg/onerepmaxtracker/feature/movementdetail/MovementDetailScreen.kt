@@ -54,7 +54,6 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddButton
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_NavBackClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_ResultClick
-import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
@@ -63,6 +62,7 @@ import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.AddResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
+import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -105,7 +105,7 @@ fun MovementDetailScreen(
     onResultClick: (Long, String) -> Unit = { _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
-    onEditMovementClick: (Movement) -> Unit = {},
+    onEditMovementClick: (MovementUiModel) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     onDeleteResultClick: (Long) -> Unit = {},
 ) {
@@ -287,7 +287,7 @@ fun MovementDetailScreen(
 
                     if (showEditMovementDialog) {
                         EditMovementDialog(
-                            movement = Movement(movementId, movementDetailUiState.movement.movementName),
+                            movement = MovementUiModel(movementId, movementDetailUiState.movement.movementName),
                             weightUnit = movementDetailUiState.weightUnit,
                             onDismissRequest = {
                                 showEditMovementDialog = false
