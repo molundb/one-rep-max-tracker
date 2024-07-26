@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalModel
@@ -51,8 +52,11 @@ class DefaultResultRepository @Inject constructor(
 
     override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
 
+    //TODO: Create separate analytics collection methods?
     override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> = analyticsEnabledService.analyticsEnabledFlow
 
-    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) =
+    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
+        analyticsHelper.logAnalyticsEnabledToggled(isEnabled)
         analyticsEnabledService.setAnalyticsCollectionEnabled(isEnabled)
+    }
 }

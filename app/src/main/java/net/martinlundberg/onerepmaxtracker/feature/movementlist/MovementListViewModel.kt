@@ -13,7 +13,6 @@ import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
-import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
@@ -86,7 +85,6 @@ class MovementListViewModel @Inject constructor(
     }
 
     fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
-        analyticsHelper.logAnalyticsEnabledToggled(isEnabled)
         viewModelScope.launch {
             resultRepository.setAnalyticsCollectionEnabled(isEnabled)
         }
