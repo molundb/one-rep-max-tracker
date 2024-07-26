@@ -55,21 +55,22 @@ import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_EditClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_AddMovementButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.AddMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.menus.MovementDropDownMenu
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
 
 @Composable
 fun MovementListRoute(
     innerPadding: PaddingValues,
-    onMovementClick: (MovementUiModel, Lifecycle.State) -> Unit = { _, _ -> },
+    onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementListViewModel: MovementListViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -94,17 +95,17 @@ fun MovementListRoute(
 fun MovementListScreen(
     innerPadding: PaddingValues,
     movementListUiState: MovementListUiState = Loading,
-    onAddMovementClick: (MovementUiModel, WeightUnit) -> Unit = { _, _ -> },
-    onMovementClick: (MovementUiModel, Lifecycle.State) -> Unit = { _, _ -> },
-    onEditMovementClick: (MovementUiModel) -> Unit = {},
+    onAddMovementClick: (Movement, WeightUnit) -> Unit = { _, _ -> },
+    onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
+    onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
 
-    var movementToEdit by remember { mutableStateOf<MovementUiModel?>(null) }
+    var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
-    var movementToDelete by remember { mutableStateOf<MovementUiModel?>(null) }
+    var movementToDelete by remember { mutableStateOf<Movement?>(null) }
 
     val context = LocalContext.current
 
@@ -265,13 +266,13 @@ fun MovementListScreen(
 @Composable
 fun MovementCard(
     modifier: Modifier = Modifier,
-    movement: MovementUiModel,
+    movement: Movement,
     weightUnit: WeightUnit,
-    onMovementClick: (MovementUiModel, Lifecycle.State) -> Unit,
-    onEditMovementClick: (MovementUiModel) -> Unit,
-    onDeleteMovementClick: (MovementUiModel) -> Unit,
+    onMovementClick: (Movement, Lifecycle.State) -> Unit,
+    onEditMovementClick: (Movement) -> Unit,
+    onDeleteMovementClick: (Movement) -> Unit,
 ) {
-    var movementDropDownMenuInfo by remember { mutableStateOf<MovementUiModel?>(null) }
+    var movementDropDownMenuInfo by remember { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
@@ -303,15 +304,17 @@ fun MovementCard(
         ) {
             Text(movement.name, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.weight(1f))
-            val text = if (movement.weight == null) {
-                stringResource(R.string.movement_list_screen_movement_card_no_weight)
+            if (movement.weight == null) {
+                Text(
+                    text = stringResource(R.string.movement_list_screen_movement_card_no_weight),
+                    style = MaterialTheme.typography.titleMedium,
+                )
             } else {
-                stringResource(R.string.weight_with_unit, movement.weight, weightUnit.toString(context))
+                Text(
+                    text = movement.weight.weightWithUnit(weightUnit, LocalContext.current),
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
-            Text(
-                text = text,
-                style = MaterialTheme.typography.titleMedium,
-            )
             Box(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_nav),
@@ -328,6 +331,7 @@ fun MovementCard(
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -368,9 +372,9 @@ private fun MovementListScreenSuccessContentPreview() {
                 innerPadding = innerPadding,
                 movementListUiState = Success(
                     listOf(
-                        MovementUiModel(1, "Movement 1", "100"),
-                        MovementUiModel(2, "Movement 4", "4.4"),
-                        MovementUiModel(3, "No weight", "-"),
+                        Movement(1, "Movement 1", 100f),
+                        Movement(2, "Movement 4", 4.4f),
+                        Movement(3, "No weight", null),
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,

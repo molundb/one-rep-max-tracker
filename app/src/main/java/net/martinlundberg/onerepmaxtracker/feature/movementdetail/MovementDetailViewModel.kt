@@ -14,13 +14,13 @@ import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
@@ -79,11 +79,10 @@ class MovementDetailViewModel @Inject constructor(
         }
     }
 
-    fun editMovement(movement: MovementUiModel) {
-        val movementDomain = movement.asDomain()
-        analyticsHelper.logEditMovement(movementDomain)
+    fun editMovement(movement: Movement) {
+        analyticsHelper.logEditMovement(movement)
         viewModelScope.launch {
-            movementsRepository.setMovement(movementDomain)
+            movementsRepository.setMovement(movement)
         }
     }
 

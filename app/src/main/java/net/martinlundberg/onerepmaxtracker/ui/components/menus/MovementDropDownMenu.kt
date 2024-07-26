@@ -15,15 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
 
 @Composable
 fun MovementDropDownMenu(
-    movement: MovementUiModel,
-    onEditMovementClick: (MovementUiModel) -> Unit = {},
-    onDeleteMovementClick: (MovementUiModel) -> Unit = {},
+    movement: Movement,
+    onEditMovementClick: (Movement) -> Unit = {},
+    onDeleteMovementClick: (Movement) -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
     MaterialTheme(

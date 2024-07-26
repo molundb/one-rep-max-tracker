@@ -50,7 +50,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_Cance
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_DeleteMovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_Dismissed
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -87,13 +87,13 @@ fun DeleteMovementConfirmDialog(
 @Composable
 fun AddMovementDialog(
     weightUnit: WeightUnit,
-    onDismissRequest: (MovementUiModel) -> Unit = {},
-    onCancel: (MovementUiModel) -> Unit = {},
-    onConfirm: (MovementUiModel) -> Unit = {},
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement) -> Unit = {},
 ) {
     val analyticsHelper = LocalAnalyticsHelper.current
     AddOrEditMovementDialog(
-        movement = MovementUiModel(name = ""),
+        movement = Movement(name = ""),
         weightUnit = weightUnit,
         cardContentDescription = stringResource(R.string.movement_list_screen_add_movement_dialog_content_description),
         title = stringResource(R.string.movement_list_screen_add_movement_dialog_title),
@@ -116,12 +116,12 @@ fun AddMovementDialog(
 
 @Composable
 fun EditMovementDialog(
-    movement: MovementUiModel,
+    movement: Movement,
     weightUnit: WeightUnit,
-    onDismissRequest: (MovementUiModel) -> Unit = {},
-    onCancel: (MovementUiModel) -> Unit = {},
-    onConfirm: (MovementUiModel) -> Unit = { },
-    onDelete: (MovementUiModel) -> Unit = {},
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement) -> Unit = { },
+    onDelete: (Movement) -> Unit = {},
 ) {
     val analyticsHelper = LocalAnalyticsHelper.current
     AddOrEditMovementDialog(
@@ -152,19 +152,19 @@ fun EditMovementDialog(
 
 @Composable
 private fun AddOrEditMovementDialog(
-    movement: MovementUiModel,
+    movement: Movement,
     weightUnit: WeightUnit,
     cardContentDescription: String,
     title: String,
     showWeightField: Boolean,
     confirmButtonText: String,
-    onDismissRequest: (MovementUiModel) -> Unit = {},
-    onCancel: (MovementUiModel) -> Unit = {},
-    onConfirm: (MovementUiModel) -> Unit = { },
+    onDismissRequest: (Movement) -> Unit = {},
+    onCancel: (Movement) -> Unit = {},
+    onConfirm: (Movement) -> Unit = { },
     onDelete: (() -> Unit)? = null,
 ) {
     var movementNameText by remember { mutableStateOf(TextFieldValue(movement.name, TextRange(movement.name.length))) }
-    val weightInitialValue = movement.weight ?: ""
+    val weightInitialValue = movement.weight?.toString() ?: ""
     var movementWeightText by remember { mutableStateOf(weightInitialValue) }
 
     Dialog(onDismissRequest = {
@@ -304,10 +304,10 @@ private fun createMovementOfInput(
     movementId: Long,
     movementNameText: String,
     movementWeightText: String,
-) = MovementUiModel(
+) = Movement(
     id = movementId,
     name = movementNameText,
-    weight = movementWeightText,
+    weight = movementWeightText.toFloatOrNull()
 )
 
 @Preview(showBackground = true)
@@ -325,7 +325,7 @@ private fun AddMovementDialogDisabledPreview() {
 private fun EditMovementDialogEnabledPreview() {
     OneRepMaxTrackerTheme {
         EditMovementDialog(
-            movement = MovementUiModel(id = 1, name = "Movement 1", weight = "100.75"),
+            movement = Movement(id = 1, name = "Movement 1", weight = 100.75f),
             weightUnit = KILOGRAMS,
         )
     }
@@ -336,7 +336,7 @@ private fun EditMovementDialogEnabledPreview() {
 private fun EditMovementDialogDisabledPreview() {
     OneRepMaxTrackerTheme {
         EditMovementDialog(
-            movement = MovementUiModel(id = 1, name = "", weight = "55.75"),
+            movement = Movement(id = 1, name = "", weight = 55.75f),
             weightUnit = KILOGRAMS,
         )
     }

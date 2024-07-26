@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logWeightUnitToggled
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
+import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class NavViewModel @Inject constructor(
     fun setWeightUnitAsUserProperty(weightUnit: WeightUnit) =
         analyticsHelper.setWeightUnitAsUserProperty(weightUnit.toString())
 
-    fun navigateToDetail(movement: MovementUiModel, lifeCycleState: Lifecycle.State, route: String) {
+    fun navigateToDetail(movement: Movement, lifeCycleState: Lifecycle.State, route: String) {
         analyticsHelper.logMovementList_MovementClick(movement)
         if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
             controller.navigate(route)

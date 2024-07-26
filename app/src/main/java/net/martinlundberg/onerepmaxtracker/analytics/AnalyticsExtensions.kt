@@ -7,7 +7,6 @@ import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.ParamKeys
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.Types
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.ui.model.MovementUiModel
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 // General
@@ -41,11 +40,11 @@ fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
 
 // Movement List Screen
 
-fun AnalyticsHelper.logMovementList_MovementClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logMovementList_MovementClick(movement: Movement) {
     logEvent("movement_list_movement_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementList_MovementLongClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logMovementList_MovementLongClick(movement: Movement) {
     logEvent("movement_list_movement_long_click", createMovementParams(movement))
 }
 
@@ -97,43 +96,43 @@ fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
 
 // Movement List Drop Down Menu
 
-fun AnalyticsHelper.logMovementListDropDownMenu_EditClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logMovementListDropDownMenu_EditClick(movement: Movement) {
     logEvent("movement_list_drop_down_menu_edit_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementListDropDownMenu_DeleteClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logMovementListDropDownMenu_DeleteClick(movement: Movement) {
     logEvent("movement_list_drop_down_menu_delete_click", createMovementParams(movement))
 }
 
 // Add Movement Dialog
 
-fun AnalyticsHelper.logAddMovementDialog_CancelClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logAddMovementDialog_CancelClick(movement: Movement) {
     logEvent("add_movement_dialog_cancel_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logAddMovementDialog_Dismissed(movement: MovementUiModel) {
+fun AnalyticsHelper.logAddMovementDialog_Dismissed(movement: Movement) {
     logEvent("add_movement_dialog_dismissed", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logAddMovementDialog_ConfirmClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logAddMovementDialog_ConfirmClick(movement: Movement) {
     logEvent("add_movement_dialog_confirm_click", createMovementParams(movement))
 }
 
 // Edit Movement Dialog
 
-fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: Movement) {
     logEvent("edit_movement_dialog_cancel_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_Dismissed(movement: MovementUiModel) {
+fun AnalyticsHelper.logEditMovementDialog_Dismissed(movement: Movement) {
     logEvent("edit_movement_dialog_dismissed", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_ConfirmClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logEditMovementDialog_ConfirmClick(movement: Movement) {
     logEvent("edit_movement_dialog_confirm_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: MovementUiModel) {
+fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: Movement) {
     logEvent("edit_movement_dialog_delete_movement_click", createMovementParams(movement))
 }
 
@@ -272,18 +271,6 @@ private fun createMovementParams(movement: Movement): List<Param> {
         Param(key = paramKeyId, value = movement.id.toString()),
         Param(key = paramKeyName, value = movement.name),
         Param(key = paramKeyWeight, value = movement.weight?.toString() ?: "-"),
-    )
-    return extras
-}
-
-private fun createMovementParams(movement: MovementUiModel): List<Param> {
-    val paramKeyId = "movement_id"
-    val paramKeyName = "movement_name"
-    val paramKeyWeight = "movement_weight"
-    val extras = listOf(
-        Param(key = paramKeyId, value = movement.id.toString()),
-        Param(key = paramKeyName, value = movement.name),
-        Param(key = paramKeyWeight, value = movement.weight ?: "-"),
     )
     return extras
 }
