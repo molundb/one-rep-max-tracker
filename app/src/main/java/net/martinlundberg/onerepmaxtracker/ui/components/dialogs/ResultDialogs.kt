@@ -53,11 +53,10 @@ import net.martinlundberg.onerepmaxtracker.ui.components.OutlinedTextFieldDatePi
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.White
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.kilosToPounds
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.POUNDS
-import net.martinlundberg.onerepmaxtracker.util.removeTrailingZeros
 import java.time.OffsetDateTime
 
 @Composable
@@ -143,11 +142,7 @@ private fun AddOrEditResultDialog(
     val weightInitialValue = if (result.weight == 0f) {
         ""
     } else {
-        if (weightUnit.isPounds()) {
-            result.weight.kilosToPounds()
-        } else {
-            result.weight.removeTrailingZeros().toString()
-        }
+        result.weight.multiplyIfPoundsAndRoundToNearestQuarter(weightUnit).toString()
     }
 
     var weightText by remember {

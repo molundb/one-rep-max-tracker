@@ -47,29 +47,25 @@ class WeightUnitServiceImpl @Inject constructor(
         private const val KILOS_TO_POUNDS_RATIO = 2.205f
 
         /*
-        Round pounds and kilograms to nearest quarter.
+        Round multiply if pounds and round to the nearest quarter.
         */
-        fun Float.weightWithUnit(weightUnit: WeightUnit, context: Context): String {
-            val weight = if (weightUnit == POUNDS) {
+        fun Float.multiplyIfPoundsAndRoundToNearestQuarter(weightUnit: WeightUnit) =
+            multiplyIfPounds(weightUnit).roundToNearestQuarter()
+                .removeTrailingZeros()
+
+        fun Float.multiplyIfPounds(weightUnit: WeightUnit) =
+            if (weightUnit == POUNDS) {
                 (this * KILOS_TO_POUNDS_RATIO)
             } else {
                 this
-            }.roundToNearestQuarter()
-                .removeTrailingZeros()
-            return context.getString(R.string.weight_with_unit, weight, weightUnit.toString(context))
-        }
+            }
 
-        fun Int.weightWithUnit(weightUnit: WeightUnit, context: Context): String {
-            val weight = if (weightUnit == POUNDS) {
-                (this * KILOS_TO_POUNDS_RATIO).toInt()
+        fun Float.divideIfPounds(weightUnit: WeightUnit) =
+            if (weightUnit == POUNDS) {
+                this / KILOS_TO_POUNDS_RATIO
             } else {
                 this
             }
-            return context.getString(R.string.weight_with_unit, weight.toString(), weightUnit.toString(context))
-        }
-
-        fun Float.poundsToKilos() = (this / KILOS_TO_POUNDS_RATIO).removeTrailingZeros().toString()
-        fun Float.kilosToPounds() = (this * KILOS_TO_POUNDS_RATIO).removeTrailingZeros().toString()
     }
 
     enum class WeightUnit {

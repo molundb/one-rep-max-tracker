@@ -64,7 +64,7 @@ import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementC
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -268,9 +268,10 @@ fun MovementDetailScreen(
                         DeleteResultConfirmDialog(
                             resultId = result.id,
                             movementName = movementDetailUiState.movement.movementName,
-                            weight = result.weight.weightWithUnit(
-                                movementDetailUiState.weightUnit,
-                                LocalContext.current,
+                            weight = stringResource(
+                                R.string.weight_with_unit,
+                                result.weight.multiplyIfPoundsAndRoundToNearestQuarter(movementDetailUiState.weightUnit),
+                                movementDetailUiState.weightUnit.toString(context),
                             ),
                             onDismissRequest = {
                                 resultToDelete = null
@@ -355,7 +356,11 @@ fun ResultCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                result.weight.weightWithUnit(weightUnit, LocalContext.current),
+                text = stringResource(
+                    R.string.weight_with_unit,
+                    result.weight.multiplyIfPoundsAndRoundToNearestQuarter(weightUnit),
+                    weightUnit.toString(context),
+                ),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.weight(1f))

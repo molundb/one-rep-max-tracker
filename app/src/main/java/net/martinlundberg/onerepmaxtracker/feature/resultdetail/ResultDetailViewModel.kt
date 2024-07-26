@@ -18,6 +18,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
@@ -44,7 +45,7 @@ class ResultDetailViewModel @Inject constructor(
                     percentages.add(
                         Percentage(
                             percentage,
-                            (result.weight * percentage / 100).roundToInt()
+                            (result.weight * percentage / 100).multiplyIfPounds(weightUnit).roundToInt()
                         )
                     )
                 }

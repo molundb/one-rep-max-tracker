@@ -63,7 +63,7 @@ import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementC
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.menus.MovementDropDownMenu
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
 
@@ -311,7 +311,11 @@ fun MovementCard(
                 )
             } else {
                 Text(
-                    text = movement.weight.weightWithUnit(weightUnit, LocalContext.current),
+                    text = stringResource(
+                        R.string.weight_with_unit,
+                        movement.weight.multiplyIfPoundsAndRoundToNearestQuarter(weightUnit),
+                        weightUnit.toString(context),
+                    ),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -331,7 +335,6 @@ fun MovementCard(
         }
     }
 }
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

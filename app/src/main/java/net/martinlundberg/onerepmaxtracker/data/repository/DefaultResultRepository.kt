@@ -15,7 +15,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.model.asEntity
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.poundsToKilos
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.divideIfPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import javax.inject.Inject
 
@@ -32,11 +32,7 @@ class DefaultResultRepository @Inject constructor(
         }
 
     override suspend fun setResult(result: Result, weightUnit: WeightUnit) {
-        val weight = if (weightUnit.isPounds()) {
-            result.weight.poundsToKilos().toFloat()
-        } else {
-            result.weight
-        }
+        val weight = result.weight.divideIfPounds(weightUnit)
         resultDao.insert(result.copy(weight = weight).asEntity())
     }
 

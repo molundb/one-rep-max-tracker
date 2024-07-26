@@ -55,7 +55,7 @@ import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiSt
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.weightWithUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -244,7 +244,11 @@ fun ResultDetailScreen(
                         DeleteResultConfirmDialog(
                             resultId = result.id,
                             movementName = movementName,
-                            weight = result.weight.weightWithUnit(resultDetailUiState.weightUnit, LocalContext.current),
+                            weight = stringResource(
+                                R.string.weight_with_unit,
+                                result.weight.multiplyIfPoundsAndRoundToNearestQuarter(resultDetailUiState.weightUnit),
+                                resultDetailUiState.weightUnit.toString(context),
+                            ),
                             onDismissRequest = {
                                 resultToDelete = null
                             },
@@ -277,7 +281,11 @@ fun Percentage(percentage: Percentage, weightUnit: WeightUnit) {
             ),
         )
         Text(
-            text = percentage.weight.weightWithUnit(weightUnit, LocalContext.current),
+            text = stringResource(
+                R.string.weight_with_unit,
+                percentage.weight,
+                weightUnit.toString(LocalContext.current),
+            ),
         )
     }
 }
