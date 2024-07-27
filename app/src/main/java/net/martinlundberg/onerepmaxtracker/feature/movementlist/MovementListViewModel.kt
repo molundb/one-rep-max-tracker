@@ -3,11 +3,10 @@ package net.martinlundberg.onerepmaxtracker.feature.movementlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
@@ -32,23 +31,21 @@ class MovementListViewModel @Inject constructor(
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<MovementListUiState> = MutableStateFlow(Loading)
-    val uiState: StateFlow<MovementListUiState> = _uiState.asStateFlow()
-
-    // TODO: Try using .stateIn instead
-    fun getMovements() {
-        viewModelScope.launch {
-            combine(
-                movementsRepository.movements,
-                resultRepository.getWeightUnitFlow(),
-                resultRepository.getAnalyticsCollectionEnabledFlow(),
-            ) { movements, weightUnit, isAnalyticsEnabled ->
-                Success(movements, weightUnit, isAnalyticsEnabled)
-            }.collect { newState ->
-                _uiState.update { newState }
-            }
-        }
-    }
+    val uiState: StateFlow<MovementListUiState> = combine(
+        movementsRepository.movements,
+        resultRepository.getWeightUnitFlow(),
+        resultRepository.getAnalyticsCollectionEnabledFlow(),
+    ) { movements, weightUnit, isAnalyticsEnabled ->
+        Success(
+            movements = movements,
+            weightUnit = weightUnit,
+            isAnalyticsEnabled = isAnalyticsEnabled
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = Loading,
+    )
 
     fun addMovement(movement: Movement, weightUnit: WeightUnit) {
         viewModelScope.launch {

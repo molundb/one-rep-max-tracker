@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,9 +72,9 @@ fun MovementListRoute(
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementListViewModel: MovementListViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(Unit) {
-        movementListViewModel.getMovements()
-    }
+//    LaunchedEffect(Unit) {
+//        movementListViewModel.getMovements()
+//    }
 
     val movementListUiState by movementListViewModel.uiState.collectAsState()
 

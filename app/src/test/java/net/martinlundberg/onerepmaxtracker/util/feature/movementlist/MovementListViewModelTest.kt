@@ -1,5 +1,11 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package net.martinlundberg.onerepmaxtracker.util.feature.movementlist
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import net.martinlundberg.onerepmaxtracker.MainDispatcherRule
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent
@@ -50,7 +56,7 @@ class MovementListViewModelTest {
 
     @Test
     fun whenAddMovementWithoutWeight_thenMovementIsAddedAndTracked() = runTest {
-        viewModel.getMovements()
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
         assertEquals(
             MovementListUiState.Success(
@@ -87,11 +93,13 @@ class MovementListViewModelTest {
                 ),
             ),
         )
+
+        collectJob.cancel()
     }
 
     @Test
     fun whenAddMovementWithWeight_thenMovementAndResultAreAddedAndTracked() = runTest {
-        viewModel.getMovements()
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
         assertEquals(
             MovementListUiState.Success(
@@ -147,6 +155,8 @@ class MovementListViewModelTest {
                 ),
             )
         )
+
+        collectJob.cancel()
     }
 
     private val sampleMovementWithoutWeight = Movement(

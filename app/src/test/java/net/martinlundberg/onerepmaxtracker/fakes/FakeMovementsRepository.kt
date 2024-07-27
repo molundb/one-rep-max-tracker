@@ -22,10 +22,6 @@ class FakeMovementsRepository(resultRepository: FakeResultRepository) : Movement
         }
     }
 
-    fun setMovements(movements: List<Movement>) {
-        _movements.tryEmit(movements)
-    }
-
     override suspend fun setMovement(movement: Movement): Long {
         val movementToEdit = _movements.value.find { it.id == movement.id }
 
