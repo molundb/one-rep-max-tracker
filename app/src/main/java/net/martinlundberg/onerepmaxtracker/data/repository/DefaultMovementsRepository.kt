@@ -16,12 +16,11 @@ class DefaultMovementsRepository @Inject constructor(
     private val resultDao: ResultDao,
     private val analyticsHelper: AnalyticsHelper,
 ) : MovementsRepository {
-    override suspend fun getMovements(): Flow<List<Movement>> =
-        movementDao.getMovements().map { map ->
-            map.entries.map {
-                it.asExternalMovement()
-            }
+    override val movements: Flow<List<Movement>> = movementDao.getMovements().map { map ->
+        map.entries.map {
+            it.asExternalMovement()
         }
+    }
 
     override suspend fun setMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 

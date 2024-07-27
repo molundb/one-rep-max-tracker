@@ -5,7 +5,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 
 interface MovementsRepository {
 
-    suspend fun getMovements(): Flow<List<Movement>>
+    val movements: Flow<List<Movement>>
 
     suspend fun setMovement(movement: Movement): Long
 

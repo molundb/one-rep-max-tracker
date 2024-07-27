@@ -38,7 +38,7 @@ class MovementListViewModel @Inject constructor(
     fun getMovements() {
         viewModelScope.launch {
             combine(
-                movementsRepository.getMovements(),
+                movementsRepository.movements,
                 resultRepository.getWeightUnitFlow(),
                 resultRepository.getAnalyticsCollectionEnabledFlow(),
             ) { movements, weightUnit, isAnalyticsEnabled ->
