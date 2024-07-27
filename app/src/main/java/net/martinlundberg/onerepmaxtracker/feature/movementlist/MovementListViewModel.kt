@@ -50,16 +50,16 @@ class MovementListViewModel @Inject constructor(
     }
 
     fun addMovement(movement: Movement, weightUnit: WeightUnit) {
-        analyticsHelper.logAddMovement(movement)
         viewModelScope.launch {
+            analyticsHelper.logAddMovement(movement)
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
                 val result = Result(
                     weight = it,
+                    movementId = movementId,
                     offsetDateTime = clockService
                         .getCurrentTimeMillis()
                         .millisToOffsetDateTime(ZoneId.systemDefault()),
-                    movementId = movementId,
                     comment = "",
                 )
                 analyticsHelper.logAddResult(result)
@@ -72,8 +72,8 @@ class MovementListViewModel @Inject constructor(
     }
 
     fun editMovement(movement: Movement) {
-        analyticsHelper.logEditMovement(movement)
         viewModelScope.launch {
+            analyticsHelper.logEditMovement(movement)
             movementsRepository.setMovement(movement)
         }
     }

@@ -9,6 +9,13 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
+const val MOVEMENT_ID = "movement_id"
+const val MOVEMENT_NAME = "movement_name"
+const val MOVEMENT_WEIGHT = "movement_weight"
+const val RESULT_ID = "result_id"
+const val RESULT_WEIGHT = "result_weight"
+const val RESULT_DATE_TIME = "result_date_time"
+
 // General
 
 fun AnalyticsHelper.logScreenView(screenName: String) {
@@ -263,28 +270,21 @@ private fun AnalyticsHelper.logEvent(type: String, params: List<Param> = emptyLi
     )
 }
 
-private fun createMovementParams(movement: Movement): List<Param> {
-    val paramKeyId = "movement_id"
-    val paramKeyName = "movement_name"
-    val paramKeyWeight = "movement_weight"
+fun createMovementParams(movement: Movement): List<Param> {
     val extras = listOf(
-        Param(key = paramKeyId, value = movement.id.toString()),
-        Param(key = paramKeyName, value = movement.name),
-        Param(key = paramKeyWeight, value = movement.weight?.toString() ?: "-"),
+        Param(key = MOVEMENT_ID, value = movement.id.toString()),
+        Param(key = MOVEMENT_NAME, value = movement.name),
+        Param(key = MOVEMENT_WEIGHT, value = movement.weight?.toString() ?: "-"),
     )
     return extras
 }
 
-private fun createResultParams(result: Result): List<Param> {
-    val paramKeyId = "result_id"
-    val paramKeyName = "movement_id"
-    val paramKeyWeight = "result_weight"
-    val paramKeyDateTime = "result_date_time"
+fun createResultParams(result: Result): List<Param> {
     val extras = listOf(
-        Param(key = paramKeyId, value = result.id.toString()),
-        Param(key = paramKeyName, value = result.movementId.toString()),
-        Param(key = paramKeyWeight, value = result.weight.toString()),
-        Param(key = paramKeyDateTime, value = result.offsetDateTime.toString()),
+        Param(key = RESULT_ID, value = result.id.toString()),
+        Param(key = MOVEMENT_ID, value = result.movementId.toString()),
+        Param(key = RESULT_WEIGHT, value = result.weight.toString()),
+        Param(key = RESULT_DATE_TIME, value = result.offsetDateTime.toString()),
     )
     return extras
 }
