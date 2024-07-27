@@ -8,11 +8,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface NavigationService {
+    val navController: NavHostController
+}
+
 @Singleton
-class NavigationService @Inject constructor(
+class NavigationServiceImpl @Inject constructor(
     @ApplicationContext context: Context,
-) {
-    val navController = NavHostController(context).apply {
+) : NavigationService {
+    override val navController = NavHostController(context).apply {
         navigatorProvider.addNavigator(ComposeNavigator())
         navigatorProvider.addNavigator(DialogNavigator())
     }

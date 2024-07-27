@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
-import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
@@ -20,9 +19,9 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.NoMovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -32,11 +31,10 @@ import javax.inject.Inject
 class MovementDetailViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
-    private val navigationService: NavigationService,
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading(MovementDetail("")))
+    private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading())
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
 
     fun getMovementInfo(id: Long) {
@@ -44,27 +42,18 @@ class MovementDetailViewModel @Inject constructor(
             combine(
                 resultRepository.getMovementDetail(id),
                 resultRepository.getWeightUnitFlow(),
-            ) { result, weightUnit ->
-                Success(
-                    result ?: MovementDetail(""),
-                    weightUnit,
-                    clockService.getCurrentTimeMillis().millisToOffsetDateTime(ZoneId.systemDefault()),
-                )
+            ) { movementDetail, weightUnit ->
+                if (movementDetail == null) {
+                    NoMovementDetail()
+                } else {
+                    Success(
+                        movementDetail.apply { formatDates(clockService.getCurrentTimeMillis()) },
+                        weightUnit,
+                        clockService.getCurrentTimeMillis().millisToOffsetDateTime(ZoneId.systemDefault()),
+                    )
+                }
             }.collect { newState ->
-                val resultsWithFormattedDate = newState.movement.results.map { result ->
-                    result.copy(
-                        dateTimeFormatted = result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis())
-                    )
-                }
-
-                _uiState.update {
-                    newState.copy(
-                        movement = MovementDetail(
-                            newState.movement.movementName,
-                            resultsWithFormattedDate,
-                        )
-                    )
-                }
+                _uiState.update { newState }
             }
         }
     }
@@ -89,7 +78,6 @@ class MovementDetailViewModel @Inject constructor(
     fun deleteMovement(id: Long) {
         viewModelScope.launch {
             movementsRepository.deleteMovement(id)
-            navigationService.navController.popBackStack()
         }
     }
 
@@ -101,15 +89,19 @@ class MovementDetailViewModel @Inject constructor(
 }
 
 sealed interface MovementDetailUiState {
-    val movement: MovementDetail
+    val movement: MovementDetail?
 
     data class Loading(
-        override val movement: MovementDetail,
+        override val movement: MovementDetail? = null,
     ) : MovementDetailUiState
 
     data class Success(
         override val movement: MovementDetail,
         val weightUnit: WeightUnit,
         val currentOffsetDateTime: OffsetDateTime,
+    ) : MovementDetailUiState
+
+    data class NoMovementDetail(
+        override val movement: MovementDetail? = null,
     ) : MovementDetailUiState
 }

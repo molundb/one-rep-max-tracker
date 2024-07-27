@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package net.martinlundberg.onerepmaxtracker.util.feature.movementlist
+package net.martinlundberg.onerepmaxtracker.feature.movementlist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -17,8 +17,6 @@ import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListViewModel
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import org.junit.Assert.assertEquals
