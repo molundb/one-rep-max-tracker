@@ -53,6 +53,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_DeleteClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_EditClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_AddMovementButtonClick
+import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementList_MovementLongClick
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
@@ -72,10 +73,6 @@ fun MovementListRoute(
     onMovementClick: (Movement, Lifecycle.State) -> Unit = { _, _ -> },
     movementListViewModel: MovementListViewModel = hiltViewModel(),
 ) {
-//    LaunchedEffect(Unit) {
-//        movementListViewModel.getMovements()
-//    }
-
     val movementListUiState by movementListViewModel.uiState.collectAsState()
 
     MovementListScreen(
@@ -280,7 +277,10 @@ fun MovementCard(
     Card(
         modifier = modifier
             .combinedClickable(
-                onClick = { onMovementClick(movement, lifecycleOwner.lifecycle.currentState) },
+                onClick = {
+                    analyticsHelper.logMovementList_MovementClick(movement)
+                    onMovementClick(movement, lifecycleOwner.lifecycle.currentState)
+                },
                 onLongClick = {
                     analyticsHelper.logMovementList_MovementLongClick(movement)
                     view.performHapticFeedback(

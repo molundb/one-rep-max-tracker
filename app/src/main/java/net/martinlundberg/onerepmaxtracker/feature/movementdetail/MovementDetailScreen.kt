@@ -76,7 +76,7 @@ fun MovementDetailRoute(
     innerPadding: PaddingValues,
     movementId: Long,
     movementName: String,
-    onResultClick: (Long, String) -> Unit = { _, _ -> },
+    onResultClick: (Long, String, Lifecycle.State) -> Unit = { _, _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     movementDetailViewModel: MovementDetailViewModel = hiltViewModel(),
 ) {
@@ -103,7 +103,7 @@ fun MovementDetailScreen(
     innerPadding: PaddingValues,
     movementId: Long,
     movementDetailUiState: MovementDetailUiState,
-    onResultClick: (Long, String) -> Unit = { _, _ -> },
+    onResultClick: (Long, String, Lifecycle.State) -> Unit = { _, _, _ -> },
     navigateBack: (Lifecycle.State) -> Unit = {},
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit = { _, _ -> },
     onEditMovementClick: (Movement) -> Unit = {},
@@ -194,13 +194,14 @@ private fun SuccessContent(
     movementDetailUiState: Success,
     movementId: Long,
     analyticsHelper: AnalyticsHelper,
-    onResultClick: (Long, String) -> Unit,
+    onResultClick: (Long, String, Lifecycle.State) -> Unit,
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit,
     onDeleteResultClick: (Long) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Long) -> Unit,
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
@@ -225,7 +226,11 @@ private fun SuccessContent(
                         weightUnit = movementDetailUiState.weightUnit,
                         onResultClick = {
                             analyticsHelper.logMovementDetail_ResultClick(result)
-                            onResultClick(result.id, movementDetailUiState.movement.movementName)
+                            onResultClick(
+                                result.id,
+                                movementDetailUiState.movement.movementName,
+                                lifecycleOwner.lifecycle.currentState,
+                            )
                         },
                     )
                 }

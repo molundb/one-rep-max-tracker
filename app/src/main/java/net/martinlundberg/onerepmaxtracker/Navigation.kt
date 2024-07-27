@@ -31,8 +31,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailRoute
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListRoute
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailRoute
@@ -62,9 +62,7 @@ fun Navigation(
         setWeightUnit = navViewModel::setWeightUnit,
     ) { innerPadding ->
         NavigationHost(
-            navController = navViewModel.controller,
             innerPadding = innerPadding,
-            navigateToDetail = navViewModel::navigateToDetail,
         )
     }
 }
@@ -112,9 +110,8 @@ fun DefaultScaffold(
 
 @Composable
 private fun NavigationHost(
-    navController: NavHostController,
+    navController: NavHostController = rememberNavController(),
     innerPadding: PaddingValues,
-    navigateToDetail: (Movement, Lifecycle.State, String) -> Unit = { _, _, _ -> },
 ) {
     NavHost(
         navController = navController,
@@ -128,7 +125,9 @@ private fun NavigationHost(
             MovementListRoute(
                 innerPadding = innerPadding,
                 onMovementClick = { movement, lifeCycleState ->
-                    navigateToDetail(movement, lifeCycleState, "$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
+                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        navController.navigate("$MOVEMENT_DETAIL_ROUTE/${movement.id}/${movement.name}")
+                    }
                 },
             )
         }
@@ -147,8 +146,10 @@ private fun NavigationHost(
                 innerPadding = innerPadding,
                 movementId = backStackEntry.arguments?.getLong(MOVEMENT_ID) ?: -1,
                 movementName = backStackEntry.arguments?.getString(MOVEMENT_NAME) ?: "",
-                onResultClick = { oneRepMaxId, movementName ->
-                    navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
+                onResultClick = { oneRepMaxId, movementName, lifeCycleState ->
+                    if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        navController.navigate("$ONE_REP_MAX_DETAIL_ROUTE/${oneRepMaxId}/${movementName}")
+                    }
                 },
                 navigateBack = { lifeCycleState ->
                     if (lifeCycleState.isAtLeast(Lifecycle.State.RESUMED)) {

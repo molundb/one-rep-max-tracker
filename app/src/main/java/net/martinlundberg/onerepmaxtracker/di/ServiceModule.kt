@@ -6,8 +6,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.ClockServiceImpl
-import net.martinlundberg.onerepmaxtracker.NavigationService
-import net.martinlundberg.onerepmaxtracker.NavigationServiceImpl
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledServiceImpl
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
@@ -29,8 +27,4 @@ abstract class ServiceModule {
     @Binds
     @Singleton
     abstract fun provideClockService(clockServiceImpl: ClockServiceImpl): ClockService
-
-    @Binds
-    @Singleton
-    abstract fun provideNavigationService(navigationService: NavigationServiceImpl): NavigationService
 }
