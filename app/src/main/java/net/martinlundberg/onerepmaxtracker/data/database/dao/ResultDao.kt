@@ -16,7 +16,14 @@ interface ResultDao {
     @Query("SELECT * FROM resultEntity WHERE resultId = :id")
     fun getResult(id: Long): Flow<ResultEntity?>
 
-    @Query("SELECT * FROM movementEntity LEFT JOIN resultEntity ON movementEntity.id = resultEntity.movementId WHERE movementEntity.id = :movementId")
+    @Query(
+        value = """
+        SELECT * FROM movementEntity
+        LEFT JOIN resultEntity ON movementEntity.id = resultEntity.movementId 
+        WHERE movementEntity.id = :movementId
+        ORDER BY resultEntity.date DESC
+        """,
+    )
     fun getResultsForMovement(movementId: Long): Flow<Map<MovementEntity, List<ResultEntity>>>
 
     @Query("DELETE FROM resultEntity WHERE resultId = :id")

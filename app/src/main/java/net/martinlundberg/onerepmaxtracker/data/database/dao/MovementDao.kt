@@ -10,7 +10,12 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.ResultEntity
 
 @Dao
 interface MovementDao {
-    @Query("SELECT * FROM movementEntity LEFT JOIN resultEntity ON movementEntity.id = resultEntity.movementId")
+    @Query(
+        value = """
+        SELECT * FROM movementEntity 
+        LEFT JOIN resultEntity ON movementEntity.id = resultEntity.movementId
+        """,
+    )
     fun getMovements(): Flow<Map<MovementEntity, List<ResultEntity>>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -51,17 +51,17 @@ class MovementDetailViewModel @Inject constructor(
                     clockService.getCurrentTimeMillis().millisToOffsetDateTime(ZoneId.systemDefault()),
                 )
             }.collect { newState ->
-                val sortedByDateAndFormattedDate = newState.movement.results.map { result ->
+                val resultsWithFormattedDate = newState.movement.results.map { result ->
                     result.copy(
                         dateTimeFormatted = result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis())
                     )
-                }.sortedByDescending { it.offsetDateTime }
+                }
 
                 _uiState.update {
                     newState.copy(
                         movement = MovementDetail(
                             newState.movement.movementName,
-                            sortedByDateAndFormattedDate,
+                            resultsWithFormattedDate,
                         )
                     )
                 }
