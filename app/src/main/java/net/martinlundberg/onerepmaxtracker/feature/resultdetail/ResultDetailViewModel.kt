@@ -10,24 +10,22 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
-import net.martinlundberg.onerepmaxtracker.NavigationService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logEditResult
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.NoResultDetail
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPounds
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.getRelativeDateString
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @HiltViewModel
 class ResultDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
-    private val navigationService: NavigationService,
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
@@ -40,24 +38,29 @@ class ResultDetailViewModel @Inject constructor(
                 resultRepository.getResult(id),
                 resultRepository.getWeightUnitFlow(),
             ) { result, weightUnit ->
-                val percentages = mutableListOf<Percentage>()
-                for (percentage in 100 downTo 40 step 10) {
-                    percentages.add(
-                        Percentage(
-                            percentage,
-                            (result.weight * percentage / 100).multiplyIfPounds(weightUnit).roundToInt()
+                if (result == null) {
+                    NoResultDetail
+                } else {
+                    val percentages = mutableListOf<Percentage>()
+                    for (percentage in 100 downTo 40 step 10) {
+                        percentages.add(
+                            Percentage(
+                                percentage,
+                                (result.weight * percentage / 100).multiplyIfPounds(weightUnit).roundToInt()
+                            )
                         )
+                    }
+
+                    Success(
+                        result = result.apply {
+                            formatDate(clockService.getCurrentTimeMillis())
+                        },
+                        percentagesOf1RM = percentages,
+                        weightUnit = weightUnit
                     )
                 }
-
-                Success(result, percentages, weightUnit)
             }.collect { newState ->
-                val stateWithFormattedDate = newState.copy(
-                    result = newState.result.copy(
-                        dateTimeFormatted = newState.result.offsetDateTime.getRelativeDateString(clockService.getCurrentTimeMillis()),
-                    )
-                )
-                _uiState.update { stateWithFormattedDate }
+                _uiState.update { newState }
             }
         }
     }
@@ -72,7 +75,6 @@ class ResultDetailViewModel @Inject constructor(
     fun deleteResult(id: Long) {
         viewModelScope.launch {
             resultRepository.deleteResult(id)
-            navigationService.navController.popBackStack()
         }
     }
 }
@@ -85,4 +87,6 @@ sealed interface ResultDetailUiState {
         val percentagesOf1RM: List<Percentage>,
         val weightUnit: WeightUnit,
     ) : ResultDetailUiState
+
+    data object NoResultDetail : ResultDetailUiState
 }

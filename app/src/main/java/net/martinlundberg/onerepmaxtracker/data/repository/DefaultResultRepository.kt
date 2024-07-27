@@ -2,7 +2,6 @@ package net.martinlundberg.onerepmaxtracker.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
@@ -36,8 +35,8 @@ class DefaultResultRepository @Inject constructor(
         resultDao.insert(result.copy(weight = weight).asEntity())
     }
 
-    override suspend fun getResult(id: Long): Flow<Result> =
-        resultDao.getResult(id).filterNotNull().map { it.asExternalModel() }
+    override suspend fun getResult(id: Long): Flow<Result?> =
+        resultDao.getResult(id).map { it?.asExternalModel() }
 
     override suspend fun deleteResult(id: Long) {
         analyticsHelper.logDeleteResult(id)

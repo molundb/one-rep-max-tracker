@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_AddResultClick
@@ -51,6 +52,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.ResultCard
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
+import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.NoResultDetail
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
@@ -134,137 +136,159 @@ fun ResultDetailScreen(
             }
         }
 
-        val context = LocalContext.current
         when (resultDetailUiState) {
-            is Loading -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(top = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(64.dp)
-                            .semantics {
-                                contentDescription = context.getString(R.string.loading_indicator_content_description)
-                            },
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
-            }
+            Loading -> LoadingContent()
+            is Success -> SuccessContent(
+                resultDetailUiState,
+                analyticsHelper,
+                onEditResult,
+                movementName,
+                onDeleteResult,
+            )
 
-            is Success -> {
-                var resultToEdit by remember { mutableStateOf<Result?>(null) }
-                var resultToDelete by remember { mutableStateOf<Result?>(null) }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(all = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    ResultCard(
-                        result = resultDetailUiState.result,
-                        weightUnit = resultDetailUiState.weightUnit,
-                    )
-                    Text(
-                        text = "Percentages of 1RM",
-                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
-                    )
-                    resultDetailUiState.percentagesOf1RM.forEach { percentage ->
-                        Percentage(percentage, resultDetailUiState.weightUnit)
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        TextButton(
-                            modifier = Modifier
-                                .width(120.dp)
-                                .semantics {
-                                    contentDescription =
-                                        context.getString(R.string.result_detail_screen_edit_result_button_content_description)
-                                },
-                            onClick = {
-                                val result = resultDetailUiState.result
-                                analyticsHelper.logResultDetail_EditResultClick(result)
-                                resultToEdit = result
-                            },
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(
-                                    horizontal = 24.dp,
-                                    vertical = 12.dp
-                                ),
-                                text = stringResource(R.string.edit),
-                                style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
-                            )
-                        }
-                        Button(
-                            modifier = Modifier
-                                .widthIn(min = 120.dp),
-                            onClick = {
-                                val result = resultDetailUiState.result
-                                analyticsHelper.logResultDetail_AddResultClick(result)
-                                resultToDelete = result
-                            },
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                text = stringResource(R.string.delete),
-                            )
-                        }
-                    }
-
-                    resultToEdit?.let { result ->
-                        EditResultDialog(
-                            result = result,
-                            weightUnit = resultDetailUiState.weightUnit,
-                            onDismissRequest = { resultToEdit = null },
-                            onConfirm = { editedResult ->
-                                onEditResult(editedResult, resultDetailUiState.weightUnit)
-                                resultToEdit = null
-                            },
-                            onCancel = { resultToEdit = null },
-                            onDelete = { editedResult ->
-                                resultToDelete = editedResult
-                                resultToEdit = null
-                            },
-                        )
-                    }
-
-                    resultToDelete?.let { result ->
-                        DeleteResultConfirmDialog(
-                            resultId = result.id,
-                            movementName = movementName,
-                            weight = stringResource(
-                                R.string.weight_with_unit,
-                                result.weight.multiplyIfPoundsAndRoundToNearestQuarter(resultDetailUiState.weightUnit),
-                                resultDetailUiState.weightUnit.toString(context),
-                            ),
-                            onDismissRequest = {
-                                resultToDelete = null
-                            },
-                            onCancel = {
-                                resultToDelete = null
-                            },
-                            onConfirmation = {
-                                onDeleteResult(result.id)
-                                resultToDelete = null
-                            }
-                        )
-                    }
-
-                }
+            NoResultDetail -> {
+                navigateBack(lifecycleOwner.lifecycle.currentState)
             }
         }
+    }
+}
+
+@Composable
+private fun SuccessContent(
+    resultDetailUiState: Success,
+    analyticsHelper: AnalyticsHelper,
+    onEditResult: (Result, WeightUnit) -> Unit,
+    movementName: String,
+    onDeleteResult: (Long) -> Unit,
+) {
+    val context = LocalContext.current
+
+    var resultToEdit by remember { mutableStateOf<Result?>(null) }
+    var resultToDelete by remember { mutableStateOf<Result?>(null) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ResultCard(
+            result = resultDetailUiState.result,
+            weightUnit = resultDetailUiState.weightUnit,
+        )
+        Text(
+            text = "Percentages of 1RM",
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+        )
+        resultDetailUiState.percentagesOf1RM.forEach { percentage ->
+            Percentage(percentage, resultDetailUiState.weightUnit)
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier
+                    .width(120.dp)
+                    .semantics {
+                        contentDescription =
+                            context.getString(R.string.result_detail_screen_edit_result_button_content_description)
+                    },
+                onClick = {
+                    val result = resultDetailUiState.result
+                    analyticsHelper.logResultDetail_EditResultClick(result)
+                    resultToEdit = result
+                },
+            ) {
+                Text(
+                    modifier = Modifier.padding(
+                        horizontal = 24.dp,
+                        vertical = 12.dp
+                    ),
+                    text = stringResource(R.string.edit),
+                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                )
+            }
+            Button(
+                modifier = Modifier
+                    .widthIn(min = 120.dp),
+                onClick = {
+                    val result = resultDetailUiState.result
+                    analyticsHelper.logResultDetail_AddResultClick(result)
+                    resultToDelete = result
+                },
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    text = stringResource(R.string.delete),
+                )
+            }
+        }
+
+        resultToEdit?.let { result ->
+            EditResultDialog(
+                result = result,
+                weightUnit = resultDetailUiState.weightUnit,
+                onDismissRequest = { resultToEdit = null },
+                onConfirm = { editedResult ->
+                    onEditResult(editedResult, resultDetailUiState.weightUnit)
+                    resultToEdit = null
+                },
+                onCancel = { resultToEdit = null },
+                onDelete = { editedResult ->
+                    resultToDelete = editedResult
+                    resultToEdit = null
+                },
+            )
+        }
+
+        resultToDelete?.let { result ->
+            DeleteResultConfirmDialog(
+                resultId = result.id,
+                movementName = movementName,
+                weight = stringResource(
+                    R.string.weight_with_unit,
+                    result.weight.multiplyIfPoundsAndRoundToNearestQuarter(resultDetailUiState.weightUnit),
+                    resultDetailUiState.weightUnit.toString(context),
+                ),
+                onDismissRequest = {
+                    resultToDelete = null
+                },
+                onCancel = {
+                    resultToDelete = null
+                },
+                onConfirmation = {
+                    onDeleteResult(result.id)
+                    resultToDelete = null
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoadingContent() {
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(64.dp)
+                .semantics {
+                    contentDescription = context.getString(R.string.loading_indicator_content_description)
+                },
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
     }
 }
 
