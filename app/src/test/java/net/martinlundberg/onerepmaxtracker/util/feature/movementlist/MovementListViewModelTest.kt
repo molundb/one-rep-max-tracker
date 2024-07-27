@@ -49,7 +49,7 @@ class MovementListViewModelTest {
     }
 
     @Test
-    fun whenAddMovementWithoutWeight_thenMovementIsAdded() = runTest {
+    fun whenAddMovementWithoutWeight_thenMovementIsAddedAndTracked() = runTest {
         viewModel.getMovements()
 
         assertEquals(
@@ -90,7 +90,7 @@ class MovementListViewModelTest {
     }
 
     @Test
-    fun givenStateIsSuccess_whenAddMovementWithWeight_thenMovementIsAdded() = runTest {
+    fun whenAddMovementWithWeight_thenMovementAndResultAreAddedAndTracked() = runTest {
         viewModel.getMovements()
 
         assertEquals(
@@ -129,7 +129,6 @@ class MovementListViewModelTest {
             ),
         )
 
-
         assertTrue(
             analyticsHelper.hasLogged(
                 AnalyticsEvent(
@@ -150,16 +149,50 @@ class MovementListViewModelTest {
         )
     }
 
+    // TODO: Is this test even a good idea? It feels like it's just testing FakeMovementsRepository.
     @Test
-    fun editMovement() {
-    }
+    fun whenEditMovement_thenMovementIsEditedAndTracked() = runTest {
+        movementsRepository.setMovements(listOf(sampleMovementWithWeight))
+        viewModel.getMovements()
 
-    @Test
-    fun deleteMovement() {
-    }
+        assertEquals(
+            MovementListUiState.Success(
+                movements = listOf(sampleMovementWithWeight),
+                weightUnit = KILOGRAMS,
+                isAnalyticsEnabled = false,
+            ),
+            viewModel.uiState.value
+        )
 
-    @Test
-    fun setAnalyticsCollectionEnabled() {
+        val editedMovement = sampleMovementWithWeight.copy(
+            name = "edited movement",
+            weight = 101f,
+        )
+        viewModel.editMovement(
+            movement = editedMovement,
+        )
+
+        assertEquals(
+            MovementListUiState.Success(
+                movements = listOf(
+                    editedMovement,
+                ),
+                weightUnit = KILOGRAMS,
+                isAnalyticsEnabled = false,
+            ),
+            viewModel.uiState.value
+        )
+
+        assertEquals(1, analyticsHelper.numberOfEvents())
+
+        assertTrue(
+            analyticsHelper.hasLogged(
+                AnalyticsEvent(
+                    type = "edit_movement",
+                    extras = createMovementParams(editedMovement),
+                ),
+            ),
+        )
     }
 
     private val sampleMovementWithoutWeight = Movement(

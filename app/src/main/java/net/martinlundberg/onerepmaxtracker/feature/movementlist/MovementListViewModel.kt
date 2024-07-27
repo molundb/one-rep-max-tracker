@@ -35,6 +35,7 @@ class MovementListViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<MovementListUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<MovementListUiState> = _uiState.asStateFlow()
 
+    // TODO: Try using .stateIn instead
     fun getMovements() {
         viewModelScope.launch {
             combine(

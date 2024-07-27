@@ -14,12 +14,28 @@ class FakeMovementsRepository(resultRepository: FakeResultRepository) : Movement
         resultRepository.results, // TODO: Feels hacky. Maybe there's a better way?
     ) { movements, results ->
         movements.map { movement ->
-            movement.copy(weight = results.find { it.movementId == movement.id }?.weight)
+            if (movement.weight == null) {
+                movement.copy(weight = results.find { it.movementId == movement.id }?.weight)
+            } else {
+                movement
+            }
         }
     }
 
+    fun setMovements(movements: List<Movement>) {
+        _movements.tryEmit(movements)
+    }
+
     override suspend fun setMovement(movement: Movement): Long {
-        val updatedMovements = _movements.value + movement.copy(weight = null)
+        val movementToEdit = _movements.value.find { it.id == movement.id }
+
+        val updatedMovements = if (movementToEdit != null) {
+            val movements = _movements.value.filter { it.id != movement.id }
+            movements + movement
+        } else {
+            _movements.value + movement.copy(weight = null)
+        }
+
         _movements.tryEmit(updatedMovements)
         return movement.id
     }
