@@ -149,52 +149,6 @@ class MovementListViewModelTest {
         )
     }
 
-    // TODO: Is this test even a good idea? It feels like it's just testing FakeMovementsRepository.
-    @Test
-    fun whenEditMovement_thenMovementIsEditedAndTracked() = runTest {
-        movementsRepository.setMovements(listOf(sampleMovementWithWeight))
-        viewModel.getMovements()
-
-        assertEquals(
-            MovementListUiState.Success(
-                movements = listOf(sampleMovementWithWeight),
-                weightUnit = KILOGRAMS,
-                isAnalyticsEnabled = false,
-            ),
-            viewModel.uiState.value
-        )
-
-        val editedMovement = sampleMovementWithWeight.copy(
-            name = "edited movement",
-            weight = 101f,
-        )
-        viewModel.editMovement(
-            movement = editedMovement,
-        )
-
-        assertEquals(
-            MovementListUiState.Success(
-                movements = listOf(
-                    editedMovement,
-                ),
-                weightUnit = KILOGRAMS,
-                isAnalyticsEnabled = false,
-            ),
-            viewModel.uiState.value
-        )
-
-        assertEquals(1, analyticsHelper.numberOfEvents())
-
-        assertTrue(
-            analyticsHelper.hasLogged(
-                AnalyticsEvent(
-                    type = "edit_movement",
-                    extras = createMovementParams(editedMovement),
-                ),
-            ),
-        )
-    }
-
     private val sampleMovementWithoutWeight = Movement(
         id = 5,
         name = "added movement without weight",
