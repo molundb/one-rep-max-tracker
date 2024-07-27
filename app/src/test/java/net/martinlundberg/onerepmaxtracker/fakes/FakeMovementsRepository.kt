@@ -11,7 +11,7 @@ class FakeMovementsRepository(resultRepository: FakeResultRepository) : Movement
     private val _movements = MutableStateFlow<List<Movement>>(emptyList())
     override val movements: Flow<List<Movement>> = combine(
         _movements,
-        resultRepository.results,
+        resultRepository.results, // TODO: Feels hacky. Maybe there's a better way?
     ) { movements, results ->
         movements.map { movement ->
             movement.copy(weight = results.find { it.movementId == movement.id }?.weight)
