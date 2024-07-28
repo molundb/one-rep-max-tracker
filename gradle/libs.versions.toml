@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 navVersion = "2.7.7"
 composeBom = "2024.06.00"
+robolectric = "4.13"
 serialization = "1.6.3"
 room = "2.6.1"
 ksp = "2.0.0-1.0.21"
@@ -55,6 +56,7 @@ google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", ve
 google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutinesTest" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 
 [plugins]
