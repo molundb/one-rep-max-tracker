@@ -3,7 +3,6 @@ package net.martinlundberg.onerepmaxtracker.fakes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
@@ -12,8 +11,9 @@ import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
 
 class FakeResultRepository : ResultRepository {
 
+    // Change this to Pair<Int, MovementDetail> if need to support having more than 1 MovementDetail
     private val _movementDetail = MutableStateFlow<MovementDetail?>(null)
-    private val movementDetail: Flow<MovementDetail?> = _movementDetail.filterNotNull()
+    private val movementDetail: Flow<MovementDetail?> = _movementDetail
 
     private val _results = MutableStateFlow<List<Result>>(emptyList())
     val results: Flow<List<Result>> = _results
@@ -57,5 +57,12 @@ class FakeResultRepository : ResultRepository {
 
     override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
         _analyticsCollectionEnabled.value = isEnabled
+    }
+
+    /**
+     * Used for testing
+     */
+    fun setMovementDetail(movementDetail: MovementDetail) {
+        _movementDetail.tryEmit(movementDetail)
     }
 }

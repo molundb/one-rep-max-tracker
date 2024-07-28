@@ -47,7 +47,7 @@ class MovementDetailViewModel @Inject constructor(
                     NoMovementDetail()
                 } else {
                     Success(
-                        movementDetail.apply { formatDates(clockService.getCurrentTimeMillis()) },
+                        movementDetail.apply { formatResultDates(clockService.getCurrentTimeMillis()) },
                         weightUnit,
                         clockService.getCurrentTimeMillis().millisToOffsetDateTime(ZoneId.systemDefault()),
                     )
