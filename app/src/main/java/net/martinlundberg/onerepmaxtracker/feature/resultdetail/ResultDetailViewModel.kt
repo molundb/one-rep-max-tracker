@@ -41,15 +41,7 @@ class ResultDetailViewModel @Inject constructor(
                 if (result == null) {
                     NoResultDetail
                 } else {
-                    val percentages = mutableListOf<Percentage>()
-                    for (percentage in 100 downTo 40 step 10) {
-                        percentages.add(
-                            Percentage(
-                                percentage,
-                                (result.weight * percentage / 100).multiplyIfPounds(weightUnit).roundToInt()
-                            )
-                        )
-                    }
+                    val percentages = createPercentages(result, weightUnit)
 
                     Success(
                         result = result.apply {
@@ -63,6 +55,22 @@ class ResultDetailViewModel @Inject constructor(
                 _uiState.update { newState }
             }
         }
+    }
+
+    private fun createPercentages(
+        result: Result,
+        weightUnit: WeightUnit,
+    ): MutableList<Percentage> {
+        val percentages = mutableListOf<Percentage>()
+        for (percentage in 100 downTo 40 step 10) {
+            percentages.add(
+                Percentage(
+                    percentage,
+                    (result.weight * percentage / 100).multiplyIfPounds(weightUnit).roundToInt()
+                )
+            )
+        }
+        return percentages
     }
 
     fun editResult(result: Result, weightUnit: WeightUnit) {
