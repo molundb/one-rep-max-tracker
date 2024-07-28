@@ -137,7 +137,7 @@ class MovementDetailScreenTest {
                     weightUnit = KILOGRAMS,
                     OffsetDateTime.of(2023, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
-                onResultClick = { _, _ ->
+                onResultClick = { _, _, _ ->
                     onResultClickCalled = true
                 }
             )
