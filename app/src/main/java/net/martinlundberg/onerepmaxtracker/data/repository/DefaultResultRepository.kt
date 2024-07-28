@@ -47,7 +47,7 @@ class DefaultResultRepository @Inject constructor(
 
     override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
 
-    //TODO: Create separate analytics collection methods?
+    //TODO: Create separate analytics collection repo?
     override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> = analyticsEnabledService.analyticsEnabledFlow
 
     override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {

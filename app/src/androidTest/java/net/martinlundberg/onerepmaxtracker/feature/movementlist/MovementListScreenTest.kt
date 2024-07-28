@@ -147,33 +147,4 @@ class MovementListScreenTest {
         composeTestRule.onNodeWithText("Edit").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete").assertIsDisplayed()
     }
-
-    /*
-    // TODO: How to test navigation between screens?
-    @Test
-    fun givenMovementDropDownMenuDismissed_whenNavigatingToDifferentScreenAndBack_thenDropDownMenuIsNotDisplayed() {
-        // Given
-        composeTestRule.setContent {
-//            Navigation()
-//            MovementsListScreen(
-//                movementsListUiState = MovementsListUiState.Success(
-//                    listOf(
-//                        Movement(name = "Test movement",  weight = 3)
-//                    )
-//                ),
-//                onMovementClick =
-//            )
-        }
-//        composeTestRule.onNodeWithText("Test movement").performTouchInput { longClick() }
-//        Espresso.pressBack()
-
-        // When
-        composeTestRule.onNodeWithText("Test movement").performClick()
-        Espresso.pressBack()
-
-        // Then
-        composeTestRule.onNodeWithText("Edit").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText("Delete").assertIsNotDisplayed()
-    }
-    */
 }
