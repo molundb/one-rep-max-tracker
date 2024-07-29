@@ -167,14 +167,14 @@ private fun SuccessUi(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "Latest")
+                Text(text = "Latest", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
                 Switch(
                     checked = movementListUiState.showBestResults,
                     onCheckedChange = {
                         showBestResults(it)
                     },
                 )
-                Text(text = "Best")
+                Text(text = "Best", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
             }
             Box(modifier = Modifier.height(24.dp))
 
