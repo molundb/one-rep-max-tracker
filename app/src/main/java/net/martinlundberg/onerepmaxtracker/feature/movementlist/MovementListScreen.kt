@@ -83,7 +83,7 @@ fun MovementListRoute(
         onEditMovementClick = movementListViewModel::editMovement,
         onDeleteMovementClick = movementListViewModel::deleteMovement,
         setAnalyticsCollectionEnabled = movementListViewModel::setAnalyticsCollectionEnabled,
-        showBestResults = movementListViewModel::showBestResults,
+        onLatestOrBestResultsSwitchChecked = movementListViewModel::showLatestOrBestResults,
     )
 }
 
@@ -96,7 +96,7 @@ fun MovementListScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
-    showBestResults: (Boolean) -> Unit = {},
+    onLatestOrBestResultsSwitchChecked: (Boolean) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
 
@@ -121,7 +121,7 @@ fun MovementListScreen(
                 onAddMovementClick,
                 onEditMovementClick,
                 onDeleteMovementClick,
-                showBestResults,
+                onLatestOrBestResultsSwitchChecked,
             )
         }
     }
@@ -136,7 +136,7 @@ private fun SuccessUi(
     onAddMovementClick: (Movement, WeightUnit) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Long) -> Unit,
-    showBestResults: (Boolean) -> Unit,
+    onLatestOrBestResultsSwitchChecked: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val analyticsHelper = LocalAnalyticsHelper.current
@@ -164,15 +164,17 @@ private fun SuccessUi(
         } else {
             Box(modifier = Modifier.height(24.dp))
             Row(
+                modifier = Modifier.semantics {
+                    contentDescription =
+                        context.getString(R.string.movement_list_screen_latest_or_best_results_switch_content_description)
+                },
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = "Latest", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
                 Switch(
                     checked = movementListUiState.showBestResults,
-                    onCheckedChange = {
-                        showBestResults(it)
-                    },
+                    onCheckedChange = onLatestOrBestResultsSwitchChecked,
                 )
                 Text(text = "Best", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
             }

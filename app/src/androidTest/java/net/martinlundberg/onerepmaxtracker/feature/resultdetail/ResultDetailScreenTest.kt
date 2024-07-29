@@ -73,6 +73,7 @@ class ResultDetailScreenTest {
     @Test
     fun whenNavBackButtonIsClicked_thenNavigateBack() {
         var navigateBackCalled = false
+
         composeTestRule.setContent {
             ResultDetailScreen(
                 innerPadding = PaddingValues(),

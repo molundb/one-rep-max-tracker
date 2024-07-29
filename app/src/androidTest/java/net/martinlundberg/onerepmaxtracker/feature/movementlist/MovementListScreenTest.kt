@@ -33,7 +33,9 @@ class MovementListScreenTest {
             )
         }
 
+        composeTestRule.onNodeWithText("Your top results").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Circular progress indicator").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Latest or best results switch").assertDoesNotExist()
     }
 
     @Test
@@ -52,7 +54,9 @@ class MovementListScreenTest {
         }
 
         // Then
+        composeTestRule.onNodeWithText("Your top results").assertIsDisplayed()
         composeTestRule.onNodeWithText("Start by adding your first result").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Latest or best results switch").assertDoesNotExist()
     }
 
     @Test
@@ -73,12 +77,43 @@ class MovementListScreenTest {
         }
 
         // Then
+        composeTestRule.onNodeWithText("Your top results").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Latest or best results switch").assertIsDisplayed()
         composeTestRule.onNodeWithText("Test movement").assertIsDisplayed()
         composeTestRule.onNodeWithText("2 kg").assertIsDisplayed()
     }
 
     @Test
-    fun whenMovementIsClicked_thenNavigateToMovementDetailScreen() {
+    fun whenLatestOrBestResultSwitchChecked_thenOnLatestOrBestResultsSwitchCheckedCalled() {
+        // Given
+        var onLatestOrBestResultsSwitchChecked = false
+
+        composeTestRule.setContent {
+            MovementListScreen(
+                innerPadding = PaddingValues(),
+                movementListUiState = Success(
+                    listOf(
+                        Movement(name = "Test movement", weight = 3f)
+                    ),
+                    weightUnit = KILOGRAMS,
+                    isAnalyticsEnabled = true,
+                    showBestResults = true,
+                ),
+                onLatestOrBestResultsSwitchChecked = {
+                    onLatestOrBestResultsSwitchChecked = true
+                }
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithContentDescription("Latest or best results switch").performClick()
+
+        // Then
+        assertTrue(onLatestOrBestResultsSwitchChecked)
+    }
+
+    @Test
+    fun whenMovementIsClicked_thenOnMovementClickCalled() {
         // Given
         var onMovementClickCalled = false
 

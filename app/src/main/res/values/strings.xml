@@ -23,6 +23,7 @@
     <string name="movement_list_screen_empty_list">Start by adding your first result</string>
     <string name="movement_list_screen_add_movement_button">+ Add movement</string>
     <string name="movement_list_screen_add_movement_button_content_description">Add movement button</string>
+    <string name="movement_list_screen_latest_or_best_results_switch_content_description">Latest or best results switch</string>
     <string name="movement_list_screen_movement_card_content_description">Movement card</string>
     <string name="movement_list_screen_movement_card_no_weight">-</string>
     <string name="movement_list_screen_movement_card_nav_icon_content_description">Navigation icon</string>

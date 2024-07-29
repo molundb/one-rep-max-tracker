@@ -92,7 +92,7 @@ class MovementListViewModel @Inject constructor(
         }
     }
 
-    fun showBestResults(showBest: Boolean) {
+    fun showLatestOrBestResults(showBest: Boolean) {
         viewModelScope.launch {
             movementsRepository.setLatestOrBestResults(if (showBest) BEST else LATEST)
         }

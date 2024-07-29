@@ -91,6 +91,7 @@ class MovementDetailScreenTest {
     @Test
     fun whenNavBackButtonIsClicked_thenNavigateBack() {
         var navigateBackCalled = false
+
         composeTestRule.setContent {
             MovementDetailScreen(
                 innerPadding = PaddingValues(),
@@ -111,7 +112,7 @@ class MovementDetailScreenTest {
     }
 
     @Test
-    fun whenResultIsClicked_thenNavigateToResultDetailScreen() {
+    fun whenResultIsClicked_thenOnResultClickCalled() {
         // Given
         var onResultClickCalled = false
 
