@@ -32,15 +32,12 @@ class MovementListViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
-    private val latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenService,
 ) : ViewModel() {
     val uiState: StateFlow<MovementListUiState> = combine(
         movementsRepository.movements,
-        // movementsRepository.getMovements(latestOrBestResultsInMovementListScreenService.latestOrBestResults),
         resultRepository.getWeightUnitFlow(),
         resultRepository.getAnalyticsCollectionEnabledFlow(),
         movementsRepository.latestOrBestResults,
-//        latestOrBestResultsInMovementListScreenService.latestOrBestResults,
     ) { movements, weightUnit, isAnalyticsEnabled, latestOrBestResults ->
         Success(
             movements = movements,

@@ -113,8 +113,8 @@ fun MovementListScreen(
         )
 
         when (movementListUiState) {
-            Loading -> Loading()
-            is Success -> Success(
+            Loading -> LoadingUi()
+            is Success -> SuccessUi(
                 movementListUiState,
                 onMovementClick,
                 setAnalyticsCollectionEnabled,
@@ -129,7 +129,7 @@ fun MovementListScreen(
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun Success(
+private fun SuccessUi(
     movementListUiState: Success,
     onMovementClick: (Movement, Lifecycle.State) -> Unit,
     setAnalyticsCollectionEnabled: (Boolean) -> Unit,
@@ -284,7 +284,7 @@ private fun Success(
 }
 
 @Composable
-private fun Loading() {
+private fun LoadingUi() {
     val context = LocalContext.current
 
     Box(modifier = Modifier.height(24.dp))

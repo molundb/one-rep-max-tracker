@@ -137,8 +137,8 @@ fun ResultDetailScreen(
         }
 
         when (resultDetailUiState) {
-            Loading -> Loading()
-            is Success -> Success(
+            Loading -> LoadingUi()
+            is Success -> SuccessUi(
                 resultDetailUiState,
                 analyticsHelper,
                 onEditResult,
@@ -154,7 +154,7 @@ fun ResultDetailScreen(
 }
 
 @Composable
-private fun Success(
+private fun SuccessUi(
     resultDetailUiState: Success,
     analyticsHelper: AnalyticsHelper,
     onEditResult: (Result, WeightUnit) -> Unit,
@@ -270,7 +270,7 @@ private fun Success(
 }
 
 @Composable
-private fun Loading() {
+private fun LoadingUi() {
     val context = LocalContext.current
 
     Column(
