@@ -83,10 +83,10 @@ fun MovementListRoute(
         onEditMovementClick = movementListViewModel::editMovement,
         onDeleteMovementClick = movementListViewModel::deleteMovement,
         setAnalyticsCollectionEnabled = movementListViewModel::setAnalyticsCollectionEnabled,
+        showBestResults = movementListViewModel::showBestResults,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementListScreen(
     innerPadding: PaddingValues,
@@ -96,6 +96,7 @@ fun MovementListScreen(
     onEditMovementClick: (Movement) -> Unit = {},
     onDeleteMovementClick: (Long) -> Unit = {},
     setAnalyticsCollectionEnabled: (Boolean) -> Unit = {},
+    showBestResults: (Boolean) -> Unit = {},
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
 
@@ -119,7 +120,8 @@ fun MovementListScreen(
                 setAnalyticsCollectionEnabled,
                 onAddMovementClick,
                 onEditMovementClick,
-                onDeleteMovementClick
+                onDeleteMovementClick,
+                showBestResults,
             )
         }
     }
@@ -134,8 +136,10 @@ private fun Success(
     onAddMovementClick: (Movement, WeightUnit) -> Unit,
     onEditMovementClick: (Movement) -> Unit,
     onDeleteMovementClick: (Long) -> Unit,
+    showBestResults: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
+    val analyticsHelper = LocalAnalyticsHelper.current
 
     var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
@@ -145,10 +149,8 @@ private fun Success(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val analyticsHelper = LocalAnalyticsHelper.current
         if (movementListUiState.movements.isEmpty()) {
             Column(
                 modifier = Modifier.weight(1f),
@@ -160,8 +162,23 @@ private fun Success(
                 )
             }
         } else {
+            Box(modifier = Modifier.height(24.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = "Latest")
+                Switch(
+                    checked = movementListUiState.showBestResults,
+                    onCheckedChange = {
+                        showBestResults(it)
+                    },
+                )
+                Text(text = "Best")
+            }
+            Box(modifier = Modifier.height(24.dp))
+
             LazyColumn(
-                modifier = Modifier.padding(top = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 movementListUiState.movements.map { movement ->
@@ -184,6 +201,7 @@ private fun Success(
                 }
             }
         }
+        Spacer(modifier = Modifier.weight(1f))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Button(
                 modifier = Modifier
@@ -383,6 +401,7 @@ private fun MovementListScreenSuccessEmptyPreview() {
                     listOf(),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = false,
                 ),
             )
         }
@@ -404,6 +423,7 @@ private fun MovementListScreenSuccessContentPreview() {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = false,
                 ),
             )
         }

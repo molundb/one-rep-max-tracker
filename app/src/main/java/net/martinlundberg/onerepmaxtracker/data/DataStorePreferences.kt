@@ -20,6 +20,8 @@ class DataStorePreferences @Inject constructor(
 
     private val weightUnitIsPoundsKey = booleanPreferencesKey("weight_unit_is_pounds")
     private val analyticsCollectionEnabledKey = booleanPreferencesKey("analytics_collection_enabled")
+    private val showBestResultsInMovementListScreenKey =
+        booleanPreferencesKey("show_latest_results_in_movement_list_screen")
 
     val weightUnitFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[weightUnitIsPoundsKey] ?: false
@@ -27,6 +29,10 @@ class DataStorePreferences @Inject constructor(
 
     val analyticsCollectionEnabledFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[analyticsCollectionEnabledKey] ?: false
+    }
+
+    val showBestResultsInMovementListScreenFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[showBestResultsInMovementListScreenKey] ?: false
     }
 
     suspend fun storeWeightUnit(isPounds: Boolean) {
@@ -38,6 +44,12 @@ class DataStorePreferences @Inject constructor(
     suspend fun storeAnalyticsCollectionEnabled(isEnabled: Boolean) {
         context.dataStore.edit { settings ->
             settings[analyticsCollectionEnabledKey] = isEnabled
+        }
+    }
+
+    suspend fun storeShowBestResultsInMovementListScreen(showBest: Boolean) {
+        context.dataStore.edit { settings ->
+            settings[showBestResultsInMovementListScreenKey] = showBest
         }
     }
 }

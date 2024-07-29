@@ -4,6 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults.BEST
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults.LATEST
 
 @Entity
 data class MovementEntity(
@@ -11,10 +14,14 @@ data class MovementEntity(
     val name: String,
 )
 
-fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovement() = Movement(
+fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovement(latestOrBestResults: LatestOrBestResults) =
+    Movement(
     id = key.id,
     name = key.name,
-    weight = value.maxByOrNull { it.weightInKilos }?.weightInKilos
+        weight = when (latestOrBestResults) {
+            LATEST -> value.maxByOrNull { it.date }?.weightInKilos
+            BEST -> value.maxByOrNull { it.weightInKilos }?.weightInKilos
+        }
 )
 
 fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovementDetail() = MovementDetail(

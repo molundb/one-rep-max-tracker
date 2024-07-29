@@ -17,6 +17,8 @@ import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults.BEST
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults.LATEST
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
@@ -30,16 +32,21 @@ class MovementListViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
     private val clockService: ClockService,
     private val analyticsHelper: AnalyticsHelper,
+    private val latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenService,
 ) : ViewModel() {
     val uiState: StateFlow<MovementListUiState> = combine(
         movementsRepository.movements,
+        // movementsRepository.getMovements(latestOrBestResultsInMovementListScreenService.latestOrBestResults),
         resultRepository.getWeightUnitFlow(),
         resultRepository.getAnalyticsCollectionEnabledFlow(),
-    ) { movements, weightUnit, isAnalyticsEnabled ->
+        movementsRepository.latestOrBestResults,
+//        latestOrBestResultsInMovementListScreenService.latestOrBestResults,
+    ) { movements, weightUnit, isAnalyticsEnabled, latestOrBestResults ->
         Success(
             movements = movements,
             weightUnit = weightUnit,
-            isAnalyticsEnabled = isAnalyticsEnabled
+            isAnalyticsEnabled = isAnalyticsEnabled,
+            latestOrBestResults == BEST,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -87,6 +94,12 @@ class MovementListViewModel @Inject constructor(
             resultRepository.setAnalyticsCollectionEnabled(isEnabled)
         }
     }
+
+    fun showBestResults(showBest: Boolean) {
+        viewModelScope.launch {
+            movementsRepository.setLatestOrBestResults(if (showBest) BEST else LATEST)
+        }
+    }
 }
 
 sealed interface MovementListUiState {
@@ -96,5 +109,6 @@ sealed interface MovementListUiState {
         val movements: List<Movement> = emptyList(),
         val weightUnit: WeightUnit,
         val isAnalyticsEnabled: Boolean,
+        val showBestResults: Boolean,
     ) : MovementListUiState
 }
