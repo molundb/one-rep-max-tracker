@@ -152,8 +152,8 @@ fun MovementDetailScreen(
         }
 
         when (movementDetailUiState) {
-            is Loading -> LoadingContent()
-            is Success -> SuccessContent(
+            is Loading -> Loading()
+            is Success -> Success(
                 movementDetailUiState,
                 movementId,
                 analyticsHelper,
@@ -172,7 +172,7 @@ fun MovementDetailScreen(
 }
 
 @Composable
-private fun LoadingContent() {
+private fun Loading() {
     val context = LocalContext.current
 
     Box(modifier = Modifier.height(24.dp))
@@ -190,7 +190,7 @@ private fun LoadingContent() {
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun SuccessContent(
+private fun Success(
     movementDetailUiState: Success,
     movementId: Long,
     analyticsHelper: AnalyticsHelper,

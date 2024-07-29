@@ -99,12 +99,6 @@ fun MovementListScreen(
 ) {
     TrackScreenViewEvent(screenName = "MovementList")
 
-    var movementToEdit by remember { mutableStateOf<Movement?>(null) }
-    var showAddMovementDialog by remember { mutableStateOf(false) }
-    var movementToDelete by remember { mutableStateOf<Movement?>(null) }
-
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,144 +112,174 @@ fun MovementListScreen(
         )
 
         when (movementListUiState) {
-            Loading -> {
-                Box(modifier = Modifier.height(24.dp))
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .semantics {
-                            contentDescription =
-                                context.getString(R.string.loading_indicator_content_description)
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            Loading -> Loading()
+            is Success -> Success(
+                movementListUiState,
+                onMovementClick,
+                setAnalyticsCollectionEnabled,
+                onAddMovementClick,
+                onEditMovementClick,
+                onDeleteMovementClick
+            )
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun Success(
+    movementListUiState: Success,
+    onMovementClick: (Movement, Lifecycle.State) -> Unit,
+    setAnalyticsCollectionEnabled: (Boolean) -> Unit,
+    onAddMovementClick: (Movement, WeightUnit) -> Unit,
+    onEditMovementClick: (Movement) -> Unit,
+    onDeleteMovementClick: (Long) -> Unit,
+) {
+    val context = LocalContext.current
+
+    var movementToEdit by remember { mutableStateOf<Movement?>(null) }
+    var showAddMovementDialog by remember { mutableStateOf(false) }
+    var movementToDelete by remember { mutableStateOf<Movement?>(null) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 24.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        val analyticsHelper = LocalAnalyticsHelper.current
+        if (movementListUiState.movements.isEmpty()) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = stringResource(R.string.movement_list_screen_empty_list),
+                    style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
                 )
             }
-
-            is Success -> Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 24.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
+        } else {
+            LazyColumn(
+                modifier = Modifier.padding(top = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                val analyticsHelper = LocalAnalyticsHelper.current
-                if (movementListUiState.movements.isEmpty()) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
-                            text = stringResource(R.string.movement_list_screen_empty_list),
-                            style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.padding(top = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(24.dp)
-                    ) {
-                        movementListUiState.movements.map { movement ->
-                            item(key = movement.id) {
-                                MovementCard(
-                                    modifier = Modifier.animateItemPlacement(),
-                                    movement = movement,
-                                    weightUnit = movementListUiState.weightUnit,
-                                    onMovementClick = onMovementClick,
-                                    onEditMovementClick = { movement ->
-                                        analyticsHelper.logMovementListDropDownMenu_EditClick(movement)
-                                        movementToEdit = movement
-                                    },
-                                    onDeleteMovementClick = { movement ->
-                                        analyticsHelper.logMovementListDropDownMenu_DeleteClick(movement)
-                                        movementToDelete = movement
-                                    }
-                                )
+                movementListUiState.movements.map { movement ->
+                    item(key = movement.id) {
+                        MovementCard(
+                            modifier = Modifier.animateItemPlacement(),
+                            movement = movement,
+                            weightUnit = movementListUiState.weightUnit,
+                            onMovementClick = onMovementClick,
+                            onEditMovementClick = { movement ->
+                                analyticsHelper.logMovementListDropDownMenu_EditClick(movement)
+                                movementToEdit = movement
+                            },
+                            onDeleteMovementClick = { movement ->
+                                analyticsHelper.logMovementListDropDownMenu_DeleteClick(movement)
+                                movementToDelete = movement
                             }
-                        }
-                    }
-                }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Button(
-                        modifier = Modifier
-                            .semantics {
-                                contentDescription =
-                                    context.getString(R.string.movement_list_screen_add_movement_button_content_description)
-                            },
-                        onClick = {
-                            analyticsHelper.logMovementList_AddMovementButtonClick()
-                            showAddMovementDialog = true
-                        },
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            text = stringResource(R.string.movement_list_screen_add_movement_button),
                         )
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "Analytics",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Box(modifier = Modifier.size(4.dp))
-                        Switch(
-                            checked = movementListUiState.isAnalyticsEnabled,
-                            onCheckedChange = {
-                                setAnalyticsCollectionEnabled(it)
-                            },
-                        )
-                    }
-                }
-
-                if (showAddMovementDialog) {
-                    AddMovementDialog(
-                        weightUnit = movementListUiState.weightUnit,
-                        onDismissRequest = { showAddMovementDialog = false },
-                        onCancel = { showAddMovementDialog = false },
-                        onConfirm = { movement ->
-                            onAddMovementClick(movement, movementListUiState.weightUnit)
-                            showAddMovementDialog = false
-                        }
-                    )
-                }
-
-                movementToEdit?.let { movement ->
-                    EditMovementDialog(
-                        movement = movement,
-                        weightUnit = movementListUiState.weightUnit,
-                        onDismissRequest = { movementToEdit = null },
-                        onCancel = { movementToEdit = null },
-                        onConfirm = { editedMovement ->
-                            onEditMovementClick(editedMovement)
-                            movementToEdit = null
-                        },
-                        onDelete = { editedMovement ->
-                            movementToDelete = editedMovement
-                            movementToEdit = null
-                        },
-                    )
-                }
-
-                movementToDelete?.let { movement ->
-                    DeleteMovementConfirmDialog(
-                        movementId = movement.id,
-                        movementName = movement.name,
-                        onDismissRequest = {
-                            movementToDelete = null
-                        },
-                        onCancel = {
-                            movementToDelete = null
-                        },
-                        onConfirmation = {
-                            onDeleteMovementClick(movement.id)
-                            movementToDelete = null
-                        }
-                    )
                 }
             }
         }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Button(
+                modifier = Modifier
+                    .semantics {
+                        contentDescription =
+                            context.getString(R.string.movement_list_screen_add_movement_button_content_description)
+                    },
+                onClick = {
+                    analyticsHelper.logMovementList_AddMovementButtonClick()
+                    showAddMovementDialog = true
+                },
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    text = stringResource(R.string.movement_list_screen_add_movement_button),
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Analytics",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Box(modifier = Modifier.size(4.dp))
+                Switch(
+                    checked = movementListUiState.isAnalyticsEnabled,
+                    onCheckedChange = {
+                        setAnalyticsCollectionEnabled(it)
+                    },
+                )
+            }
+        }
+
+        if (showAddMovementDialog) {
+            AddMovementDialog(
+                weightUnit = movementListUiState.weightUnit,
+                onDismissRequest = { showAddMovementDialog = false },
+                onCancel = { showAddMovementDialog = false },
+                onConfirm = { movement ->
+                    onAddMovementClick(movement, movementListUiState.weightUnit)
+                    showAddMovementDialog = false
+                }
+            )
+        }
+
+        movementToEdit?.let { movement ->
+            EditMovementDialog(
+                movement = movement,
+                weightUnit = movementListUiState.weightUnit,
+                onDismissRequest = { movementToEdit = null },
+                onCancel = { movementToEdit = null },
+                onConfirm = { editedMovement ->
+                    onEditMovementClick(editedMovement)
+                    movementToEdit = null
+                },
+                onDelete = { editedMovement ->
+                    movementToDelete = editedMovement
+                    movementToEdit = null
+                },
+            )
+        }
+
+        movementToDelete?.let { movement ->
+            DeleteMovementConfirmDialog(
+                movementId = movement.id,
+                movementName = movement.name,
+                onDismissRequest = {
+                    movementToDelete = null
+                },
+                onCancel = {
+                    movementToDelete = null
+                },
+                onConfirmation = {
+                    onDeleteMovementClick(movement.id)
+                    movementToDelete = null
+                }
+            )
+        }
     }
+}
+
+@Composable
+private fun Loading() {
+    val context = LocalContext.current
+
+    Box(modifier = Modifier.height(24.dp))
+    CircularProgressIndicator(
+        modifier = Modifier
+            .width(64.dp)
+            .semantics {
+                contentDescription =
+                    context.getString(R.string.loading_indicator_content_description)
+            },
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
