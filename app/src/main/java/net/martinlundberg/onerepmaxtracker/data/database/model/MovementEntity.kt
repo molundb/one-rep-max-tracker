@@ -16,13 +16,13 @@ data class MovementEntity(
 
 fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovement(latestOrBestResults: LatestOrBestResults) =
     Movement(
-    id = key.id,
-    name = key.name,
+        id = key.id,
+        name = key.name,
         weight = when (latestOrBestResults) {
             LATEST -> value.maxByOrNull { it.date }?.weightInKilos
             BEST -> value.maxByOrNull { it.weightInKilos }?.weightInKilos
         }
-)
+    )
 
 fun Map.Entry<MovementEntity, List<ResultEntity>>.asExternalMovementDetail() = MovementDetail(
     movementName = key.name,

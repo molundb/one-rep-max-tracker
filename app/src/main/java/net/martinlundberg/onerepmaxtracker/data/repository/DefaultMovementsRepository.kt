@@ -28,13 +28,6 @@ class DefaultMovementsRepository @Inject constructor(
         }
     }
 
-//    override fun getMovements(latestOrBestResults: LatestOrBestResults = BEST): Flow<List<Movement>> = movementDao.getMovements()
-//        .map { movements ->
-//            movements.map {
-//                it.asExternalMovement(latestOrBestResults)
-//            }
-//        }
-
     override suspend fun setMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 
     override suspend fun deleteMovement(movementId: Long) {

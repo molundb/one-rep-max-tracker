@@ -8,8 +8,6 @@ interface MovementsRepository {
 
     val movements: Flow<List<Movement>>
 
-//    suspend fun getMovements(latestOrBestResults: LatestOrBestResults)
-
     suspend fun setMovement(movement: Movement): Long
 
     suspend fun deleteMovement(movementId: Long)
