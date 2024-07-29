@@ -61,6 +61,7 @@ class MovementListViewModelTest {
                 movements = emptyList(),
                 weightUnit = KILOGRAMS,
                 isAnalyticsEnabled = false,
+                showBestResults = true,
             ),
             viewModel.uiState.value
         )
@@ -77,6 +78,7 @@ class MovementListViewModelTest {
                 ),
                 weightUnit = KILOGRAMS,
                 isAnalyticsEnabled = false,
+                showBestResults = true,
             ),
             viewModel.uiState.value
         )
@@ -104,6 +106,7 @@ class MovementListViewModelTest {
                 movements = emptyList(),
                 weightUnit = KILOGRAMS,
                 isAnalyticsEnabled = false,
+                showBestResults = true,
             ),
             viewModel.uiState.value
         )
@@ -120,6 +123,7 @@ class MovementListViewModelTest {
                 ),
                 weightUnit = KILOGRAMS,
                 isAnalyticsEnabled = false,
+                showBestResults = true,
             ),
             viewModel.uiState.value
         )

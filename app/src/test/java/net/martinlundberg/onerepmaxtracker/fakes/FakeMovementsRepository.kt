@@ -3,8 +3,11 @@ package net.martinlundberg.onerepmaxtracker.fakes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.repository.MovementsRepository
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults.BEST
 
 class FakeMovementsRepository(resultRepository: FakeResultRepository) : MovementsRepository {
 
@@ -37,6 +40,12 @@ class FakeMovementsRepository(resultRepository: FakeResultRepository) : Movement
     }
 
     override suspend fun deleteMovement(movementId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override val latestOrBestResults: Flow<LatestOrBestResults> = flowOf(BEST)
+
+    override suspend fun setLatestOrBestResults(latestOrBestResults: LatestOrBestResults) {
         TODO("Not yet implemented")
     }
 }

@@ -46,6 +46,7 @@ class MovementListScreenTest {
                     listOf(),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 )
             )
         }
@@ -66,6 +67,7 @@ class MovementListScreenTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 )
             )
         }
@@ -89,6 +91,7 @@ class MovementListScreenTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 ),
                 onMovementClick = { _, _ -> onMovementClickCalled = true }
             )
@@ -113,6 +116,7 @@ class MovementListScreenTest {
                     ),
                     weightUnit = POUNDS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 )
             )
         }
@@ -136,6 +140,7 @@ class MovementListScreenTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }

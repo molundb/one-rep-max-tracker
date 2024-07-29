@@ -46,6 +46,7 @@ class MovementDialogsTest {
                     listOf(),
                     weightUnit = POUNDS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 )
             )
         }
@@ -67,6 +68,7 @@ class MovementDialogsTest {
                     listOf(),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -95,6 +97,7 @@ class MovementDialogsTest {
                     listOf(),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
                 onAddMovementClick = { _, _ ->
                     addMovementCalled = true
@@ -125,6 +128,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
                 onEditMovementClick = {
                     editMovementCalled = true
@@ -155,6 +159,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
                 onEditMovementClick = {
                     editMovementCalled = true
@@ -184,6 +189,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }
@@ -214,6 +220,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 ),
             )
         }
@@ -242,6 +249,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
             )
@@ -274,6 +282,7 @@ class MovementDialogsTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = true,
+                    showBestResults = true,
                 ),
                 onDeleteMovementClick = { deleteMovementCalled = true }
             )

@@ -37,6 +37,7 @@ class MovementDropDownMenuTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }
@@ -62,6 +63,7 @@ class MovementDropDownMenuTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }
@@ -88,6 +90,7 @@ class MovementDropDownMenuTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }
@@ -113,6 +116,7 @@ class MovementDropDownMenuTest {
                     ),
                     weightUnit = KILOGRAMS,
                     isAnalyticsEnabled = false,
+                    showBestResults = true,
                 ),
             )
         }
