@@ -2,7 +2,7 @@ package net.martinlundberg.onerepmaxtracker.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteMovement
 import net.martinlundberg.onerepmaxtracker.data.database.dao.MovementDao
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class DefaultMovementsRepository @Inject constructor(
     private val movementDao: MovementDao,
     private val resultDao: ResultDao,
-    private val analyticsHelper: AnalyticsHelper,
+    private val analyticsService: AnalyticsService,
     private val latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenService,
 ) : MovementsRepository {
     override val movements: Flow<List<Movement>> = combine(
@@ -31,7 +31,7 @@ class DefaultMovementsRepository @Inject constructor(
     override suspend fun setMovement(movement: Movement) = movementDao.insert(movement.asEntity())
 
     override suspend fun deleteMovement(movementId: Long) {
-        analyticsHelper.logDeleteMovement(movementId)
+        analyticsService.logDeleteMovement(movementId)
         movementDao.deleteById(movementId)
         resultDao.deleteAllWithMovementId(movementId)
     }

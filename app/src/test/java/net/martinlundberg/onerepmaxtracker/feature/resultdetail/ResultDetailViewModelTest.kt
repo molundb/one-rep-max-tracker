@@ -4,7 +4,7 @@ import kotlinx.coroutines.test.runTest
 import net.martinlundberg.onerepmaxtracker.MainDispatcherRule
 import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
@@ -24,7 +24,7 @@ class ResultDetailViewModelTest {
 
     private val resultRepository = FakeResultRepository()
     private val clockService = FakeClockService()
-    private val analyticsHelper = FakeAnalyticsHelper()
+    private val analyticsService = FakeAnalyticsService()
 
     private lateinit var viewModel: ResultDetailViewModel
 
@@ -33,7 +33,7 @@ class ResultDetailViewModelTest {
         viewModel = ResultDetailViewModel(
             resultRepository = resultRepository,
             clockService = clockService,
-            analyticsHelper = analyticsHelper,
+            analyticsService = analyticsService,
         )
     }
 

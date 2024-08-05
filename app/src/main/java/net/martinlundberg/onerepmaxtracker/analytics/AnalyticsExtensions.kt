@@ -18,7 +18,7 @@ const val RESULT_DATE_TIME = "result_date_time"
 
 // General
 
-fun AnalyticsHelper.logScreenView(screenName: String) {
+fun AnalyticsService.logScreenView(screenName: String) {
     logEvent(
         AnalyticsEvent(
             type = Types.SCREEN_VIEW,
@@ -29,7 +29,7 @@ fun AnalyticsHelper.logScreenView(screenName: String) {
     )
 }
 
-fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
+fun AnalyticsService.logWeightUnitToggled(weightUnit: WeightUnit) {
     logEvent(
         "weight_unit_toggled", listOf(
             Param(key = "weight_unit", value = weightUnit.toString()),
@@ -37,7 +37,7 @@ fun AnalyticsHelper.logWeightUnitToggled(weightUnit: WeightUnit) {
     )
 }
 
-fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
+fun AnalyticsService.logAnalyticsEnabledToggled(isEnabled: Boolean) {
     logEvent(
         "analytics_enabled_toggled", listOf(
             Param(key = "analytics_enabled", value = isEnabled.toString()),
@@ -47,29 +47,29 @@ fun AnalyticsHelper.logAnalyticsEnabledToggled(isEnabled: Boolean) {
 
 // Movement List Screen
 
-fun AnalyticsHelper.logMovementList_MovementClick(movement: Movement) {
+fun AnalyticsService.logMovementList_MovementClick(movement: Movement) {
     logEvent("movement_list_movement_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementList_MovementLongClick(movement: Movement) {
+fun AnalyticsService.logMovementList_MovementLongClick(movement: Movement) {
     logEvent("movement_list_movement_long_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementList_AddMovementButtonClick() {
+fun AnalyticsService.logMovementList_AddMovementButtonClick() {
     logEvent("movement_list_add_movement_button_click")
 }
 
 // Movement Detail Screen
 
-fun AnalyticsHelper.logMovementDetail_NavBackClick() {
+fun AnalyticsService.logMovementDetail_NavBackClick() {
     logEvent("movement_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logMovementDetail_ResultClick(result: Result) {
+fun AnalyticsService.logMovementDetail_ResultClick(result: Result) {
     logEvent("movement_detail_result_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logMovementDetail_EditButtonClick(movementId: Long, movementName: String) {
+fun AnalyticsService.logMovementDetail_EditButtonClick(movementId: Long, movementName: String) {
     logEvent(
         "movement_detail_edit_button_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -78,7 +78,7 @@ fun AnalyticsHelper.logMovementDetail_EditButtonClick(movementId: Long, movement
     )
 }
 
-fun AnalyticsHelper.logMovementDetail_AddButtonClick(movementId: Long, movementName: String) {
+fun AnalyticsService.logMovementDetail_AddButtonClick(movementId: Long, movementName: String) {
     logEvent(
         "movement_detail_add_button_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -89,63 +89,63 @@ fun AnalyticsHelper.logMovementDetail_AddButtonClick(movementId: Long, movementN
 
 // Result Detail Screen
 
-fun AnalyticsHelper.logResultDetail_NavBackClick() {
+fun AnalyticsService.logResultDetail_NavBackClick() {
     logEvent("result_detail_nav_back_click")
 }
 
-fun AnalyticsHelper.logResultDetail_AddResultClick(result: Result) {
+fun AnalyticsService.logResultDetail_AddResultClick(result: Result) {
     logEvent("result_detail_add_result_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logResultDetail_EditResultClick(result: Result) {
+fun AnalyticsService.logResultDetail_EditResultClick(result: Result) {
     logEvent("result_detail_edit_result_click", createResultParams(result))
 }
 
 // Movement List Drop Down Menu
 
-fun AnalyticsHelper.logMovementListDropDownMenu_EditClick(movement: Movement) {
+fun AnalyticsService.logMovementListDropDownMenu_EditClick(movement: Movement) {
     logEvent("movement_list_drop_down_menu_edit_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logMovementListDropDownMenu_DeleteClick(movement: Movement) {
+fun AnalyticsService.logMovementListDropDownMenu_DeleteClick(movement: Movement) {
     logEvent("movement_list_drop_down_menu_delete_click", createMovementParams(movement))
 }
 
 // Add Movement Dialog
 
-fun AnalyticsHelper.logAddMovementDialog_CancelClick(movement: Movement) {
+fun AnalyticsService.logAddMovementDialog_CancelClick(movement: Movement) {
     logEvent("add_movement_dialog_cancel_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logAddMovementDialog_Dismissed(movement: Movement) {
+fun AnalyticsService.logAddMovementDialog_Dismissed(movement: Movement) {
     logEvent("add_movement_dialog_dismissed", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logAddMovementDialog_ConfirmClick(movement: Movement) {
+fun AnalyticsService.logAddMovementDialog_ConfirmClick(movement: Movement) {
     logEvent("add_movement_dialog_confirm_click", createMovementParams(movement))
 }
 
 // Edit Movement Dialog
 
-fun AnalyticsHelper.logEditMovementDialog_CancelClick(movement: Movement) {
+fun AnalyticsService.logEditMovementDialog_CancelClick(movement: Movement) {
     logEvent("edit_movement_dialog_cancel_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_Dismissed(movement: Movement) {
+fun AnalyticsService.logEditMovementDialog_Dismissed(movement: Movement) {
     logEvent("edit_movement_dialog_dismissed", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_ConfirmClick(movement: Movement) {
+fun AnalyticsService.logEditMovementDialog_ConfirmClick(movement: Movement) {
     logEvent("edit_movement_dialog_confirm_click", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovementDialog_DeleteMovementClick(movement: Movement) {
+fun AnalyticsService.logEditMovementDialog_DeleteMovementClick(movement: Movement) {
     logEvent("edit_movement_dialog_delete_movement_click", createMovementParams(movement))
 }
 
 // Delete Movement Confirm Dialog
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_ConfirmClick(movementId: Long) {
+fun AnalyticsService.logDeleteMovementConfirmDialog_ConfirmClick(movementId: Long) {
     logEvent(
         "delete_movement_confirm_dialog_confirm_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -153,7 +153,7 @@ fun AnalyticsHelper.logDeleteMovementConfirmDialog_ConfirmClick(movementId: Long
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long) {
+fun AnalyticsService.logDeleteMovementConfirmDialog_CancelClick(movementId: Long) {
     logEvent(
         "delete_movement_confirm_dialog_cancel_click", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -161,7 +161,7 @@ fun AnalyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId: Long)
     )
 }
 
-fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
+fun AnalyticsService.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
     logEvent(
         "delete_movement_confirm_dialog_dismissed", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -171,39 +171,39 @@ fun AnalyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId: Long) {
 
 // Add Result Dialog
 
-fun AnalyticsHelper.logAddResultDialog_CancelClick(result: Result) {
+fun AnalyticsService.logAddResultDialog_CancelClick(result: Result) {
     logEvent("add_result_dialog_cancel_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logAddResultDialog_ConfirmClick(result: Result) {
+fun AnalyticsService.logAddResultDialog_ConfirmClick(result: Result) {
     logEvent("add_result_dialog_confirm_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logAddResultDialog_Dismissed(result: Result) {
+fun AnalyticsService.logAddResultDialog_Dismissed(result: Result) {
     logEvent("add_result_dialog_dismissed", createResultParams(result))
 }
 
 // Edit Result Dialog
 
-fun AnalyticsHelper.logEditResultDialog_CancelClick(result: Result) {
+fun AnalyticsService.logEditResultDialog_CancelClick(result: Result) {
     logEvent("edit_result_dialog_cancel_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResultDialog_ConfirmClick(result: Result) {
+fun AnalyticsService.logEditResultDialog_ConfirmClick(result: Result) {
     logEvent("edit_result_dialog_confirm_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResultDialog_DeleteClick(result: Result) {
+fun AnalyticsService.logEditResultDialog_DeleteClick(result: Result) {
     logEvent("edit_result_dialog_delete_click", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResultDialog_Dismissed(result: Result) {
+fun AnalyticsService.logEditResultDialog_Dismissed(result: Result) {
     logEvent("edit_result_dialog_dismissed", createResultParams(result))
 }
 
 // Delete Result Confirm Dialog
 
-fun AnalyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId: Long) {
+fun AnalyticsService.logDeleteResultConfirmDialog_ConfirmClick(resultId: Long) {
     logEvent(
         "delete_result_confirm_dialog_confirm_click", listOf(
             Param(key = "result_id", value = resultId.toString()),
@@ -211,7 +211,7 @@ fun AnalyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId: Long) {
     )
 }
 
-fun AnalyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
+fun AnalyticsService.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
     logEvent(
         "delete_result_confirm_dialog_cancel_click", listOf(
             Param(key = "result_id", value = resultId.toString()),
@@ -219,7 +219,7 @@ fun AnalyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId: Long) {
     )
 }
 
-fun AnalyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId: Long) {
+fun AnalyticsService.logDeleteResultConfirmDialog_Dismissed(resultId: Long) {
     logEvent(
         "delete_result_confirm_dialog_dismissed", listOf(
             Param(key = "result_id", value = resultId.toString()),
@@ -229,15 +229,15 @@ fun AnalyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId: Long) {
 
 // ViewModel & Repository events
 
-fun AnalyticsHelper.logAddMovement(movement: Movement) {
+fun AnalyticsService.logAddMovement(movement: Movement) {
     logEvent("add_movement", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logEditMovement(movement: Movement) {
+fun AnalyticsService.logEditMovement(movement: Movement) {
     logEvent("edit_movement", createMovementParams(movement))
 }
 
-fun AnalyticsHelper.logDeleteMovement(movementId: Long) {
+fun AnalyticsService.logDeleteMovement(movementId: Long) {
     logEvent(
         "edit_movement", listOf(
             Param(key = "movement_id", value = movementId.toString()),
@@ -245,15 +245,15 @@ fun AnalyticsHelper.logDeleteMovement(movementId: Long) {
     )
 }
 
-fun AnalyticsHelper.logAddResult(result: Result) {
+fun AnalyticsService.logAddResult(result: Result) {
     logEvent("add_result", createResultParams(result))
 }
 
-fun AnalyticsHelper.logEditResult(result: Result) {
+fun AnalyticsService.logEditResult(result: Result) {
     logEvent("edit_result", createResultParams(result))
 }
 
-fun AnalyticsHelper.logDeleteResult(resultId: Long) {
+fun AnalyticsService.logDeleteResult(resultId: Long) {
     logEvent(
         "delete_result", listOf(
             Param(key = "result_id", value = resultId.toString()),
@@ -261,7 +261,7 @@ fun AnalyticsHelper.logDeleteResult(resultId: Long) {
     )
 }
 
-private fun AnalyticsHelper.logEvent(type: String, params: List<Param> = emptyList()) {
+private fun AnalyticsService.logEvent(type: String, params: List<Param> = emptyList()) {
     logEvent(
         AnalyticsEvent(
             type = type,
@@ -295,8 +295,8 @@ fun createResultParams(result: Result): List<Param> {
 @Composable
 fun TrackScreenViewEvent(
     screenName: String,
-    analyticsHelper: AnalyticsHelper = LocalAnalyticsHelper.current,
+    analyticsService: AnalyticsService = LocalAnalyticsService.current,
 ) = DisposableEffect(Unit) {
-    analyticsHelper.logScreenView(screenName)
+    analyticsService.logScreenView(screenName)
     onDispose {}
 }

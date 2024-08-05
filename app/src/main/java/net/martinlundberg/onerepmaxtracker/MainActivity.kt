@@ -9,8 +9,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
 import net.martinlundberg.onerepmaxtracker.ui.theme.Red
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var analyticsHelper: AnalyticsHelper
+    lateinit var analyticsService: AnalyticsService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(
-                LocalAnalyticsHelper provides analyticsHelper
+                LocalAnalyticsService provides analyticsService
             ) {
                 OneRepMaxTrackerTheme {
                     Navigation()

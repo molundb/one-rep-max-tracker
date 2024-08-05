@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovementDialog_Dismissed
@@ -64,21 +64,21 @@ fun DeleteMovementConfirmDialog(
     onCancel: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     ConfirmDeletionDialog(
         title = stringResource(R.string.delete_movement_confirm_dialog_title),
         movementName = movementName,
         cardContentDescription = stringResource(R.string.delete_movement_confirm_dialog_content_description),
         onDismissRequest = {
-            analyticsHelper.logDeleteMovementConfirmDialog_Dismissed(movementId)
+            analyticsService.logDeleteMovementConfirmDialog_Dismissed(movementId)
             onDismissRequest()
         },
         onCancel = {
-            analyticsHelper.logDeleteMovementConfirmDialog_CancelClick(movementId)
+            analyticsService.logDeleteMovementConfirmDialog_CancelClick(movementId)
             onCancel()
         },
         onConfirmation = {
-            analyticsHelper.logDeleteMovementConfirmDialog_ConfirmClick(movementId)
+            analyticsService.logDeleteMovementConfirmDialog_ConfirmClick(movementId)
             onConfirmation()
         },
     )
@@ -91,7 +91,7 @@ fun AddMovementDialog(
     onCancel: (Movement) -> Unit = {},
     onConfirm: (Movement) -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     AddOrEditMovementDialog(
         movement = Movement(name = ""),
         weightUnit = weightUnit,
@@ -100,15 +100,15 @@ fun AddMovementDialog(
         showWeightField = true,
         confirmButtonText = stringResource(R.string.movement_list_screen_add_movement_dialog_confirm_button),
         onDismissRequest = { movement ->
-            analyticsHelper.logAddMovementDialog_Dismissed(movement)
+            analyticsService.logAddMovementDialog_Dismissed(movement)
             onDismissRequest(movement)
         },
         onCancel = { movement ->
-            analyticsHelper.logAddMovementDialog_CancelClick(movement)
+            analyticsService.logAddMovementDialog_CancelClick(movement)
             onCancel(movement)
         },
         onConfirm = { movement ->
-            analyticsHelper.logAddMovementDialog_ConfirmClick(movement)
+            analyticsService.logAddMovementDialog_ConfirmClick(movement)
             onConfirm(movement)
         },
     )
@@ -123,7 +123,7 @@ fun EditMovementDialog(
     onConfirm: (Movement) -> Unit = { },
     onDelete: (Movement) -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     AddOrEditMovementDialog(
         movement = movement,
         weightUnit = weightUnit,
@@ -132,19 +132,19 @@ fun EditMovementDialog(
         showWeightField = false,
         confirmButtonText = stringResource(R.string.save),
         onDismissRequest = { editedMovement ->
-            analyticsHelper.logEditMovementDialog_Dismissed(editedMovement)
+            analyticsService.logEditMovementDialog_Dismissed(editedMovement)
             onDismissRequest(editedMovement)
         },
         onCancel = { editedMovement ->
-            analyticsHelper.logEditMovementDialog_CancelClick(editedMovement)
+            analyticsService.logEditMovementDialog_CancelClick(editedMovement)
             onCancel(editedMovement)
         },
         onConfirm = { editedMovement ->
-            analyticsHelper.logEditMovementDialog_ConfirmClick(editedMovement)
+            analyticsService.logEditMovementDialog_ConfirmClick(editedMovement)
             onConfirm(editedMovement)
         },
         onDelete = {
-            analyticsHelper.logEditMovementDialog_DeleteMovementClick(movement)
+            analyticsService.logEditMovementDialog_DeleteMovementClick(movement)
             onDelete(movement)
         },
     )

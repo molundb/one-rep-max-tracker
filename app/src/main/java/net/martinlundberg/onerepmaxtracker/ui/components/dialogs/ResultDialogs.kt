@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_CancelClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_ConfirmClick
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResultDialog_Dismissed
@@ -67,7 +67,7 @@ fun AddResultDialog(
     onConfirm: (Result) -> Unit = {},
     onCancel: (Result) -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     AddOrEditResultDialog(
         result = result,
         weightUnit = weightUnit,
@@ -76,15 +76,15 @@ fun AddResultDialog(
         confirmButtonText = stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button),
         confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_add_result_dialog_confirm_button_content_description),
         onDismissRequest = { editedResult ->
-            analyticsHelper.logAddResultDialog_Dismissed(editedResult)
+            analyticsService.logAddResultDialog_Dismissed(editedResult)
             onDismissRequest(editedResult)
         },
         onConfirm = { editedResult ->
-            analyticsHelper.logAddResultDialog_ConfirmClick(editedResult)
+            analyticsService.logAddResultDialog_ConfirmClick(editedResult)
             onConfirm(editedResult)
         },
         onCancel = { editedResult ->
-            analyticsHelper.logAddResultDialog_CancelClick(editedResult)
+            analyticsService.logAddResultDialog_CancelClick(editedResult)
             onCancel(editedResult)
         },
     )
@@ -99,7 +99,7 @@ fun EditResultDialog(
     onCancel: (Result) -> Unit = {},
     onDelete: (Result) -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     AddOrEditResultDialog(
         result = result,
         weightUnit = weightUnit,
@@ -108,19 +108,19 @@ fun EditResultDialog(
         confirmButtonText = stringResource(R.string.save),
         confirmButtonContentDescription = stringResource(R.string.movement_detail_screen_edit_result_dialog_confirm_button_content_description),
         onDismissRequest = { editedResult ->
-            analyticsHelper.logEditResultDialog_Dismissed(editedResult)
+            analyticsService.logEditResultDialog_Dismissed(editedResult)
             onDismissRequest(editedResult)
         },
         onConfirm = { editedResult ->
-            analyticsHelper.logEditResultDialog_ConfirmClick(editedResult)
+            analyticsService.logEditResultDialog_ConfirmClick(editedResult)
             onConfirm(editedResult)
         },
         onCancel = { editedResult ->
-            analyticsHelper.logEditResultDialog_CancelClick(editedResult)
+            analyticsService.logEditResultDialog_CancelClick(editedResult)
             onCancel(editedResult)
         },
         onDelete = {
-            analyticsHelper.logEditResultDialog_DeleteClick(result)
+            analyticsService.logEditResultDialog_DeleteClick(result)
             onDelete(result)
         },
     )
@@ -316,22 +316,22 @@ fun DeleteResultConfirmDialog(
     onCancel: () -> Unit = {},
     onConfirmation: () -> Unit = {},
 ) {
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
     ConfirmDeletionDialog(
         title = stringResource(R.string.delete_result_confirm_dialog_title),
         movementName = movementName,
         weight = weight,
         cardContentDescription = stringResource(R.string.delete_result_confirm_dialog_content_description),
         onDismissRequest = {
-            analyticsHelper.logDeleteResultConfirmDialog_Dismissed(resultId)
+            analyticsService.logDeleteResultConfirmDialog_Dismissed(resultId)
             onDismissRequest()
         },
         onCancel = {
-            analyticsHelper.logDeleteResultConfirmDialog_CancelClick(resultId)
+            analyticsService.logDeleteResultConfirmDialog_CancelClick(resultId)
             onCancel()
         },
         onConfirmation = {
-            analyticsHelper.logDeleteResultConfirmDialog_ConfirmClick(resultId)
+            analyticsService.logDeleteResultConfirmDialog_ConfirmClick(resultId)
             onConfirmation()
         },
     )

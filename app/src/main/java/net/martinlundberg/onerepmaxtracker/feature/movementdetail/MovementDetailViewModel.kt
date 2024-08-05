@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
@@ -32,7 +32,7 @@ class MovementDetailViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
     private val clockService: ClockService,
-    private val analyticsHelper: AnalyticsHelper,
+    private val analyticsService: AnalyticsService,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<MovementDetailUiState> = MutableStateFlow(Loading())
     val uiState: StateFlow<MovementDetailUiState> = _uiState.asStateFlow()
@@ -59,7 +59,7 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun addResult(result: Result, weightUnit: WeightUnit) {
-        analyticsHelper.logAddResult(result)
+        analyticsService.logAddResult(result)
         viewModelScope.launch {
             resultRepository.setResult(
                 result = result,
@@ -69,7 +69,7 @@ class MovementDetailViewModel @Inject constructor(
     }
 
     fun editMovement(movement: Movement) {
-        analyticsHelper.logEditMovement(movement)
+        analyticsService.logEditMovement(movement)
         viewModelScope.launch {
             movementsRepository.setMovement(movement)
         }

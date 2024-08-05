@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logWeightUnitToggled
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NavViewModel @Inject constructor(
     private val weightUnitService: DefaultWeightUnitService,
-    private val analyticsHelper: AnalyticsHelper,
+    private val analyticsService: AnalyticsService,
 ) : ViewModel() {
     val weightUnitFlow: StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
 
@@ -24,9 +24,9 @@ class NavViewModel @Inject constructor(
         }
 
         val weightUnit = if (isPounds) WeightUnit.POUNDS else WeightUnit.KILOGRAMS
-        analyticsHelper.logWeightUnitToggled(weightUnit)
+        analyticsService.logWeightUnitToggled(weightUnit)
     }
 
     fun setWeightUnitAsUserProperty(weightUnit: WeightUnit) =
-        analyticsHelper.setWeightUnitAsUserProperty(weightUnit.toString())
+        analyticsService.setWeightUnitAsUserProperty(weightUnit.toString())
 }

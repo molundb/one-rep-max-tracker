@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
@@ -22,7 +22,7 @@ class DefaultResultRepository @Inject constructor(
     private val resultDao: ResultDao,
     private val weightUnitService: DefaultWeightUnitService,
     private val analyticsEnabledService: AnalyticsEnabledService,
-    private val analyticsHelper: AnalyticsHelper,
+    private val analyticsService: AnalyticsService,
 ) : ResultRepository {
 
     override suspend fun getMovementDetail(id: Long): Flow<MovementDetail?> =
@@ -39,7 +39,7 @@ class DefaultResultRepository @Inject constructor(
         resultDao.getResult(id).map { it?.asExternalModel() }
 
     override suspend fun deleteResult(id: Long) {
-        analyticsHelper.logDeleteResult(id)
+        analyticsService.logDeleteResult(id)
         resultDao.deleteByResultId(id)
     }
 
@@ -51,7 +51,7 @@ class DefaultResultRepository @Inject constructor(
     override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> = analyticsEnabledService.analyticsEnabledFlow
 
     override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
-        analyticsHelper.logAnalyticsEnabledToggled(isEnabled)
+        analyticsService.logAnalyticsEnabledToggled(isEnabled)
         analyticsEnabledService.setAnalyticsCollectionEnabled(isEnabled)
     }
 }

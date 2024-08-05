@@ -8,15 +8,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.FirebaseAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
+import net.martinlundberg.onerepmaxtracker.analytics.FirebaseAnalyticsService
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AnalyticsModule {
     @Binds
-    abstract fun bindAnalyticsHelper(analyticsHelper: FirebaseAnalyticsHelper): AnalyticsHelper
+    abstract fun bindAnalyticsService(analyticsService: FirebaseAnalyticsService): AnalyticsService
 
     companion object {
         @Provides

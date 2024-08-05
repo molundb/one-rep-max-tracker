@@ -48,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_DeleteClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementListDropDownMenu_EditClick
@@ -139,7 +139,7 @@ private fun SuccessUi(
     onLatestOrBestResultsSwitchChecked: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
 
     var movementToEdit by remember { mutableStateOf<Movement?>(null) }
     var showAddMovementDialog by remember { mutableStateOf(false) }
@@ -191,11 +191,11 @@ private fun SuccessUi(
                             weightUnit = movementListUiState.weightUnit,
                             onMovementClick = onMovementClick,
                             onEditMovementClick = { movement ->
-                                analyticsHelper.logMovementListDropDownMenu_EditClick(movement)
+                                analyticsService.logMovementListDropDownMenu_EditClick(movement)
                                 movementToEdit = movement
                             },
                             onDeleteMovementClick = { movement ->
-                                analyticsHelper.logMovementListDropDownMenu_DeleteClick(movement)
+                                analyticsService.logMovementListDropDownMenu_DeleteClick(movement)
                                 movementToDelete = movement
                             }
                         )
@@ -212,7 +212,7 @@ private fun SuccessUi(
                             context.getString(R.string.movement_list_screen_add_movement_button_content_description)
                     },
                 onClick = {
-                    analyticsHelper.logMovementList_AddMovementButtonClick()
+                    analyticsService.logMovementList_AddMovementButtonClick()
                     showAddMovementDialog = true
                 },
             ) {
@@ -316,17 +316,17 @@ fun MovementCard(
     val view = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
 
     Card(
         modifier = modifier
             .combinedClickable(
                 onClick = {
-                    analyticsHelper.logMovementList_MovementClick(movement)
+                    analyticsService.logMovementList_MovementClick(movement)
                     onMovementClick(movement, lifecycleOwner.lifecycle.currentState)
                 },
                 onLongClick = {
-                    analyticsHelper.logMovementList_MovementLongClick(movement)
+                    analyticsService.logMovementList_MovementLongClick(movement)
                     view.performHapticFeedback(
                         HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                     )

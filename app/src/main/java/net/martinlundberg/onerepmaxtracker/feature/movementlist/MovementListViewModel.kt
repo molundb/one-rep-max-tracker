@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
 import net.martinlundberg.onerepmaxtracker.analytics.logEditMovement
@@ -31,7 +31,7 @@ class MovementListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
     private val clockService: ClockService,
-    private val analyticsHelper: AnalyticsHelper,
+    private val analyticsService: AnalyticsService,
 ) : ViewModel() {
     val uiState: StateFlow<MovementListUiState> = combine(
         movementsRepository.movements,
@@ -53,7 +53,7 @@ class MovementListViewModel @Inject constructor(
 
     fun addMovement(movement: Movement, weightUnit: WeightUnit) {
         viewModelScope.launch {
-            analyticsHelper.logAddMovement(movement)
+            analyticsService.logAddMovement(movement)
             val movementId = movementsRepository.setMovement(movement.copy(name = movement.name.trim()))
             movement.weight?.let {
                 val result = Result(
@@ -64,7 +64,7 @@ class MovementListViewModel @Inject constructor(
                         .millisToOffsetDateTime(ZoneId.systemDefault()),
                     comment = "",
                 )
-                analyticsHelper.logAddResult(result)
+                analyticsService.logAddResult(result)
                 resultRepository.setResult(
                     result,
                     weightUnit = weightUnit,
@@ -75,7 +75,7 @@ class MovementListViewModel @Inject constructor(
 
     fun editMovement(movement: Movement) {
         viewModelScope.launch {
-            analyticsHelper.logEditMovement(movement)
+            analyticsService.logEditMovement(movement)
             movementsRepository.setMovement(movement)
         }
     }

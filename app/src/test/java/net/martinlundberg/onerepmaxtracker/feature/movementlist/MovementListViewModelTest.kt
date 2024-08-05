@@ -13,7 +13,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.createMovementParams
 import net.martinlundberg.onerepmaxtracker.analytics.createResultParams
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
@@ -33,7 +33,7 @@ class MovementListViewModelTest {
     private val resultRepository = FakeResultRepository()
     private val movementsRepository = FakeMovementsRepository(resultRepository)
     private val clockService = FakeClockService()
-    private val analyticsHelper = FakeAnalyticsHelper()
+    private val analyticsService = FakeAnalyticsService()
 
     private lateinit var viewModel: MovementListViewModel
 
@@ -43,7 +43,7 @@ class MovementListViewModelTest {
             movementsRepository,
             resultRepository,
             clockService,
-            analyticsHelper,
+            analyticsService,
         )
     }
 
@@ -83,10 +83,10 @@ class MovementListViewModelTest {
             viewModel.uiState.value
         )
 
-        assertEquals(1, analyticsHelper.numberOfEvents())
+        assertEquals(1, analyticsService.numberOfEvents())
 
         assertTrue(
-            analyticsHelper.hasLogged(
+            analyticsService.hasLogged(
                 AnalyticsEvent(
                     type = "add_movement",
                     extras = createMovementParams(sampleMovementWithoutWeight),
@@ -128,10 +128,10 @@ class MovementListViewModelTest {
             viewModel.uiState.value
         )
 
-        assertEquals(2, analyticsHelper.numberOfEvents())
+        assertEquals(2, analyticsService.numberOfEvents())
 
         assertTrue(
-            analyticsHelper.hasLogged(
+            analyticsService.hasLogged(
                 AnalyticsEvent(
                     type = "add_movement",
                     extras = createMovementParams(sampleMovementWithWeight),
@@ -140,7 +140,7 @@ class MovementListViewModelTest {
         )
 
         assertTrue(
-            analyticsHelper.hasLogged(
+            analyticsService.hasLogged(
                 AnalyticsEvent(
                     type = "add_result",
                     extras = createResultParams(

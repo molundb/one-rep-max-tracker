@@ -48,8 +48,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_AddButtonClick
 import net.martinlundberg.onerepmaxtracker.analytics.logMovementDetail_EditButtonClick
@@ -113,7 +113,7 @@ fun MovementDetailScreen(
     TrackScreenViewEvent(screenName = "MovementDetail")
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
 
     Column(
         modifier = Modifier
@@ -139,7 +139,7 @@ fun MovementDetailScreen(
                 modifier = Modifier
                     .clickable(
                         onClick = {
-                            analyticsHelper.logMovementDetail_NavBackClick()
+                            analyticsService.logMovementDetail_NavBackClick()
                             navigateBack(lifecycleOwner.lifecycle.currentState)
                         }
                     )
@@ -156,7 +156,7 @@ fun MovementDetailScreen(
             is Success -> SuccessUi(
                 movementDetailUiState,
                 movementId,
-                analyticsHelper,
+                analyticsService,
                 onResultClick,
                 addResult,
                 onDeleteResultClick,
@@ -193,7 +193,7 @@ private fun LoadingUi() {
 private fun SuccessUi(
     movementDetailUiState: Success,
     movementId: Long,
-    analyticsHelper: AnalyticsHelper,
+    analyticsService: AnalyticsService,
     onResultClick: (Long, String, Lifecycle.State) -> Unit,
     addResult: (result: Result, weightUnit: WeightUnit) -> Unit,
     onDeleteResultClick: (Long) -> Unit,
@@ -225,7 +225,7 @@ private fun SuccessUi(
                         result = result,
                         weightUnit = movementDetailUiState.weightUnit,
                         onResultClick = {
-                            analyticsHelper.logMovementDetail_ResultClick(result)
+                            analyticsService.logMovementDetail_ResultClick(result)
                             onResultClick(
                                 result.id,
                                 movementDetailUiState.movement.movementName,
@@ -248,7 +248,7 @@ private fun SuccessUi(
                             context.getString(R.string.movement_detail_screen_edit_movement_button_content_description)
                     },
                 onClick = {
-                    analyticsHelper.logMovementDetail_EditButtonClick(
+                    analyticsService.logMovementDetail_EditButtonClick(
                         movementId,
                         movementDetailUiState.movement.movementName
                     )
@@ -271,7 +271,7 @@ private fun SuccessUi(
                             context.getString(R.string.movement_detail_screen_add_result_button_content_description)
                     },
                 onClick = {
-                    analyticsHelper.logMovementDetail_AddButtonClick(
+                    analyticsService.logMovementDetail_AddButtonClick(
                         movementId,
                         movementDetailUiState.movement.movementName
                     )

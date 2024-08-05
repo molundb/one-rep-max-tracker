@@ -1,9 +1,9 @@
 package net.martinlundberg.onerepmaxtracker.fakes
 
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 
-class FakeAnalyticsHelper : AnalyticsHelper {
+class FakeAnalyticsService : AnalyticsService {
 
     private val events = mutableListOf<AnalyticsEvent>()
     override fun logEvent(event: AnalyticsEvent) {

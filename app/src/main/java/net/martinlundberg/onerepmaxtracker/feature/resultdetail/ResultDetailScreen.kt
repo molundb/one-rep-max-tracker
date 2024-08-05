@@ -42,8 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
-import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
+import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.TrackScreenViewEvent
 import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_AddResultClick
 import net.martinlundberg.onerepmaxtracker.analytics.logResultDetail_EditResultClick
@@ -98,7 +98,7 @@ fun ResultDetailScreen(
     TrackScreenViewEvent(screenName = "ResultDetail")
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    val analyticsHelper = LocalAnalyticsHelper.current
+    val analyticsService = LocalAnalyticsService.current
 
     Column(
         modifier = Modifier
@@ -124,7 +124,7 @@ fun ResultDetailScreen(
                 modifier = Modifier
                     .clickable(
                         onClick = {
-                            analyticsHelper.logResultDetail_NavBackClick()
+                            analyticsService.logResultDetail_NavBackClick()
                             navigateBack(lifecycleOwner.lifecycle.currentState)
                         }
                     )
@@ -140,7 +140,7 @@ fun ResultDetailScreen(
             Loading -> LoadingUi()
             is Success -> SuccessUi(
                 resultDetailUiState,
-                analyticsHelper,
+                analyticsService,
                 onEditResult,
                 movementName,
                 onDeleteResult,
@@ -156,7 +156,7 @@ fun ResultDetailScreen(
 @Composable
 private fun SuccessUi(
     resultDetailUiState: Success,
-    analyticsHelper: AnalyticsHelper,
+    analyticsService: AnalyticsService,
     onEditResult: (Result, WeightUnit) -> Unit,
     movementName: String,
     onDeleteResult: (Long) -> Unit,
@@ -199,7 +199,7 @@ private fun SuccessUi(
                     },
                 onClick = {
                     val result = resultDetailUiState.result
-                    analyticsHelper.logResultDetail_EditResultClick(result)
+                    analyticsService.logResultDetail_EditResultClick(result)
                     resultToEdit = result
                 },
             ) {
@@ -217,7 +217,7 @@ private fun SuccessUi(
                     .widthIn(min = 120.dp),
                 onClick = {
                     val result = resultDetailUiState.result
-                    analyticsHelper.logResultDetail_AddResultClick(result)
+                    analyticsService.logResultDetail_AddResultClick(result)
                     resultToDelete = result
                 },
             ) {

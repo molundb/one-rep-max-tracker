@@ -4,7 +4,7 @@ import kotlinx.coroutines.test.runTest
 import net.martinlundberg.onerepmaxtracker.MainDispatcherRule
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsHelper
+import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
@@ -28,7 +28,7 @@ class MovementDetailViewModelTest {
     private val resultRepository = FakeResultRepository()
     private val movementsRepository = FakeMovementsRepository(resultRepository)
     private val clockService = FakeClockService()
-    private val analyticsHelper = FakeAnalyticsHelper()
+    private val analyticsService = FakeAnalyticsService()
 
     private lateinit var viewModel: MovementDetailViewModel
 
@@ -38,7 +38,7 @@ class MovementDetailViewModelTest {
             movementsRepository,
             resultRepository,
             clockService,
-            analyticsHelper,
+            analyticsService,
         )
     }
 
