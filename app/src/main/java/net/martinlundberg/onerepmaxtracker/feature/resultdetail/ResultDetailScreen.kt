@@ -57,8 +57,8 @@ import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiSt
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteResultConfirmDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditResultDialog
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.Companion.multiplyIfPoundsAndRoundToNearestQuarter
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 

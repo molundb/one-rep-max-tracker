@@ -8,7 +8,7 @@ interface ClockService {
 }
 
 @Singleton
-class ClockServiceImpl @Inject constructor() : ClockService {
+class DefaultClockService @Inject constructor() : ClockService {
     override fun getCurrentTimeMillis() = System.currentTimeMillis()
 }
 

@@ -13,14 +13,14 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovemen
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.model.asEntity
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.divideIfPounds
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.Companion.divideIfPounds
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
 import javax.inject.Inject
 
 class DefaultResultRepository @Inject constructor(
     private val resultDao: ResultDao,
-    private val weightUnitService: WeightUnitServiceImpl,
+    private val weightUnitService: DefaultWeightUnitService,
     private val analyticsEnabledService: AnalyticsEnabledService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ResultRepository {

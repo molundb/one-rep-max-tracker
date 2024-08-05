@@ -18,8 +18,8 @@ import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.NoResultDetail
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPounds
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.Companion.multiplyIfPounds
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
 import javax.inject.Inject
 import kotlin.math.roundToInt
 

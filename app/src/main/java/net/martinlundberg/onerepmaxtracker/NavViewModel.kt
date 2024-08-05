@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.analytics.logWeightUnitToggled
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class NavViewModel @Inject constructor(
-    private val weightUnitService: WeightUnitServiceImpl,
+    private val weightUnitService: DefaultWeightUnitService,
     private val analyticsHelper: AnalyticsHelper,
 ) : ViewModel() {
     val weightUnitFlow: StateFlow<WeightUnit> = weightUnitService.weightUnitFlow

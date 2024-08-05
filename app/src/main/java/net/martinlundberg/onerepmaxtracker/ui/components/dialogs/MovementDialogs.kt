@@ -53,8 +53,8 @@ import net.martinlundberg.onerepmaxtracker.analytics.logEditMovementDialog_Dismi
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.ui.theme.Black
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
 
 @Composable
 fun DeleteMovementConfirmDialog(

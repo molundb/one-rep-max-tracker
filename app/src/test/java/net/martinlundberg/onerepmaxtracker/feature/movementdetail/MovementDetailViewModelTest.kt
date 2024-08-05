@@ -8,7 +8,7 @@ import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsHelper
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Before

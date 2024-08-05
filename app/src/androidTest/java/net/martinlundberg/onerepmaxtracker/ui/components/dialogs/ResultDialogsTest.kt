@@ -21,7 +21,7 @@ import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailScreen
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

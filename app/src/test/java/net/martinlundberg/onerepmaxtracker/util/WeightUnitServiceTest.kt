@@ -1,9 +1,9 @@
 package net.martinlundberg.onerepmaxtracker.util
 
 import junit.framework.TestCase.assertEquals
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.POUNDS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.Companion.multiplyIfPoundsAndRoundToNearestQuarter
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.POUNDS
 import org.junit.Test
 
 internal class WeightUnitServiceTest {

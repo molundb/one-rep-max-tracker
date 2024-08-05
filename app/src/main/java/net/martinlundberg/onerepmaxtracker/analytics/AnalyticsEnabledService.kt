@@ -30,7 +30,7 @@ interface AnalyticsEnabledService {
 }
 
 @Singleton
-class AnalyticsEnabledServiceImpl @Inject constructor(
+class DefaultAnalyticsEnabledService @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : AnalyticsEnabledService {
     private val scope = MainScope()

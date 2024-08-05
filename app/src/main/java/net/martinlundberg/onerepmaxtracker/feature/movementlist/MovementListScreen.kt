@@ -63,9 +63,9 @@ import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.DeleteMovementC
 import net.martinlundberg.onerepmaxtracker.ui.components.dialogs.EditMovementDialog
 import net.martinlundberg.onerepmaxtracker.ui.components.menus.MovementDropDownMenu
 import net.martinlundberg.onerepmaxtracker.ui.theme.OneRepMaxTrackerTheme
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.Companion.multiplyIfPoundsAndRoundToNearestQuarter
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.Companion.multiplyIfPoundsAndRoundToNearestQuarter
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
 
 @Composable
 fun MovementListRoute(

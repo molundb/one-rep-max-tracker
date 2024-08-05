@@ -5,13 +5,13 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.ClockService
-import net.martinlundberg.onerepmaxtracker.ClockServiceImpl
+import net.martinlundberg.onerepmaxtracker.DefaultClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledServiceImpl
+import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledService
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenService
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenServiceImpl
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl
 import javax.inject.Singleton
 
 @Module
@@ -20,15 +20,15 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideWeightUnitService(weightUnitService: WeightUnitServiceImpl): WeightUnitService
+    abstract fun provideWeightUnitService(weightUnitService: DefaultWeightUnitService): WeightUnitService
 
     @Binds
     @Singleton
-    abstract fun provideAnalyticsService(analyticsService: AnalyticsEnabledServiceImpl): AnalyticsEnabledService
+    abstract fun provideAnalyticsService(analyticsService: DefaultAnalyticsEnabledService): AnalyticsEnabledService
 
     @Binds
     @Singleton
-    abstract fun provideClockService(clockServiceImpl: ClockServiceImpl): ClockService
+    abstract fun provideClockService(clockServiceImpl: DefaultClockService): ClockService
 
     @Binds
     @Singleton

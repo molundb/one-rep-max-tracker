@@ -14,7 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListScreen
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitServiceImpl.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
