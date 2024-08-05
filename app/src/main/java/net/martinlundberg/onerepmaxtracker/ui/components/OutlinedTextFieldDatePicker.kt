@@ -53,6 +53,7 @@ fun OutlinedTextFieldDatePicker(
 
     if (showDialog) {
         CustomDatePickerDialog(
+            initialDateMillis = currentDateTime.toInstant().toEpochMilli(),
             onAccept = {
                 if (it != null) {
                     val selectedDate = Instant
@@ -78,10 +79,11 @@ fun OutlinedTextFieldDatePicker(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CustomDatePickerDialog(
+    initialDateMillis: Long? = null,
     onAccept: (Long?) -> Unit,
     onCancel: () -> Unit,
 ) {
-    val state = rememberDatePickerState()
+    val state = rememberDatePickerState(initialDateMillis)
 
     MaterialTheme(
         colorScheme = MaterialTheme.colorScheme.copy(
