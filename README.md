@@ -16,7 +16,7 @@ To build and run the app you need to create a firebase project and [add the goog
 ## Testing
 To run the tests execute the following gradle tasks: 
  - `testDevDebug` runs all local tests against the `devDebug` variant.
- - `connectedDevDebugAndroidTest` runs all instrumented tests. At the moment there are only instrumented tests.
+ - `connectedDevDebugAndroidTest` runs all instrumented tests.
 
 ## UI 
 The app was designed using [Material 3 guidelines](https://m3.material.io/). The Screens and UI elements are built entirely using [Jetpack Compose](https://developer.android.com/compose).
