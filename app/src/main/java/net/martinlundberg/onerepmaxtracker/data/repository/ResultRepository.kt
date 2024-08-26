@@ -13,8 +13,4 @@ interface ResultRepository {
     suspend fun deleteResult(id: Long)
     fun getWeightUnitFlow(): StateFlow<WeightUnit>
     suspend fun setWeightUnit(isPounds: Boolean)
-
-    //TODO: Create separate repo for this?
-    fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean>
-    suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean)
 }

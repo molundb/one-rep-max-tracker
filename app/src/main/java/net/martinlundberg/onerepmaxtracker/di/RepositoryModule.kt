@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
-import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.data.database.OneRepMaxTrackerDatabase
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultMovementsRepository
 import net.martinlundberg.onerepmaxtracker.data.repository.DefaultResultRepository
@@ -38,13 +37,11 @@ object RepositoryModule {
     fun provideOneRepMaxRepository(
         db: OneRepMaxTrackerDatabase,
         weightUnitService: DefaultWeightUnitRepository,
-        analyticsEnabledRepository: DefaultAnalyticsEnabledRepository,
         analyticsService: AnalyticsService,
     ): ResultRepository {
         return DefaultResultRepository(
             db.resultDao(),
             weightUnitService,
-            analyticsEnabledRepository,
             analyticsService,
         )
     }

@@ -19,7 +19,6 @@ class FakeResultRepository : ResultRepository {
     private val _results = MutableStateFlow<List<Result>>(emptyList())
     val results: Flow<List<Result>> = _results
 
-    private val _analyticsCollectionEnabled = MutableStateFlow(false)
     private val _weightUnit = MutableStateFlow(KILOGRAMS)
 
     override suspend fun getMovementDetail(id: Long): Flow<MovementDetail?> = movementDetail
@@ -48,14 +47,6 @@ class FakeResultRepository : ResultRepository {
 
     override suspend fun setWeightUnit(isPounds: Boolean) {
         TODO("Not yet implemented")
-    }
-
-    override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> {
-        return _analyticsCollectionEnabled
-    }
-
-    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
-        _analyticsCollectionEnabled.value = isEnabled
     }
 
     /**

@@ -3,9 +3,7 @@ package net.martinlundberg.onerepmaxtracker.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
-import net.martinlundberg.onerepmaxtracker.analytics.logAnalyticsEnabledToggled
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
 import net.martinlundberg.onerepmaxtracker.data.database.dao.ResultDao
 import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalModel
@@ -21,7 +19,6 @@ import javax.inject.Inject
 class DefaultResultRepository @Inject constructor(
     private val resultDao: ResultDao,
     private val weightUnitService: DefaultWeightUnitRepository,
-    private val analyticsEnabledRepository: AnalyticsEnabledRepository,
     private val analyticsService: AnalyticsService,
 ) : ResultRepository {
 
@@ -46,13 +43,4 @@ class DefaultResultRepository @Inject constructor(
     override fun getWeightUnitFlow(): StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
 
     override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
-
-    //TODO: Create separate analytics collection repo?
-    override fun getAnalyticsCollectionEnabledFlow(): StateFlow<Boolean> =
-        analyticsEnabledRepository.analyticsEnabledFlow
-
-    override suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
-        analyticsService.logAnalyticsEnabledToggled(isEnabled)
-        analyticsEnabledRepository.setAnalyticsCollectionEnabled(isEnabled)
-    }
 }

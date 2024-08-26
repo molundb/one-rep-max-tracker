@@ -13,6 +13,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.createMovementParams
 import net.martinlundberg.onerepmaxtracker.analytics.createResultParams
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
+import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
@@ -32,6 +33,7 @@ class MovementListViewModelTest {
 
     private val resultRepository = FakeResultRepository()
     private val movementsRepository = FakeMovementsRepository(resultRepository)
+    private val analyticsEnabledRepository = FakeAnalyticsEnabledRepository()
     private val clockService = FakeClockService()
     private val analyticsService = FakeAnalyticsService()
 
@@ -40,10 +42,11 @@ class MovementListViewModelTest {
     @Before
     fun setUp() {
         viewModel = MovementListViewModel(
-            movementsRepository,
-            resultRepository,
-            clockService,
-            analyticsService,
+            movementsRepository = movementsRepository,
+            resultRepository = resultRepository,
+            analyticsEnabledRepository = analyticsEnabledRepository,
+            clockService = clockService,
+            analyticsService = analyticsService,
         )
     }
 

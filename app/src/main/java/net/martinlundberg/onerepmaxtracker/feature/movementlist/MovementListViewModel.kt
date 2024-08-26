@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.ClockService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logAddMovement
 import net.martinlundberg.onerepmaxtracker.analytics.logAddResult
@@ -30,13 +31,14 @@ import javax.inject.Inject
 class MovementListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
+    private val analyticsEnabledRepository: AnalyticsEnabledRepository,
     private val clockService: ClockService,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
     val uiState: StateFlow<MovementListUiState> = combine(
         movementsRepository.movements,
         resultRepository.getWeightUnitFlow(),
-        resultRepository.getAnalyticsCollectionEnabledFlow(),
+        analyticsEnabledRepository.analyticsEnabledFlow,
         movementsRepository.latestOrBestResults,
     ) { movements, weightUnit, isAnalyticsEnabled, latestOrBestResults ->
         Success(
@@ -88,7 +90,7 @@ class MovementListViewModel @Inject constructor(
 
     fun setAnalyticsCollectionEnabled(isEnabled: Boolean) {
         viewModelScope.launch {
-            resultRepository.setAnalyticsCollectionEnabled(isEnabled)
+            analyticsEnabledRepository.setAnalyticsCollectionEnabled(isEnabled)
         }
     }
 
