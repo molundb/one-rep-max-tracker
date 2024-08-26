@@ -6,12 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.DefaultClockService
-import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
-import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledService
+import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledRepository
+import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepositoryImpl
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
-import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitRepository
 import javax.inject.Singleton
 
 @Module
@@ -20,11 +20,11 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideWeightUnitService(weightUnitService: DefaultWeightUnitService): WeightUnitService
+    abstract fun provideWeightUnitRepository(weightUnitRepository: DefaultWeightUnitRepository): WeightUnitRepository
 
     @Binds
     @Singleton
-    abstract fun provideAnalyticsService(analyticsService: DefaultAnalyticsEnabledService): AnalyticsEnabledService
+    abstract fun provideAnalyticsRepository(analyticsEnabledRepository: DefaultAnalyticsEnabledRepository): AnalyticsEnabledRepository
 
     @Binds
     @Singleton
@@ -32,5 +32,7 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideLatestOrBestResultsInMovementListScreenService(latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenRepositoryImpl): LatestOrBestResultsInMovementListScreenRepository
+    abstract fun provideLatestOrBestResultsInMovementListScreenRepository(
+        latestOrBestResultsInMovementListScreenRepository: LatestOrBestResultsInMovementListScreenRepositoryImpl,
+    ): LatestOrBestResultsInMovementListScreenRepository
 }

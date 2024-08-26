@@ -10,8 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

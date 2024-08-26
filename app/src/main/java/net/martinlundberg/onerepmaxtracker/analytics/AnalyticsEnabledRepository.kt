@@ -23,16 +23,16 @@ import java.util.EnumMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface AnalyticsEnabledService {
+interface AnalyticsEnabledRepository {
     val analyticsEnabledFlow: StateFlow<Boolean>
 
     suspend fun setAnalyticsCollectionEnabled(isEnabled: Boolean)
 }
 
 @Singleton
-class DefaultAnalyticsEnabledService @Inject constructor(
+class DefaultAnalyticsEnabledRepository @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-) : AnalyticsEnabledService {
+) : AnalyticsEnabledRepository {
     private val scope = MainScope()
 
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics

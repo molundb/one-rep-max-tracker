@@ -8,22 +8,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.POUNDS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.POUNDS
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface WeightUnitService {
+interface WeightUnitRepository {
     val weightUnitFlow: StateFlow<WeightUnit>
 
     suspend fun setWeightUnit(isPounds: Boolean)
 }
 
 @Singleton
-class DefaultWeightUnitService @Inject constructor(
+class DefaultWeightUnitRepository @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-) : WeightUnitService {
+) : WeightUnitRepository {
     private val scope = MainScope()
 
     private val _weightUnitFlow: MutableStateFlow<WeightUnit> = MutableStateFlow(KILOGRAMS)

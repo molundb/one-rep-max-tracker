@@ -13,8 +13,8 @@ import junit.framework.TestCase.assertTrue
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.POUNDS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.POUNDS
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

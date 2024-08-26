@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
 
 interface ResultRepository {
     suspend fun getMovementDetail(id: Long): Flow<MovementDetail?>

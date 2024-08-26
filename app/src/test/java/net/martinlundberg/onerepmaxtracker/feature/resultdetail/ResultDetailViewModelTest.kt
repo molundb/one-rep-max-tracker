@@ -7,7 +7,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit.KILOGRAMS
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule

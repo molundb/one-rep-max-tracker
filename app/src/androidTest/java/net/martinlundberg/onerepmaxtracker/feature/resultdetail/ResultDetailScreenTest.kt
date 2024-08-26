@@ -12,7 +12,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Percentage
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

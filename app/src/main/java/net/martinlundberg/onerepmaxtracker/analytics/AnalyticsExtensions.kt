@@ -7,7 +7,7 @@ import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.ParamKeys
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEvent.Types
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.Result
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
 
 const val MOVEMENT_ID = "movement_id"
 const val MOVEMENT_NAME = "movement_name"

@@ -21,7 +21,7 @@ import net.martinlundberg.onerepmaxtracker.data.repository.ResultRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.NoMovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
