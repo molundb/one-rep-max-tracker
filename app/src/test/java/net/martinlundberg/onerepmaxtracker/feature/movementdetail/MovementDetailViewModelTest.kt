@@ -51,7 +51,7 @@ class MovementDetailViewModelTest {
     }
 
     @Test
-    fun givenNoMovementWithId_stateIsNoMovementDetail() = runTest {
+    fun givenNoMovementWithId_whenGetMovementInfo_stateIsNoMovementDetail() = runTest {
         viewModel.getMovementInfo(0)
 
         assertEquals(
@@ -61,7 +61,7 @@ class MovementDetailViewModelTest {
     }
 
     @Test
-    fun givenMovementWithResults_stateIsSuccess() = runTest {
+    fun givenMovementWithResults_whenGetMovementInfo_stateIsSuccess() = runTest {
         resultRepository.setMovementDetail(sampleMovementDetail)
 
         viewModel.getMovementInfo(1)
@@ -77,7 +77,7 @@ class MovementDetailViewModelTest {
     }
 
     @Test
-    fun givenMovementWithNoResults_stateIsNoMovementDetail() = runTest {
+    fun givenMovementWithNoResults_whenGetMovementInfo_stateIsNoMovementDetail() = runTest {
         resultRepository.setMovementDetail(sampleMovementDetailWithNoResults)
 
         viewModel.getMovementInfo(0)

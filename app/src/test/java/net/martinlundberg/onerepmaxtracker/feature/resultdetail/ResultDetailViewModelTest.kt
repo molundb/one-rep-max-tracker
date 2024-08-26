@@ -46,7 +46,7 @@ class ResultDetailViewModelTest {
     }
 
     @Test
-    fun givenNoResultWithId_stateIsNoResultDetail() = runTest {
+    fun givenNoResultWithId_whenGetResult_stateIsNoResultDetail() = runTest {
         viewModel.getResult(0)
 
         assertEquals(
@@ -56,7 +56,7 @@ class ResultDetailViewModelTest {
     }
 
     @Test
-    fun givenResultWithId_stateIsSuccess() = runTest {
+    fun givenResultWithId_whenGetResult_stateIsSuccess() = runTest {
         resultRepository.setResult(sampleResult, KILOGRAMS)
 
         viewModel.getResult(1)
