@@ -10,18 +10,18 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovemen
 import net.martinlundberg.onerepmaxtracker.data.model.Movement
 import net.martinlundberg.onerepmaxtracker.data.model.asEntity
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResults
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenService
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepository
 import javax.inject.Inject
 
 class DefaultMovementsRepository @Inject constructor(
     private val movementDao: MovementDao,
     private val resultDao: ResultDao,
     private val analyticsService: AnalyticsService,
-    private val latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenService,
+    private val latestOrBestResultsInMovementListScreenRepository: LatestOrBestResultsInMovementListScreenRepository,
 ) : MovementsRepository {
     override val movements: Flow<List<Movement>> = combine(
         movementDao.getMovements(),
-        latestOrBestResultsInMovementListScreenService.latestOrBestResults,
+        latestOrBestResultsInMovementListScreenRepository.latestOrBestResults,
     ) { movements, latest ->
         movements.map {
             it.asExternalMovement(latest)
@@ -37,8 +37,8 @@ class DefaultMovementsRepository @Inject constructor(
     }
 
     override val latestOrBestResults: Flow<LatestOrBestResults> =
-        latestOrBestResultsInMovementListScreenService.latestOrBestResults
+        latestOrBestResultsInMovementListScreenRepository.latestOrBestResults
 
     override suspend fun setLatestOrBestResults(latestOrBestResults: LatestOrBestResults) =
-        latestOrBestResultsInMovementListScreenService.setLatestOrBestResults(latestOrBestResults)
+        latestOrBestResultsInMovementListScreenRepository.setLatestOrBestResults(latestOrBestResults)
 }

@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.data.DataStorePreferences
 import javax.inject.Inject
 
-interface LatestOrBestResultsInMovementListScreenService {
+interface LatestOrBestResultsInMovementListScreenRepository {
     val latestOrBestResults: Flow<LatestOrBestResults>
     suspend fun setLatestOrBestResults(latestOrBestResults: LatestOrBestResults)
 }
 
-class LatestOrBestResultsInMovementListScreenServiceImpl @Inject constructor(
+class LatestOrBestResultsInMovementListScreenRepositoryImpl @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-) : LatestOrBestResultsInMovementListScreenService {
+) : LatestOrBestResultsInMovementListScreenRepository {
 
     override val latestOrBestResults =
         dataStorePreferences.showBestResultsInMovementListScreenFlow.map {

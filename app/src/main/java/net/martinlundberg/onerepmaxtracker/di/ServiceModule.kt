@@ -8,8 +8,8 @@ import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.DefaultClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledService
 import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledService
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenService
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenServiceImpl
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepository
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepositoryImpl
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitService
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitService
 import javax.inject.Singleton
@@ -32,5 +32,5 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideLatestOrBestResultsInMovementListScreenService(latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenServiceImpl): LatestOrBestResultsInMovementListScreenService
+    abstract fun provideLatestOrBestResultsInMovementListScreenService(latestOrBestResultsInMovementListScreenService: LatestOrBestResultsInMovementListScreenRepositoryImpl): LatestOrBestResultsInMovementListScreenRepository
 }
