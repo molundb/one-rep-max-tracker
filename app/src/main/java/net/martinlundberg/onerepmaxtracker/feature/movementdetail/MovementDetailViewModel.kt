@@ -22,6 +22,7 @@ import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.NoMovementDetail
 import net.martinlundberg.onerepmaxtracker.feature.movementdetail.MovementDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class MovementDetailViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
+    private val weightUnitRepository: WeightUnitRepository,
     private val clockService: ClockService,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
@@ -41,7 +43,7 @@ class MovementDetailViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 resultRepository.getMovementDetail(id),
-                resultRepository.getWeightUnitFlow(),
+                weightUnitRepository.weightUnitFlow,
             ) { movementDetail, weightUnit ->
                 if (movementDetail == null) {
                     NoMovementDetail()

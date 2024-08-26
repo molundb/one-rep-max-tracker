@@ -18,6 +18,7 @@ import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeMovementsRepository
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
+import net.martinlundberg.onerepmaxtracker.fakes.FakeWeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import org.junit.Assert.assertEquals
@@ -34,6 +35,7 @@ class MovementListViewModelTest {
     private val resultRepository = FakeResultRepository()
     private val movementsRepository = FakeMovementsRepository(resultRepository)
     private val analyticsEnabledRepository = FakeAnalyticsEnabledRepository()
+    private val weightUnitRepository = FakeWeightUnitRepository()
     private val clockService = FakeClockService()
     private val analyticsService = FakeAnalyticsService()
 
@@ -45,6 +47,7 @@ class MovementListViewModelTest {
             movementsRepository = movementsRepository,
             resultRepository = resultRepository,
             analyticsEnabledRepository = analyticsEnabledRepository,
+            weightUnitRepository = weightUnitRepository,
             clockService = clockService,
             analyticsService = analyticsService,
         )

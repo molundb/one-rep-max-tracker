@@ -23,6 +23,7 @@ import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResu
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Loading
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.MovementListUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.millisToOffsetDateTime
 import java.time.ZoneId
 import javax.inject.Inject
@@ -31,13 +32,14 @@ import javax.inject.Inject
 class MovementListViewModel @Inject constructor(
     private val movementsRepository: MovementsRepository,
     private val resultRepository: ResultRepository,
+    weightUnitRepository: WeightUnitRepository,
     private val analyticsEnabledRepository: AnalyticsEnabledRepository,
     private val clockService: ClockService,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
     val uiState: StateFlow<MovementListUiState> = combine(
         movementsRepository.movements,
-        resultRepository.getWeightUnitFlow(),
+        weightUnitRepository.weightUnitFlow,
         analyticsEnabledRepository.analyticsEnabledFlow,
         movementsRepository.latestOrBestResults,
     ) { movements, weightUnit, isAnalyticsEnabled, latestOrBestResults ->

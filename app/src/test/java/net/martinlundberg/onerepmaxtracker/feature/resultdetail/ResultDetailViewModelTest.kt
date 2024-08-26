@@ -7,6 +7,7 @@ import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.fakes.FakeAnalyticsService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeClockService
 import net.martinlundberg.onerepmaxtracker.fakes.FakeResultRepository
+import net.martinlundberg.onerepmaxtracker.fakes.FakeWeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit.KILOGRAMS
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -23,6 +24,7 @@ class ResultDetailViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val resultRepository = FakeResultRepository()
+    private val weightUnitRepository = FakeWeightUnitRepository()
     private val clockService = FakeClockService()
     private val analyticsService = FakeAnalyticsService()
 
@@ -32,6 +34,7 @@ class ResultDetailViewModelTest {
     fun setUp() {
         viewModel = ResultDetailViewModel(
             resultRepository = resultRepository,
+            weightUnitRepository = weightUnitRepository,
             clockService = clockService,
             analyticsService = analyticsService,
         )

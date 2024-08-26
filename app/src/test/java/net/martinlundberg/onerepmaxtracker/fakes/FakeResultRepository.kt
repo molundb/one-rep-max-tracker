@@ -2,7 +2,6 @@ package net.martinlundberg.onerepmaxtracker.fakes
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
@@ -39,10 +38,6 @@ class FakeResultRepository : ResultRepository {
 
     override suspend fun deleteResult(id: Long) {
         TODO("Not yet implemented")
-    }
-
-    override fun getWeightUnitFlow(): StateFlow<WeightUnit> {
-        return _weightUnit
     }
 
     /**

@@ -1,7 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
 import net.martinlundberg.onerepmaxtracker.analytics.logDeleteResult
@@ -11,14 +10,12 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.asExternalMovemen
 import net.martinlundberg.onerepmaxtracker.data.model.MovementDetail
 import net.martinlundberg.onerepmaxtracker.data.model.Result
 import net.martinlundberg.onerepmaxtracker.data.model.asEntity
-import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.Companion.divideIfPounds
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
 import javax.inject.Inject
 
 class DefaultResultRepository @Inject constructor(
     private val resultDao: ResultDao,
-    private val weightUnitService: DefaultWeightUnitRepository,
     private val analyticsService: AnalyticsService,
 ) : ResultRepository {
 
@@ -39,6 +36,4 @@ class DefaultResultRepository @Inject constructor(
         analyticsService.logDeleteResult(id)
         resultDao.deleteByResultId(id)
     }
-
-    override fun getWeightUnitFlow(): StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
 }

@@ -20,12 +20,14 @@ import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiSt
 import net.martinlundberg.onerepmaxtracker.feature.resultdetail.ResultDetailUiState.Success
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.Companion.multiplyIfPounds
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository.WeightUnit
+import net.martinlundberg.onerepmaxtracker.util.WeightUnitRepository
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @HiltViewModel
 class ResultDetailViewModel @Inject constructor(
     private val resultRepository: ResultRepository,
+    private val weightUnitRepository: WeightUnitRepository,
     private val clockService: ClockService,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
@@ -36,7 +38,7 @@ class ResultDetailViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 resultRepository.getResult(id),
-                resultRepository.getWeightUnitFlow(),
+                weightUnitRepository.weightUnitFlow,
             ) { result, weightUnit ->
                 if (result == null) {
                     NoResultDetail
