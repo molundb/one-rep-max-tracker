@@ -8,8 +8,8 @@ import net.martinlundberg.onerepmaxtracker.ClockService
 import net.martinlundberg.onerepmaxtracker.DefaultClockService
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsEnabledRepository
 import net.martinlundberg.onerepmaxtracker.analytics.DefaultAnalyticsEnabledRepository
+import net.martinlundberg.onerepmaxtracker.feature.movementlist.DefaultLatestOrBestResultsInMovementListScreenRepository
 import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepository
-import net.martinlundberg.onerepmaxtracker.feature.movementlist.LatestOrBestResultsInMovementListScreenRepositoryImpl
 import net.martinlundberg.onerepmaxtracker.util.DefaultWeightUnitRepository
 import net.martinlundberg.onerepmaxtracker.util.WeightUnitRepository
 import javax.inject.Singleton
@@ -28,11 +28,11 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun provideClockService(clockServiceImpl: DefaultClockService): ClockService
+    abstract fun provideClockService(clockService: DefaultClockService): ClockService
 
     @Binds
     @Singleton
     abstract fun provideLatestOrBestResultsInMovementListScreenRepository(
-        latestOrBestResultsInMovementListScreenRepository: LatestOrBestResultsInMovementListScreenRepositoryImpl,
+        latestOrBestResultsInMovementListScreenRepository: DefaultLatestOrBestResultsInMovementListScreenRepository,
     ): LatestOrBestResultsInMovementListScreenRepository
 }

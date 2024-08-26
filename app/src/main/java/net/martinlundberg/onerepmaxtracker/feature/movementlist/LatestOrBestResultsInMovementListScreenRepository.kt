@@ -10,7 +10,7 @@ interface LatestOrBestResultsInMovementListScreenRepository {
     suspend fun setLatestOrBestResults(latestOrBestResults: LatestOrBestResults)
 }
 
-class LatestOrBestResultsInMovementListScreenRepositoryImpl @Inject constructor(
+class DefaultLatestOrBestResultsInMovementListScreenRepository @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : LatestOrBestResultsInMovementListScreenRepository {
 
