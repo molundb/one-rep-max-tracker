@@ -11,7 +11,7 @@ import net.martinlundberg.onerepmaxtracker.data.database.model.ResultEntity
 @Dao
 interface MovementDao {
     @Query(
-        value = """
+        """
         SELECT * FROM movementEntity 
         LEFT JOIN resultEntity ON movementEntity.id = resultEntity.movementId
         """,
