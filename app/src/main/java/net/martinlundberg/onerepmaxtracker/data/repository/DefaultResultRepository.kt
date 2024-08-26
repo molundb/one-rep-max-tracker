@@ -41,6 +41,4 @@ class DefaultResultRepository @Inject constructor(
     }
 
     override fun getWeightUnitFlow(): StateFlow<WeightUnit> = weightUnitService.weightUnitFlow
-
-    override suspend fun setWeightUnit(isPounds: Boolean) = weightUnitService.setWeightUnit(isPounds)
 }

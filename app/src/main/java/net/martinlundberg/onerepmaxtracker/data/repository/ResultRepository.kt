@@ -12,5 +12,4 @@ interface ResultRepository {
     suspend fun getResult(id: Long): Flow<Result?>
     suspend fun deleteResult(id: Long)
     fun getWeightUnitFlow(): StateFlow<WeightUnit>
-    suspend fun setWeightUnit(isPounds: Boolean)
 }

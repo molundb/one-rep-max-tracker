@@ -45,10 +45,6 @@ class FakeResultRepository : ResultRepository {
         return _weightUnit
     }
 
-    override suspend fun setWeightUnit(isPounds: Boolean) {
-        TODO("Not yet implemented")
-    }
-
     /**
      * Used for testing
      */
