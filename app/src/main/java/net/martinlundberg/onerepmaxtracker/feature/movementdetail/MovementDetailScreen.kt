@@ -1,6 +1,5 @@
 package net.martinlundberg.onerepmaxtracker.feature.movementdetail
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -189,7 +188,6 @@ private fun LoadingUi() {
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun SuccessUi(
     movementDetailUiState: Success,
     movementId: Long,
@@ -221,7 +219,11 @@ private fun SuccessUi(
             movementDetailUiState.movement.results.map { result ->
                 item(key = result.id) {
                     ResultCard(
-                        modifier = Modifier.animateItemPlacement(),
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = null,
+                            fadeOutSpec = null,
+                            placementSpec = androidx.compose.animation.core.spring()
+                        ),
                         result = result,
                         weightUnit = movementDetailUiState.weightUnit,
                         onResultClick = {

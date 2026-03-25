@@ -1,7 +1,6 @@
 package net.martinlundberg.onerepmaxtracker.feature.movementlist
 
 import android.view.HapticFeedbackConstants
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -128,7 +127,6 @@ fun MovementListScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun SuccessUi(
     movementListUiState: Success,
     onMovementClick: (Movement, Lifecycle.State) -> Unit,
@@ -186,7 +184,11 @@ private fun SuccessUi(
                 movementListUiState.movements.map { movement ->
                     item(key = movement.id) {
                         MovementCard(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = null,
+                                fadeOutSpec = null,
+                                placementSpec = androidx.compose.animation.core.spring()
+                            ),
                             movement = movement,
                             weightUnit = movementListUiState.weightUnit,
                             onMovementClick = onMovementClick,
@@ -302,7 +304,6 @@ private fun LoadingUi() {
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MovementCard(
     modifier: Modifier = Modifier,
