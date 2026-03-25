@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.LocalAnalyticsService
@@ -316,6 +317,7 @@ fun MovementCard(
     var movementDropDownMenuInfo by remember { mutableStateOf<Movement?>(null) }
     val view = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
     val context = LocalContext.current
     val analyticsService = LocalAnalyticsService.current
 
@@ -324,7 +326,7 @@ fun MovementCard(
             .combinedClickable(
                 onClick = {
                     analyticsService.logMovementList_MovementClick(movement)
-                    onMovementClick(movement, lifecycleOwner.lifecycle.currentState)
+                    onMovementClick(movement, lifecycleState)
                 },
                 onLongClick = {
                     analyticsService.logMovementList_MovementLongClick(movement)

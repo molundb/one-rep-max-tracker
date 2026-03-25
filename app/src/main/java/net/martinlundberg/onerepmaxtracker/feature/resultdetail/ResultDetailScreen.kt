@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
@@ -98,6 +99,7 @@ fun ResultDetailScreen(
     TrackScreenViewEvent(screenName = "ResultDetail")
 
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
     val analyticsService = LocalAnalyticsService.current
 
     Column(
@@ -125,7 +127,7 @@ fun ResultDetailScreen(
                     .clickable(
                         onClick = {
                             analyticsService.logResultDetail_NavBackClick()
-                            navigateBack(lifecycleOwner.lifecycle.currentState)
+                            navigateBack(lifecycleState)
                         }
                     )
             ) {
@@ -147,7 +149,7 @@ fun ResultDetailScreen(
             )
 
             NoResultDetail -> {
-                navigateBack(lifecycleOwner.lifecycle.currentState)
+                navigateBack(lifecycleState)
             }
         }
     }

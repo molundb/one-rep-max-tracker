@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import net.martinlundberg.onerepmaxtracker.DefaultScaffold
 import net.martinlundberg.onerepmaxtracker.R
 import net.martinlundberg.onerepmaxtracker.analytics.AnalyticsService
@@ -112,6 +113,7 @@ fun MovementDetailScreen(
     TrackScreenViewEvent(screenName = "MovementDetail")
 
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
     val analyticsService = LocalAnalyticsService.current
 
     Column(
@@ -139,7 +141,7 @@ fun MovementDetailScreen(
                     .clickable(
                         onClick = {
                             analyticsService.logMovementDetail_NavBackClick()
-                            navigateBack(lifecycleOwner.lifecycle.currentState)
+                            navigateBack(lifecycleState)
                         }
                     )
             ) {
@@ -164,7 +166,7 @@ fun MovementDetailScreen(
             )
 
             is NoMovementDetail -> {
-                navigateBack(lifecycleOwner.lifecycle.currentState)
+                navigateBack(lifecycleState)
             }
         }
     }
@@ -200,6 +202,7 @@ private fun SuccessUi(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
 
     var resultToDelete by remember { mutableStateOf<Result?>(null) }
     var showAddResultDialog by remember { mutableStateOf(false) }
@@ -231,7 +234,7 @@ private fun SuccessUi(
                             onResultClick(
                                 result.id,
                                 movementDetailUiState.movement.movementName,
-                                lifecycleOwner.lifecycle.currentState,
+                                lifecycleState,
                             )
                         },
                     )
